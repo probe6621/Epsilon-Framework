@@ -1,379 +1,353 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Primary Search Engine Meta Tags -->
-    <title>The Epsilon Framework | Resolving Millennium Prize Problems & Physical Singularities</title>
-    <meta name="description" content="The Epsilon Framework eliminates point-zero singularities and ultraviolet divergences by establishing non-zero lower geometric boundary conditions, providing unified resolutions to Millennium Prize Problems, quantum field anomalies, and cosmological paradoxes.">
-    <meta name="keywords" content="Epsilon Framework, Millennium Prize Problems, Yang-Mills Mass Gap, Riemann Hypothesis, Navier-Stokes Existence and Smoothness, Birch and Swinnerton-Dyer Conjecture, Poincaré Conjecture, Hodge Conjecture, P versus NP, Collatz Conjecture, Odd Perfect Number, Dark Matter, Dark Energy, Zero Point Geometry, Theoretical Physics, Quantum Field Theory">
-    <meta name="author" content="Paul Roberts">
-    <meta name="robots" content="index, follow">
-    <meta name="build-id" content="awareness-patch-2026-08-06-v1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Epsilon Framework | Resolving Millennium Prize Problems & Physical Singularities</title>
+  <meta name="description" content="The Epsilon Framework eliminates point-zero singularities and ultraviolet divergences by establishing non-zero lower geometric boundary conditions." />
+  <meta name="keywords" content="Epsilon Framework, Millennium Prize Problems, Yang-Mills Mass Gap, Riemann Hypothesis, Navier-Stokes, Birch and Swinnerton-Dyer, Hodge, Poincaré, Collatz, Odd Perfect Number" />
+  <meta name="author" content="Paul Roberts" />
+  <meta name="robots" content="index, follow" />
+  <meta name="build-id" content="inline-papers-2026-08-06-v1" />
 
-    <!-- Open Graph / Social Media -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://epsilonframework.org/">
-    <meta property="og:title" content="The Epsilon Framework | Theoretical Physics & Applied Topology">
-    <meta property="og:description" content="Eliminating point-zero abstractions via non-zero lower geometric boundary conditions ($\partial\epsilon/\partial r \neq 0$). Explore open-source proofs, simulations, and DOIs.">
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://epsilonframework.org/" />
+  <meta property="og:title" content="The Epsilon Framework | Theoretical Physics & Applied Topology" />
+  <meta property="og:description" content="Eliminating point-zero abstractions via non-zero lower geometric boundary conditions." />
 
-    <!-- KaTeX CSS & JS for LaTeX Math Rendering -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body);"></script>
 
-    <style>
-        :root {
-            --bg: #0a0f1d;
-            --card: #111827;
-            --card-border: #1e293b;
-            --accent: #00f2fe;
-            --accent-2: #4facfe;
-            --accent-glow: rgba(0, 242, 254, 0.15);
-            --text: #e2e8f0;
-            --subtext: #94a3b8;
-            --code-bg: #070a13;
-            --solved: #22c55e;
-            --danger: #ef4444;
-        }
+  <style>
+    :root {
+      --bg: #0a0f1d;
+      --card: #111827;
+      --card-border: #1e293b;
+      --accent: #00f2fe;
+      --accent-2: #4facfe;
+      --accent-glow: rgba(0, 242, 254, 0.15);
+      --text: #e2e8f0;
+      --subtext: #94a3b8;
+      --code-bg: #070a13;
+      --solved: #22c55e;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-        }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+    }
 
-        .container { max-width: 1024px; margin: 40px auto; padding: 0 10px; }
-        header { text-align: center; margin-bottom: 36px; }
+    .container { max-width: 1024px; margin: 40px auto; padding: 0 10px; }
+    header { text-align: center; margin-bottom: 40px; }
 
-        h1 {
-            font-size: 3rem;
-            background: linear-gradient(45deg, var(--accent), var(--accent-2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 15px;
-            letter-spacing: -0.5px;
-        }
+    h1 {
+      font-size: 3rem;
+      background: linear-gradient(45deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
 
-        .tagline { color: var(--subtext); font-size: 1.2rem; max-width: 780px; margin: 0 auto; }
+    .tagline { color: var(--subtext); font-size: 1.15rem; max-width: 780px; margin: 0 auto; }
 
-        .card {
-            background: var(--card);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 26px;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 26px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
 
-        h2 {
-            color: var(--accent);
-            margin-top: 0;
-            font-size: 1.55rem;
-            border-bottom: 1px solid var(--card-border);
-            padding-bottom: 10px;
-        }
+    h2 {
+      color: var(--accent);
+      margin-top: 0;
+      font-size: 1.55rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 10px;
+    }
 
-        h3 { color: var(--text); margin-top: 18px; font-size: 1.12rem; }
+    h3 { color: var(--text); margin-top: 18px; font-size: 1.12rem; }
 
-        .math-block {
-            background: var(--code-bg);
-            padding: 14px;
-            border-radius: 8px;
-            border-left: 3px solid var(--accent);
-            overflow-x: auto;
-            margin: 12px 0;
-        }
+    .math-block {
+      background: var(--code-bg);
+      padding: 14px;
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+      overflow-x: auto;
+      margin: 12px 0;
+    }
 
-        .btn {
-            display: inline-block;
-            background: linear-gradient(45deg, var(--accent), var(--accent-2));
-            color: #000;
-            font-weight: bold;
-            padding: 10px 18px;
-            border-radius: 6px;
-            text-decoration: none;
-            margin: 10px 10px 0 0;
-            transition: opacity 0.2s ease;
-        }
-        .btn:hover { opacity: 0.9; }
+    .btn {
+      display: inline-block;
+      background: linear-gradient(45deg, var(--accent), var(--accent-2));
+      color: #000;
+      font-weight: bold;
+      padding: 10px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      margin: 10px 10px 0 0;
+      transition: opacity .2s ease;
+    }
+    .btn:hover { opacity: .9; }
 
-        .btn-outline {
-            background: transparent;
-            color: var(--accent);
-            border: 1px solid var(--accent);
-        }
-        .btn-outline:hover { background: var(--accent-glow); }
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    .btn-outline:hover { background: var(--accent-glow); }
 
-        .quickstart-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0,1fr));
-            gap: 14px;
-        }
-        .quickstep {
-            background: var(--code-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 10px;
-            padding: 14px;
-        }
-        .quickstep strong { color: var(--accent); display: block; margin-bottom: 6px; }
+    .quickstart-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 14px;
+    }
 
-        .mode-switch { display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
-        .mode-btn {
-            border:1px solid var(--card-border);
-            background: var(--code-bg);
-            color: var(--text);
-            padding:8px 12px;
-            border-radius:999px;
-            cursor:pointer;
-        }
-        .mode-btn.active { border-color: var(--accent); color: var(--accent); }
-        .mode-explorer .research-only { display:none; }
-        .mode-research .explorer-only { display:none; }
+    .quickstep {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .quickstep strong { color: var(--accent); display: block; margin-bottom: 6px; }
 
-        .diagram-wrap img {
-            width:100%;
-            max-width: 700px;
-            border-radius:10px;
-            border:1px solid var(--card-border);
-            display:block;
-            margin: 10px auto;
-            background:#000;
-        }
+    .pub-list { list-style: none; padding: 0; margin: 0; }
+    .pub-item {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
 
-        .pub-list { list-style: none; padding: 0; margin: 0; }
-        .pub-item {
-            background: var(--code-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            padding: 14px 16px;
-            margin-bottom: 12px;
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            gap: 10px;
-            align-items: center;
-        }
+    .status-pill {
+      font-size: .72rem;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 5px 10px;
+      white-space: nowrap;
+      color: #052e16;
+      background: var(--solved);
+      border: 1px solid #16a34a;
+      letter-spacing: .4px;
+    }
 
-        .status-pill {
-            font-size: 0.72rem;
-            font-weight: 700;
-            border-radius: 999px;
-            padding: 5px 10px;
-            white-space: nowrap;
-            color: #052e16;
-            background: var(--solved);
-            border: 1px solid #16a34a;
-        }
+    .pub-title { font-weight: 600; color: var(--text); text-decoration: none; }
+    .pub-title:hover { color: var(--accent); text-decoration: underline; }
 
-        .pub-title { font-weight: 600; color: var(--text); text-decoration: none; }
-        .pub-title:hover { color: var(--accent); text-decoration: underline; }
-        .pub-doi {
-            color: var(--accent);
-            text-decoration: none;
-            font-family: monospace;
-            font-size: 0.86rem;
-            background: var(--card);
-            padding: 4px 9px;
-            border-radius: 4px;
-            border: 1px solid var(--card-border);
-            white-space: nowrap;
-        }
+    .pub-doi {
+      color: var(--accent);
+      text-decoration: none;
+      font-family: monospace;
+      font-size: .86rem;
+      background: var(--card);
+      padding: 4px 9px;
+      border-radius: 4px;
+      border: 1px solid var(--card-border);
+      white-space: nowrap;
+    }
 
-        .kpi-row {
-            display:grid;
-            grid-template-columns: repeat(4, minmax(0,1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .kpi {
-            background: var(--code-bg);
-            border:1px solid var(--card-border);
-            border-radius:8px;
-            padding:10px;
-            text-align:center;
-        }
-        .kpi b { color: var(--accent); font-size:1.1rem; display:block; }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 10px;
+      margin-top: 10px;
+      margin-bottom: 16px;
+    }
 
-        .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; margin-bottom: 5px; color: var(--text); }
-        .form-group input, .form-group textarea {
-            width: 100%; padding: 10px; border-radius: 6px;
-            border: 1px solid var(--card-border); background: var(--code-bg);
-            color: var(--text); box-sizing: border-box; font-family: inherit;
-        }
+    .kpi {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+    .kpi b { color: var(--accent); font-size: 1.1rem; display: block; }
 
-        footer {
-            text-align: center;
-            color: var(--subtext);
-            font-size: 0.9rem;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid var(--card-border);
-        }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; margin-bottom: 5px; color: var(--text); }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid var(--card-border);
+      background: var(--code-bg);
+      color: var(--text);
+      box-sizing: border-box;
+      font-family: inherit;
+    }
 
-        @media (max-width: 900px) {
-            .quickstart-grid, .kpi-row { grid-template-columns: 1fr; }
-            .pub-item { grid-template-columns: 1fr; align-items: start; }
-            h1 { font-size: 2.2rem; }
-        }
-    </style>
+    footer {
+      text-align: center;
+      color: var(--subtext);
+      font-size: .9rem;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--card-border);
+    }
+
+    @media (max-width: 900px) {
+      .quickstart-grid, .kpi-row { grid-template-columns: 1fr; }
+      .pub-item { grid-template-columns: 1fr; align-items: start; }
+      h1 { font-size: 2.2rem; }
+    }
+  </style>
 </head>
-<body class="mode-explorer">
-    <div class="container">
-        <header>
-            <h1>The &epsilon;-Framework</h1>
-            <p class="tagline">Recursive Physics — resolving singular behavior through non-zero geometric boundary conditions and compact topological recirculation.</p>
-            <div class="mode-switch" aria-label="Reading mode">
-                <button class="mode-btn active" id="explorerBtn" type="button">Explorer Mode</button>
-                <button class="mode-btn" id="researchBtn" type="button">Research Mode</button>
-            </div>
-        </header>
+<body>
+  <div class="container">
+    <header>
+      <h1>The &epsilon;-Framework</h1>
+      <p class="tagline">Recursive Physics — resolving singular behavior through non-zero geometric boundary conditions and compact topological recirculation.</p>
+    </header>
 
-        <div class="card">
-            <h2>Start Here (30 seconds)</h2>
-            <div class="quickstart-grid">
-                <div class="quickstep">
-                    <strong>1) Why infinities appear</strong>
-                    Legacy formalisms let radial limits collapse toward point-zero, amplifying terms that diverge under singular boundary assumptions.
-                </div>
-                <div class="quickstep">
-                    <strong>2) The ε boundary</strong>
-                    Enforce a non-zero lower bound: \(\epsilon > 0\), with \(\partial\epsilon/\partial r \neq 0\), so fields never integrate through an unphysical point singularity.
-                </div>
-                <div class="quickstep">
-                    <strong>3) What changes</strong>
-                    Operators regularize into finite, discrete spectra with stable topology-compatible behavior.
-                </div>
-            </div>
+    <div class="card">
+      <h2>Start Here (30 seconds)</h2>
+      <div class="quickstart-grid">
+        <div class="quickstep">
+          <strong>1) Why infinities appear</strong>
+          Legacy formalisms let radial limits collapse toward point-zero, amplifying terms that diverge under singular boundary assumptions.
         </div>
-
-        <div class="card" style="border:1px solid var(--accent); text-align:center;">
-            <h2>Interactive Intuition: Why Infinities Disappear</h2>
-            <p style="color: var(--subtext);">Move from point-collapse assumptions toward an ε-bounded geometry.</p>
-            <div style="margin: 16px 0;">
-                <input type="range" id="epsilonSlider" min="0" max="100" value="60" style="width: 80%; cursor: pointer;">
-            </div>
-            <div id="visualDisplay" style="background:#070a13; padding:20px; border-radius:8px; border:1px solid var(--card-border);">
-                <h3 id="modeTitle" style="color: var(--accent); margin-top: 0;">Epsilon Framework Geometry (ε > 0)</h3>
-                <p id="modeDesc" style="font-size: 1.05rem; color: var(--text);">Integration proceeds to \(\epsilon > 0\), giving finite operator behavior and discrete ground-state structure.</p>
-                <div id="mathOutput" class="math-block" style="display:inline-block; padding:10px 22px;">
-                    $$\int_{\epsilon}^{R} \mathcal{L} \, dr = \text{Finite Discrete Spectrum } (E_0 > 0)$$
-                </div>
-            </div>
+        <div class="quickstep">
+          <strong>2) The ε boundary</strong>
+          Enforce a non-zero lower bound: \(\epsilon > 0\), with \(\partial\epsilon/\partial r \neq 0\), so fields never integrate through an unphysical point singularity.
         </div>
-
-        <div class="card diagram-wrap">
-            <h2>Visual Legend: Toroidal Configuration Intuition</h2>
-            <p class="explorer-only" style="color:var(--subtext);">Think of this as a map from unstable point-collapse intuition to closed, recirculating topological structure.</p>
-            <p class="research-only" style="color:var(--subtext);">Representative toroidal manifold motifs used to communicate compact recirculation and bounded geometric flow assumptions.</p>
-            <img src="https://raw.githubusercontent.com/probe6621/Epsilon-Framework/main/assets/torus-configurations.jpg" alt="Torus configurations in physics diagram">
-            <p style="color:var(--subtext); margin:8px 0 0;">If this image does not load, place your uploaded file at <code>assets/torus-configurations.jpg</code> in the repo.</p>
+        <div class="quickstep">
+          <strong>3) What changes</strong>
+          Operators regularize into finite, discrete spectra with stable topology-compatible behavior.
         </div>
-
-        <div class="card">
-            <h2>Featured Code Module: Yang-Mills Mass Gap</h2>
-            <p class="explorer-only">Open the module page, inspect repository code, or execute the simulation directly in Colab.</p>
-            <p class="research-only">Applying an ε-lower radial bound yields discretized operator behavior with a strictly positive spectral floor \(\Delta E = E_1 - E_0 > 0\).</p>
-            <div class="math-block research-only">
-                $$\int_{\epsilon}^{R_{max}} \mathcal{L}_{YM} \, dr \Rightarrow \Delta E = E_1 - E_0 > 0$$
-            </div>
-            <a href="https://epsilonframework.org/01_Yang_Mills_Mass_Gap/" class="btn">View Interactive Module Page</a>
-            <a href="https://github.com/probe6621/Epsilon-Framework/tree/main/01_Yang_Mills_Mass_Gap" class="btn btn-outline" target="_blank" rel="noopener">View Code on GitHub</a>
-            <a href="https://colab.research.google.com/github/probe6621/Epsilon-Framework/blob/main/01_Yang_Mills_Mass_Gap/simulation.py" class="btn btn-outline" target="_blank" rel="noopener">Run in Google Colab</a>
-        </div>
-
-        <div class="card">
-            <h2>Completed Publications & Zenodo Manuscripts</h2>
-            <p style="color: var(--subtext); margin-bottom: 18px;">Open-access manuscripts, derivations, and simulation-linked results.</p>
-            <div class="kpi-row">
-                <div class="kpi"><b>9+</b><span>Published DOIs</span></div>
-                <div class="kpi"><b>6</b><span>Millennium Problems Addressed</span></div>
-                <div class="kpi"><b>1</b><span>Public Code Repository</span></div>
-                <div class="kpi"><b>2026-08-06</b><span>Site Build Date</span></div>
-            </div>
-
-            <h3>I. Millennium Prize Problems</h3>
-            <ul class="pub-list">
-                <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21781000" target="_blank" class="pub-title">Yang-Mills Existence and Mass Gap</a><a href="https://doi.org/10.5281/zenodo.21781000" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781000</a></li>
-                <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21781067" target="_blank" class="pub-title">Riemann Hypothesis</a><a href="https://doi.org/10.5281/zenodo.21781067" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781067</a></li>
-                <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21781253" target="_blank" class="pub-title">Navier-Stokes Existence and Smoothness</a><a href="https://doi.org/10.5281/zenodo.21781253" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781253</a></li>
-                <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21781295" target="_blank" class="pub-title">Birch and Swinnerton-Dyer Conjecture</a><a href="https://doi.org/10.5281/zenodo.21781295" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781295</a></li>
-                <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21781350" target="_blank" class="pub-title">Hodge Conjecture</a><a href="https://doi.org/10.5281/zenodo.21781350" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781350</a></li>
-                <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21781435" target="_blank" class="pub-title">Poincaré Conjecture</a><a href="https://doi.org/10.5281/zenodo.21781435" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781435</a></li>
-            </ul>
-
-            <h3>II. Mathematics & Discrete Foundations</h3>
-            <ul class="pub-list">
-                <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21783495" target="_blank" class="pub-title">Collatz Conjecture</a><a href="https://doi.org/10.5281/zenodo.21783495" target="_blank" class="pub-doi">doi:10.5281/zenodo.21783495</a></li>
-                <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21783395" target="_blank" class="pub-title">Odd Perfect Number Problem</a><a href="https://doi.org/10.5281/zenodo.21783395" target="_blank" class="pub-doi">doi:10.5281/zenodo.21783395</a></li>
-            </ul>
-        </div>
-
-        <div class="card">
-            <h2>Contact & Academic Correspondence</h2>
-            <p style="color: var(--subtext);">For academic inquiries, collaboration proposals, or peer-review discussion regarding the &epsilon;-Framework:</p>
-            <form action="https://formspree.io/f/xbjnqwez" method="POST" style="margin-top: 20px;">
-                <div class="form-group"><label>Name / Institution</label><input type="text" name="name" placeholder="Dr. Jane Doe / Department of Physics" required></div>
-                <div class="form-group"><label>Email Address</label><input type="email" name="email" placeholder="jane.doe@university.edu" required></div>
-                <div class="form-group"><label>Message / Peer Review Discussion</label><textarea name="message" rows="5" placeholder="Inquiry regarding numerical simulation parameters or paper derivations..." required></textarea></div>
-                <button type="submit" class="btn" style="border:none; cursor:pointer;">Send Message</button>
-            </form>
-            <div style="margin-top: 20px; border-top: 1px solid var(--card-border); padding-top: 12px; color:var(--subtext);">
-                <strong>Direct Email:</strong> contact@epsilonframework.org<br>
-                <strong>Master Repository:</strong> <a href="https://github.com/probe6621/Epsilon-Framework" style="color: var(--accent); text-decoration: none;">github.com/probe6621/Epsilon-Framework</a>
-            </div>
-        </div>
-
-        <footer>
-            <p>&copy; The &epsilon;-Framework Research Laboratory. Open Access under MIT License & Creative Commons Attribution International.</p>
-        </footer>
+      </div>
     </div>
 
-    <script>
-        // Force-remove any legacy open status pills
-        document.querySelectorAll('.status-open,.status-pill.status-open').forEach(el => el.remove());
+    <div class="card" style="border:1px solid var(--accent); text-align:center;">
+      <h2>Interactive Intuition: Why Infinities Disappear</h2>
+      <p style="color: var(--subtext);">Move from point-collapse assumptions toward an ε-bounded geometry.</p>
+      <div style="margin: 16px 0;">
+        <input type="range" id="epsilonSlider" min="0" max="100" value="60" style="width: 80%; cursor: pointer;" />
+      </div>
+      <div style="background:#070a13; padding:20px; border-radius:8px; border:1px solid var(--card-border);">
+        <h3 id="modeTitle" style="color: var(--accent); margin-top: 0;">Epsilon Framework Geometry (ε > 0)</h3>
+        <p id="modeDesc" style="font-size: 1.05rem; color: var(--text);">Integration proceeds to \(\epsilon > 0\), giving finite operator behavior and discrete ground-state structure.</p>
+        <div id="mathOutput" class="math-block" style="display:inline-block; padding:10px 22px;">
+          $$\int_{\epsilon}^{R} \mathcal{L} \, dr = \text{Finite Discrete Spectrum } (E_0 > 0)$$
+        </div>
+      </div>
+    </div>
 
-        // Explorer / Research mode toggle
-        const explorerBtn = document.getElementById('explorerBtn');
-        const researchBtn = document.getElementById('researchBtn');
-        explorerBtn.addEventListener('click', () => {
-            document.body.classList.add('mode-explorer');
-            document.body.classList.remove('mode-research');
-            explorerBtn.classList.add('active');
-            researchBtn.classList.remove('active');
-        });
-        researchBtn.addEventListener('click', () => {
-            document.body.classList.add('mode-research');
-            document.body.classList.remove('mode-explorer');
-            researchBtn.classList.add('active');
-            explorerBtn.classList.remove('active');
-        });
+    <div class="card">
+      <h2>Featured Code Module: Yang-Mills Mass Gap</h2>
+      <p>Open the module page, inspect repository code, or execute the simulation directly in Colab.</p>
+      <a href="https://epsilonframework.org/01_Yang_Mills_Mass_Gap/" class="btn">View Interactive Module Page</a>
+      <a href="https://github.com/probe6621/Epsilon-Framework/tree/main/01_Yang_Mills_Mass_Gap" class="btn btn-outline" target="_blank" rel="noopener">View Code on GitHub</a>
+      <a href="https://colab.research.google.com/github/probe6621/Epsilon-Framework/blob/main/01_Yang_Mills_Mass_Gap/simulation.py" class="btn btn-outline" target="_blank" rel="noopener">Run in Google Colab</a>
+    </div>
 
-        // Slider logic
-        const slider = document.getElementById('epsilonSlider');
-        const modeTitle = document.getElementById('modeTitle');
-        const modeDesc = document.getElementById('modeDesc');
-        const mathOutput = document.getElementById('mathOutput');
+    <div class="card">
+      <h2>Completed Publications & Zenodo Manuscripts</h2>
+      <p style="color: var(--subtext); margin-bottom: 18px;">Open-access manuscripts, derivations, and simulation-linked results.</p>
 
-        slider.addEventListener('input', (e) => {
-            const val = Number(e.target.value);
-            if (val < 15) {
-                modeTitle.innerText = 'Legacy Point-Collapse Assumption (r → 0)';
-                modeTitle.style.color = '#ef4444';
-                modeDesc.innerText = 'As the lower bound tends toward zero, terms become unbounded and singular behavior appears.';
-                mathOutput.innerHTML = '$$\\lim_{r \\to 0} \\frac{1}{r} = \\infty$$';
-            } else {
-                modeTitle.innerText = 'Epsilon Framework Geometry (ε > 0)';
-                modeTitle.style.color = '#00f2fe';
-                modeDesc.innerText = 'A non-zero lower boundary keeps the system finite and supports stable, discrete behavior.';
-                mathOutput.innerHTML = '$$\\int_{\\epsilon}^{R} \\mathcal{L} \\, dr = \\text{Finite Discrete Spectrum } (E_0 > 0)$$';
-            }
-            if (window.renderMathInElement) renderMathInElement(mathOutput);
-        });
-    </script>
+      <div class="kpi-row">
+        <div class="kpi"><b>9+</b><span>Published DOIs</span></div>
+        <div class="kpi"><b>6</b><span>Millennium Problems Addressed</span></div>
+        <div class="kpi"><b>1</b><span>Public Code Repository</span></div>
+        <div class="kpi"><b>2026-08-06</b><span>Site Build Date</span></div>
+      </div>
+
+      <h3>I. Millennium Prize Problems</h3>
+      <ul class="pub-list">
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21781000" target="_blank" class="pub-title">Yang-Mills Existence and Mass Gap</a><a href="https://doi.org/10.5281/zenodo.21781000" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781000</a></li>
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21781067" target="_blank" class="pub-title">Riemann Hypothesis</a><a href="https://doi.org/10.5281/zenodo.21781067" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781067</a></li>
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21781253" target="_blank" class="pub-title">Navier-Stokes Existence and Smoothness</a><a href="https://doi.org/10.5281/zenodo.21781253" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781253</a></li>
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21781295" target="_blank" class="pub-title">Birch and Swinnerton-Dyer Conjecture</a><a href="https://doi.org/10.5281/zenodo.21781295" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781295</a></li>
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21781350" target="_blank" class="pub-title">Hodge Conjecture</a><a href="https://doi.org/10.5281/zenodo.21781350" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781350</a></li>
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21781435" target="_blank" class="pub-title">Poincaré Conjecture</a><a href="https://doi.org/10.5281/zenodo.21781435" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781435</a></li>
+      </ul>
+
+      <h3>II. Mathematics & Discrete Foundations</h3>
+      <ul class="pub-list">
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21783495" target="_blank" class="pub-title">Collatz Conjecture</a><a href="https://doi.org/10.5281/zenodo.21783495" target="_blank" class="pub-doi">doi:10.5281/zenodo.21783495</a></li>
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21783395" target="_blank" class="pub-title">Odd Perfect Number Problem</a><a href="https://doi.org/10.5281/zenodo.21783395" target="_blank" class="pub-doi">doi:10.5281/zenodo.21783395</a></li>
+      </ul>
+
+      <!-- Inline Test 2026-08-06 -->
+      <h3>III. Additional Published Papers</h3>
+      <ul class="pub-list">
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21815732" target="_blank" class="pub-title">On the Hydro-Electrodynamic Origin of Gravitation</a><a href="https://doi.org/10.5281/zenodo.21815732" target="_blank" class="pub-doi">doi:10.5281/zenodo.21815732</a></li>
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21808618" target="_blank" class="pub-title">Proof of Singular Boundary Elimination, Natural Renormalization, and Universal Scaling</a><a href="https://doi.org/10.5281/zenodo.21808618" target="_blank" class="pub-doi">doi:10.5281/zenodo.21808618</a></li>
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21784147" target="_blank" class="pub-title">Principles of Geometric Field Tuning and Phase-Lock Mechanics</a><a href="https://doi.org/10.5281/zenodo.21784147" target="_blank" class="pub-doi">doi:10.5281/zenodo.21784147</a></li>
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21776147" target="_blank" class="pub-title">Metric Regularization, Spectral Mass Eigenspaces, and Vacuum Debye Screening</a><a href="https://doi.org/10.5281/zenodo.21776147" target="_blank" class="pub-doi">doi:10.5281/zenodo.21776147</a></li>
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21768320" target="_blank" class="pub-title">Emergent Galactic Dynamics & Cosmological Acceleration via Superfluid Plenum Hydrodynamics</a><a href="https://doi.org/10.5281/zenodo.21768320" target="_blank" class="pub-doi">doi:10.5281/zenodo.21768320</a></li>
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21768174" target="_blank" class="pub-title">Superfluid Plenum Hydrodynamics: Causality, Preferred Frame, and Vacuum Dynamics</a><a href="https://doi.org/10.5281/zenodo.21768174" target="_blank" class="pub-doi">doi:10.5281/zenodo.21768174</a></li>
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21767522" target="_blank" class="pub-title">Topological Derivation of Koide’s Formula (Q = 2/3)</a><a href="https://doi.org/10.5281/zenodo.21767522" target="_blank" class="pub-doi">doi:10.5281/zenodo.21767522</a></li>
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21776306" target="_blank" class="pub-title">Anomalous Field Shear and Thermal Persistence in Counter-Rotating Field Systems</a><a href="https://doi.org/10.5281/zenodo.21776306" target="_blank" class="pub-doi">doi:10.5281/zenodo.21776306</a></li>
+        <li class="pub-item"><span class="status-pill">SOLVED</span><a href="https://doi.org/10.5281/zenodo.21781824" target="_blank" class="pub-title">Methodological Supplement: Coupling Parameter α Derivation and Validation</a><a href="https://doi.org/10.5281/zenodo.21781824" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781824</a></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Contact & Academic Correspondence</h2>
+      <p style="color: var(--subtext);">For academic inquiries, collaboration proposals, or peer-review discussion regarding the &epsilon;-Framework:</p>
+
+      <form action="https://formspree.io/f/xbjnqwez" method="POST" style="margin-top: 20px;">
+        <div class="form-group">
+          <label>Name / Institution</label>
+          <input type="text" name="name" placeholder="Dr. Jane Doe / Department of Physics" required />
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" name="email" placeholder="jane.doe@university.edu" required />
+        </div>
+        <div class="form-group">
+          <label>Message / Peer Review Discussion</label>
+          <textarea name="message" rows="5" placeholder="Inquiry regarding numerical simulation parameters or paper derivations..." required></textarea>
+        </div>
+        <button type="submit" class="btn" style="border:none; cursor:pointer;">Send Message</button>
+      </form>
+
+      <div style="margin-top: 20px; border-top: 1px solid var(--card-border); padding-top: 12px; color:var(--subtext);">
+        <strong>Direct Email:</strong> contact@epsilonframework.org<br />
+        <strong>Master Repository:</strong>
+        <a href="https://github.com/probe6621/Epsilon-Framework" style="color: var(--accent); text-decoration: none;">github.com/probe6621/Epsilon-Framework</a>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; The &epsilon;-Framework Research Laboratory. Open Access under MIT License & Creative Commons Attribution International.</p>
+    </footer>
+  </div>
+
+  <script>
+    const slider = document.getElementById("epsilonSlider");
+    const modeTitle = document.getElementById("modeTitle");
+    const modeDesc = document.getElementById("modeDesc");
+    const mathOutput = document.getElementById("mathOutput");
+
+    slider.addEventListener("input", (e) => {
+      const val = Number(e.target.value);
+      if (val < 15) {
+        modeTitle.innerText = "Legacy Point-Collapse Assumption (r → 0)";
+        modeTitle.style.color = "#ef4444";
+        modeDesc.innerText = "As the lower bound tends toward zero, terms become unbounded and singular behavior appears.";
+        mathOutput.innerHTML = "$$\\lim_{r \\to 0} \\frac{1}{r} = \\infty$$";
+      } else {
+        modeTitle.innerText = "Epsilon Framework Geometry (ε > 0)";
+        modeTitle.style.color = "#00f2fe";
+        modeDesc.innerText = "A non-zero lower boundary keeps the system finite and supports stable, discrete behavior.";
+        mathOutput.innerHTML = "$$\\int_{\\epsilon}^{R} \\mathcal{L} \\, dr = \\text{Finite Discrete Spectrum } (E_0 > 0)$$";
+      }
+      if (window.renderMathInElement) renderMathInElement(mathOutput);
+    });
+  </script>
 </body>
 </html>
