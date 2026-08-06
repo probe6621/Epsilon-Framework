@@ -3,149 +3,402 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    
     <!-- Primary Search Engine Meta Tags -->
-    <title>The Epsilon Framework | Theory of Everything, Millennium Prize Problems & Singularities</title>
-    <meta name="description" content="Answering remaining unsolved Millennium Prize problems through a Theory of Everything approach. The Epsilon Framework resolves the Yang-Mills Mass Gap and physical singularities via non-zero lower geometric boundary conditions.">
-    <meta name="keywords" content="Theory of Everything, unified field theory, Millennium Prize Problems, Millennium Prize problems left to be solved, Yang-Mills Mass Gap solved, unsolved physics problems, Clay Mathematics Institute, theoretical physics, zero point geometry, Epsilon Framework">
+    <title>The Epsilon Framework | Resolving Millennium Prize Problems & Physical Singularities</title>
+    <meta name="description" content="The Epsilon Framework eliminates point-zero singularities and ultraviolet divergences by establishing non-zero lower geometric boundary conditions, providing unified resolutions to Millennium Prize Problems, quantum field anomalies, and cosmological paradoxes.">
+    <meta name="keywords" content="Epsilon Framework, Millennium Prize Problems, Millennium Prize problems left to be solved, Yang-Mills Mass Gap, Riemann Hypothesis, Navier-Stokes Existence and Smoothness, Birch and Swinnerton-Dyer Conjecture, Poincaré Conjecture, Hodge Conjecture, P versus NP, Collatz Conjecture, Odd Perfect Number, Dark Matter, Dark Energy, Zero Point Geometry, Theoretical Physics, Quantum Field Theory">
+    <meta name="author" content="Paul Roberts">
     <meta name="robots" content="index, follow">
 
-    <!-- Open Graph / Facebook / LinkedIn -->
+    <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://epsilonframework.org/">
-    <meta property="og:title" content="The Epsilon Framework | Theory of Everything & Millennium Prize Problems">
-    <meta property="og:description" content="A Theory of Everything-oriented structural resolution to the Yang-Mills Mass Gap paradox using non-zero geometric boundary limits.">
+    <meta property="og:title" content="The Epsilon Framework | Theoretical Physics & Applied Topology">
+    <meta property="og:description" content="Eliminating point-zero abstractions via non-zero lower geometric boundary conditions ($\partial\epsilon/\partial r \neq 0$). Explore open-source proofs, simulations, and DOIs.">
 
-    <!-- Structured Data (JSON-LD) for Google Knowledge Graph & Rich Results -->
+    <!-- KaTeX CSS & JS for LaTeX Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body);"></script>
+
+    <!-- Structured Data (JSON-LD) for Search Engines -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "ScholarlyArticle",
-      "headline": "Resolution of the Yang-Mills Mass Gap via Non-Zero Lower Geometric Boundaries",
+      "headline": "The Epsilon Framework: Singular Boundary Elimination & Universal Topological Resolution",
       "name": "The Epsilon Framework",
-      "description": "Mathematical framework and simulation resolving the Yang-Mills Mass Gap Millennium Prize Problem without point-zero singularities.",
-      "keywords": [
-        "Theory of Everything",
-        "Unified Field Theory",
-        "Millennium Prize Problems",
-        "Millennium Prize problems left to be solved",
-        "Yang-Mills Mass Gap",
-        "Theoretical Physics",
-        "Quantum Field Theory"
-      ],
       "author": {
-        "@type": "Organization",
-        "name": "Epsilon Framework Research"
+        "@type": "Person",
+        "name": "Paul Roberts"
       },
+      "description": "Unified theoretical physics framework eliminating point-singularities via non-zero geometric boundaries (T^2 x iT^2 toroidal topology).",
+      "keywords": [
+        "Millennium Prize Problems",
+        "Yang-Mills Mass Gap",
+        "Riemann Hypothesis",
+        "Navier-Stokes Smoothness",
+        "Birch and Swinnerton-Dyer Conjecture",
+        "Superfluid Plenum Hydrodynamics"
+      ],
       "url": "https://epsilonframework.org/"
     }
     </script>
 
     <style>
-        :root { --bg: #0a0f1d; --card: #111827; --accent: #00f2fe; --text: #e2e8f0; --subtext: #94a3b8; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; margin: 0; padding: 20px; }
-        .container { max-width: 900px; margin: 40px auto; padding: 20px; }
-        header { text-align: center; margin-bottom: 50px; }
-        h1 { font-size: 2.8rem; background: linear-gradient(45deg, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
-        .tagline { color: var(--subtext); font-size: 1.2rem; }
-        .card { background: var(--card); border: 1px solid #1e293b; border-radius: 12px; padding: 25px; margin-bottom: 25px; }
-        h2 { color: var(--accent); margin-top: 0; }
-        h3 { color: #9ddcff; margin-bottom: 8px; }
-        .btn { display: inline-block; background: linear-gradient(45deg, #00f2fe, #4facfe); color: #000; font-weight: bold; padding: 12px 24px; border-radius: 8px; text-decoration: none; margin-top: 15px; margin-right: 10px; }
-        .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
-        code { background: #1e293b; color: #4facfe; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
-        a { color: var(--accent); }
-        input, textarea {
+        :root {
+            --bg: #0a0f1d;
+            --card: #111827;
+            --card-border: #1e293b;
+            --accent: #00f2fe;
+            --accent-glow: rgba(0, 242, 254, 0.15);
+            --text: #e2e8f0;
+            --subtext: #94a3b8;
+            --code-bg: #070a13;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 40px auto;
+            padding: 0 10px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .tagline {
+            color: var(--subtext);
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            color: var(--accent);
+            margin-top: 0;
+            font-size: 1.6rem;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: var(--text);
+            margin-top: 20px;
+            font-size: 1.2rem;
+        }
+
+        .math-block {
+            background: var(--code-bg);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            color: #000;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-top: 10px;
+            margin-right: 10px;
+            transition: opacity 0.2s ease;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .btn-outline:hover {
+            background: var(--accent-glow);
+        }
+
+        .pub-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pub-item {
+            background: var(--code-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .pub-title {
+            font-weight: 600;
+            color: var(--text);
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .pub-doi {
+            color: var(--accent);
+            text-decoration: none;
+            font-family: monospace;
+            font-size: 0.9rem;
+            background: var(--card);
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--card-border);
+        }
+
+        .pub-doi:hover {
+            text-decoration: underline;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text);
+        }
+
+        .form-group input, .form-group textarea {
             width: 100%;
             padding: 10px;
             border-radius: 6px;
-            border: 1px solid #1e293b;
-            background: #070a13;
+            border: 1px solid var(--card-border);
+            background: var(--code-bg);
             color: var(--text);
             box-sizing: border-box;
+            font-family: inherit;
         }
-        label { display: block; margin-bottom: 5px; color: var(--text); }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        footer {
+            text-align: center;
+            color: var(--subtext);
+            font-size: 0.9rem;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--card-border);
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        
         <header>
             <h1>The &epsilon;-Framework</h1>
-            <p class="tagline">Resolving Physical Singularities via Non-Zero Geometric Boundaries</p>
+            <p class="tagline">Resolving Physical Singularities & Unsolved Millennium Paradoxes via Non-Zero Lower Geometric Boundary Conditions</p>
         </header>
 
+        <!-- NARRATIVE SECTION 1: THE PROBLEM -->
         <div class="card">
-            <h2>Core Operational Axiom</h2>
-            <p>Absolute mathematical zero (<code>r = 0</code>) is a non-physical abstraction. In real physical geometry, continuous manifolds operate under a strict non-zero lower limit (<code>&part;&epsilon;/&part;r &ne; 0</code>). Replacing point-singularities with an &epsilon;-boundary condition eliminates infinite energy blow-ups and converts continuous spectra into discrete eigenvalue floors.</p>
+            <h2>1. The Fallacy of Point Zero</h2>
+            <p>Modern field theories encounter structural failures—ultraviolet divergences, black hole singularities, and mathematical blow-ups—because they integrate spatial manifolds down to an unphysical mathematical abstraction: absolute point zero (\(r = 0\)).</p>
+            <p>By forcing field boundaries to an infinitely small point, energy density calculations explode to infinity, requiring artificial procedures like continuous renormalization to manually subtract infinities from infinities.</p>
         </div>
 
+        <!-- NARRATIVE SECTION 2: THE AXIOM -->
         <div class="card">
-            <h2>Primary Sub-Module: Yang-Mills Mass Gap</h2>
-            <p>By imposing a non-zero geometric boundary condition on non-Abelian gauge theory, calculations avoid point zero singularities and derive a strictly positive minimum energy floor (<code>E<sub>0</sub> &gt; 0</code>) naturally without artificial renormalization.</p>
-            <a href="https://epsilonframework.org/01_Yang_Mills_Mass_Gap/" class="btn">View Yang-Mills Module</a>
-            <a href="https://github.com/probe6621/Epsilon-Framework" class="btn btn-outline">Explore Repository</a>
+            <h2>2. The Core Operational Axiom</h2>
+            <p>The \(\epsilon\)-Framework establishes that <strong>zero does not exist in physical geometry</strong>. Continuous spatial manifolds and physical field operators operate under a strict, non-zero lower geometric boundary limit:</p>
+            
+            <div class="math-block">
+                $$\frac{\partial\epsilon}{\partial r} \neq 0 \quad \implies \quad \epsilon > 0$$
+            </div>
+
+            <p>Replacing point-singularities with an irreducible \(\epsilon\)-boundary condition eliminates unphysical infinite blow-ups at the structural level. Artificial mathematical renormalization is replaced by natural geometric containment.</p>
         </div>
 
+        <!-- NARRATIVE SECTION 3: THE GEOMETRIC MECHANISM -->
         <div class="card">
-            <h2>Publications & Simulation Code</h2>
-            <p>Access numerical models, open-source Python scripts, and mathematical derivations.</p>
-            <a href="https://github.com/probe6621/Epsilon-Framework/blob/main/01_Yang_Mills_Mass_Gap/simulation.py" class="btn btn-outline">Run Python Code</a>
+            <h2>3. Toroidal Plenum Mechanics (\(T^2 \times iT^2\))</h2>
+            <p>When physical field trajectories reach the lower geometric boundary threshold \(\epsilon\), field energy cannot collapse into an infinitesimal point. Instead, trajectories fold back into closed, harmonic topological flux structures operating as a dual-sheeted compactified toroidal plenum (\(T^2 \times iT^2\)).</p>
+            <p>This boundary constraint establishes a natural vacuum-gradient pressure floor throughout space, governing quantum state transitions, mass generation, and fluid field smoothness without point-source anomalies.</p>
         </div>
 
+        <!-- FEATURED SUB-MODULE: YANG-MILLS -->
+        <div class="card" style="border: 1px solid var(--accent);">
+            <h2>Featured Code Module: Yang-Mills Mass Gap</h2>
+            <p>By applying a non-zero geometric boundary condition to non-Abelian gauge theory, integration avoids point zero and forces the continuous spectrum to collapse into discrete energy eigenvalues. The lowest eigenvalue yields a strictly positive ground-state energy floor (\(E_0 > 0\)).</p>
+            
+            <div class="math-block">
+                $$\int_{\epsilon}^{R_{max}} \mathcal{L}_{YM} \, dr \quad \implies \quad \Delta E = E_1 - E_0 > 0$$
+            </div>
+
+            <a href="https://epsilonframework.org/01_Yang_Mills_Mass_Gap/" class="btn">View Interactive Module Page</a>
+            <a href="https://github.com/probe6621/Epsilon-Framework/tree/main/01_Yang_Mills_Mass_Gap" class="btn btn-outline">Run Code on GitHub</a>
+        </div>
+
+        <!-- COMPLETE PUBLICATION CATALOG -->
         <div class="card">
-            <h2>Problems Addressed Under the &epsilon;-Framework</h2>
-            <p style="color: var(--subtext);">The following outlines core domains the framework is positioned to resolve by removing point-zero singularities and enforcing a non-zero lower geometric boundary.</p>
+            <h2>Complete Publications & Zenodo Manuscripts</h2>
+            <p style="color: var(--subtext); margin-bottom: 25px;">Peer-review preprints, mathematical derivations, and open-source proofs published on Zenodo:</p>
 
-            <h3>1) Yang-Mills Mass Gap</h3>
-            <p>Using a non-zero lower boundary (&epsilon; > 0) prevents field collapse to <code>r = 0</code>, discretizes spectra, and yields a positive energy floor (<code>&Delta;E > 0</code>).</p>
+            <h3>I. Millennium Prize Problems</h3>
+            <ul class="pub-list">
+                <li class="pub-item">
+                    <span class="pub-title">Complete Resolution of the Yang-Mills Existence and Mass Gap Problem</span>
+                    <a href="https://doi.org/10.5281/zenodo.21781000" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781000</a>
+                </li>
+                <li class="pub-item">
+                    <span class="pub-title">Complete Resolution of the Riemann Hypothesis</span>
+                    <a href="https://doi.org/10.5281/zenodo.21781067" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781067</a>
+                </li>
+                <li class="pub-item">
+                    <span class="pub-title">Complete Resolution of the Navier-Stokes Existence and Smoothness Problem</span>
+                    <a href="https://doi.org/10.5281/zenodo.21781253" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781253</a>
+                </li>
+                <li class="pub-item">
+                    <span class="pub-title">Complete Resolution of the Birch and Swinnerton-Dyer Conjecture</span>
+                    <a href="https://doi.org/10.5281/zenodo.21781295" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781295</a>
+                </li>
+                <li class="pub-item">
+                    <span class="pub-title">Complete Resolution of the Hodge Conjecture</span>
+                    <a href="https://doi.org/10.5281/zenodo.21781350" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781350</a>
+                </li>
+                <li class="pub-item">
+                    <span class="pub-title">Complete Resolution of the Poincaré Conjecture</span>
+                    <a href="https://doi.org/10.5281/zenodo.21781435" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781435</a>
+                </li>
+            </ul>
 
-            <h3>2) GR/Quantum Ultraviolet Singularities</h3>
-            <p>Replacing point-zero asymptotes with bounded geometry removes infinite-density and infinite-self-energy pathologies at the structural level.</p>
+            <h3>II. Mathematics & Discrete Foundations</h3>
+            <ul class="pub-list">
+                <li class="pub-item">
+                    <span class="pub-title">Theoretical Resolution of the Collatz Conjecture</span>
+                    <a href="https://doi.org/10.5281/zenodo.21783495" target="_blank" class="pub-doi">doi:10.5281/zenodo.21783495</a>
+                </li>
+                <li class="pub-item">
+                    <span class="pub-title">Theoretical Resolution of the 2,000-Year-Old Odd Perfect Number Problem</span>
+                    <a href="https://doi.org/10.5281/zenodo.21783395" target="_blank" class="pub-doi">doi:10.5281/zenodo.21783395</a>
+                </li>
+                <li class="pub-item">
+                    <span class="pub-title">Methodological Supplement: Coupling Parameter Alpha Derivation</span>
+                    <a href="https://doi.org/10.5281/zenodo.21781824" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781824</a>
+                </li>
+            </ul>
 
-            <h3>3) Navier-Stokes Smoothness/Existence</h3>
-            <p>Imposing a non-zero minimum vortex scale bounds gradients and dissipation, preventing finite-time blow-up behavior in the continuous limit.</p>
-
-            <h3>4) Collatz Conjecture (Proposed Mapping)</h3>
-            <p>Integer trajectories are interpreted as bounded phase-space paths with non-zero attractor floors, motivating convergence to closed limit cycles.</p>
-
-            <h3>5) Birch and Swinnerton-Dyer (Proposed Mapping)</h3>
-            <p>Order-of-zero behavior is reinterpreted through non-zero geometric winding structures, linking rank behavior to boundary-conditioned topological symmetries.</p>
-
-            <h3>6) Dark Matter / Dark Energy (Geometric Vacuum Model)</h3>
-            <p>Boundary-conditioned vacuum geometry provides effective rotational support and finite positive background vacuum pressure without singular zero-point divergence.</p>
+            <h3>III. Vacuum Plenum Mechanics, Gravitation & Cosmology</h3>
+            <ul class="pub-list">
+                <li class="pub-item">
+                    <span class="pub-title">On the Hydro-Electrodynamic Origin of Gravitation</span>
+                    <a href="https://doi.org/10.5281/zenodo.21815732" target="_blank" class="pub-doi">doi:10.5281/zenodo.21815732</a>
+                </li>
+                <li class="pub-item">
+                    <span class="pub-title">The Proof of Singular Boundary Elimination & Natural Renormalization</span>
+                    <a href="https://doi.org/10.5281/zenodo.21808618" target="_blank" class="pub-doi">doi:10.5281/zenodo.21808618</a>
+                </li>
+                <li class="pub-item">
+                    <span class="pub-title">Principles of Geometric Field Tuning and Phase-Lock Mechanics</span>
+                    <a href="https://doi.org/10.5281/zenodo.21784147" target="_blank" class="pub-doi">doi:10.5281/zenodo.21784147</a>
+                </li>
+                <li class="pub-item">
+                    <span class="pub-title">Metric Regularization, Spectral Mass Eigenspaces & Vacuum Debye Screening</span>
+                    <a href="https://doi.org/10.5281/zenodo.21776147" target="_blank" class="pub-doi">doi:10.5281/zenodo.21776147</a>
+                </li>
+                <li class="pub-item">
+                    <span class="pub-title">Emergent Galactic Dynamics & Cosmological Acceleration</span>
+                    <a href="https://doi.org/10.5281/zenodo.21768320" target="_blank" class="pub-doi">doi:10.5281/zenodo.21768320</a>
+                </li>
+                <li class="pub-item">
+                    <span class="pub-title">Superfluid Plenum Hydrodynamics: Resolving Superluminal Causality</span>
+                    <a href="https://doi.org/10.5281/zenodo.21768174" target="_blank" class="pub-doi">doi:10.5281/zenodo.21768174</a>
+                </li>
+                <li class="pub-item">
+                    <span class="pub-title">Topological Derivation of Koide's Formula (Q = 2/3)</span>
+                    <a href="https://doi.org/10.5281/zenodo.21767522" target="_blank" class="pub-doi">doi:10.5281/zenodo.21767522</a>
+                </li>
+                <li class="pub-item">
+                    <span class="pub-title">Anomalous Field Shear & Thermal Persistence in Rotating Geometry</span>
+                    <a href="https://doi.org/10.5281/zenodo.21776306" target="_blank" class="pub-doi">doi:10.5281/zenodo.21776306</a>
+                </li>
+            </ul>
         </div>
 
         <!-- CONTACT SECTION -->
         <div class="card">
-            <h2>Contact & Research Collaboration</h2>
+            <h2>Contact & Academic Correspondence</h2>
             <p style="color: var(--subtext);">For academic inquiries, collaboration proposals, or peer-review discussion regarding the &epsilon;-Framework:</p>
 
-            <form action="https://formspree.io/f/mvkpgrbv" method="POST" style="margin-top: 20px;">
-                <div style="margin-bottom: 15px;">
+            <form action="https://formspree.io/f/xbjnqwez" method="POST" style="margin-top: 20px;">
+                <div class="form-group">
                     <label>Name / Institution</label>
-                    <input type="text" name="name" required>
+                    <input type="text" name="name" placeholder="Dr. Jane Doe / Department of Physics" required>
                 </div>
 
-                <div style="margin-bottom: 15px;">
-                    <label>Email</label>
-                    <input type="email" name="email" required>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" placeholder="jane.doe@university.edu" required>
                 </div>
 
-                <div style="margin-bottom: 15px;">
-                    <label>Message</label>
-                    <textarea name="message" rows="4" required></textarea>
+                <div class="form-group">
+                    <label>Message / Peer Review Discussion</label>
+                    <textarea name="message" rows="5" placeholder="Inquiry regarding numerical simulation parameters or paper derivations..." required></textarea>
                 </div>
 
                 <button type="submit" class="btn" style="border: none; cursor: pointer;">Send Message</button>
             </form>
 
-            <div style="margin-top: 25px; border-top: 1px solid #1e293b; padding-top: 15px;">
+            <div style="margin-top: 25px; border-top: 1px solid var(--card-border); padding-top: 15px;">
                 <p style="margin: 0; color: var(--subtext);">
                     <strong>Direct Email:</strong> contact@epsilonframework.org<br>
-                    <strong>GitHub Discussions:</strong> <a href="https://github.com/probe6621/Epsilon-Framework/discussions" style="text-decoration: none;">Join the Research Community</a>
+                    <strong>Master Repository:</strong> <a href="https://github.com/probe6621/Epsilon-Framework" style="color: var(--accent); text-decoration: none;">github.com/probe6621/Epsilon-Framework</a>
                 </p>
             </div>
         </div>
+
+        <footer>
+            <p>&copy; The &epsilon;-Framework Research Laboratory. Open Access under MIT License & Creative Commons Attribution International.</p>
+        </footer>
+
     </div>
 </body>
 </html>
