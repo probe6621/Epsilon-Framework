@@ -195,6 +195,21 @@
             border-color: #d97706;
         }
 
+        /* Emergency override: hide any non-solved status pills */
+        .status-open,
+        span.status-pill.status-open,
+        .pub-item .status-open,
+        .pub-item span[class*="status-open"] {
+          display: none !important;
+          visibility: hidden !important;
+          width: 0 !important;
+          min-width: 0 !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          border: 0 !important;
+          overflow: hidden !important;
+        }
+
         .pub-title {
             font-weight: 600;
             color: var(--text);
