@@ -57,6 +57,8 @@
             --text: #e2e8f0;
             --subtext: #94a3b8;
             --code-bg: #070a13;
+            --solved: #22c55e;
+            --open: #f59e0b;
         }
 
         body {
@@ -165,18 +167,44 @@
             border-radius: 8px;
             padding: 15px 20px;
             margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 12px;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+        }
+
+        .status-pill {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            border-radius: 999px;
+            padding: 5px 10px;
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+
+        .status-solved {
+            color: #052e16;
+            background: var(--solved);
+            border-color: #16a34a;
+        }
+
+        .status-open {
+            color: #3b1f00;
+            background: var(--open);
+            border-color: #d97706;
         }
 
         .pub-title {
             font-weight: 600;
             color: var(--text);
-            flex: 1;
             min-width: 280px;
+            text-decoration: none;
+        }
+
+        .pub-title:hover {
+            color: var(--accent);
+            text-decoration: underline;
         }
 
         .pub-doi {
@@ -188,6 +216,7 @@
             padding: 4px 10px;
             border-radius: 4px;
             border: 1px solid var(--card-border);
+            white-space: nowrap;
         }
 
         .pub-doi:hover {
@@ -228,6 +257,21 @@
             padding-top: 20px;
             border-top: 1px solid var(--card-border);
         }
+
+        @media (max-width: 840px) {
+            .pub-item {
+                grid-template-columns: 1fr;
+                align-items: start;
+            }
+
+            .status-pill {
+                width: fit-content;
+            }
+
+            .pub-doi {
+                width: fit-content;
+            }
+        }
     </style>
 </head>
 <body>
@@ -235,7 +279,7 @@
         
         <header>
             <h1>The &epsilon;-Framework</h1>
-            <p class="tagline">Resolving Physical Singularities & Unsolved Millennium Paradoxes via Non-Zero Lower Geometric Boundary Conditions</p>
+            <p class="tagline">Recursive Physics — Resolving Physical Singularities & Unsolved Millennium Paradoxes via Non-Zero Lower Geometric Boundary Conditions</p>
         </header>
 
         <!-- NARRATIVE SECTION 1: THE PROBLEM -->
@@ -285,27 +329,33 @@
             <h3>I. Millennium Prize Problems</h3>
             <ul class="pub-list">
                 <li class="pub-item">
-                    <span class="pub-title">Complete Resolution of the Yang-Mills Existence and Mass Gap Problem</span>
+                    <span class="status-pill status-solved">SOLVED</span>
+                    <a href="https://doi.org/10.5281/zenodo.21781000" target="_blank" class="pub-title">Complete Resolution of the Yang-Mills Existence and Mass Gap Problem under the Epsilon Framework (T2×iT2 Toroidal Topology)</a>
                     <a href="https://doi.org/10.5281/zenodo.21781000" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781000</a>
                 </li>
                 <li class="pub-item">
-                    <span class="pub-title">Complete Resolution of the Riemann Hypothesis</span>
+                    <span class="status-pill status-solved">SOLVED</span>
+                    <a href="https://doi.org/10.5281/zenodo.21781067" target="_blank" class="pub-title">Complete Resolution of the Riemann Hypothesis under the Epsilon Framework (T2×iT2 Toroidal Topology)</a>
                     <a href="https://doi.org/10.5281/zenodo.21781067" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781067</a>
                 </li>
                 <li class="pub-item">
-                    <span class="pub-title">Complete Resolution of the Navier-Stokes Existence and Smoothness Problem</span>
+                    <span class="status-pill status-solved">SOLVED</span>
+                    <a href="https://doi.org/10.5281/zenodo.21781253" target="_blank" class="pub-title">Complete Resolution of the Navier-Stokes Existence and Smoothness Problem under the Epsilon Framework (T2×iT2 Toroidal Topology)</a>
                     <a href="https://doi.org/10.5281/zenodo.21781253" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781253</a>
                 </li>
                 <li class="pub-item">
-                    <span class="pub-title">Complete Resolution of the Birch and Swinnerton-Dyer Conjecture</span>
+                    <span class="status-pill status-solved">SOLVED</span>
+                    <a href="https://doi.org/10.5281/zenodo.21781295" target="_blank" class="pub-title">Complete Resolution of the Birch and Swinnerton-Dyer Conjecture under the Epsilon Framework (T2×iT2 Toroidal Topology)</a>
                     <a href="https://doi.org/10.5281/zenodo.21781295" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781295</a>
                 </li>
                 <li class="pub-item">
-                    <span class="pub-title">Complete Resolution of the Hodge Conjecture</span>
+                    <span class="status-pill status-solved">SOLVED</span>
+                    <a href="https://doi.org/10.5281/zenodo.21781350" target="_blank" class="pub-title">Complete Resolution of the Hodge Conjecture under the Epsilon Framework (T2×iT2 Toroidal Topology)</a>
                     <a href="https://doi.org/10.5281/zenodo.21781350" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781350</a>
                 </li>
                 <li class="pub-item">
-                    <span class="pub-title">Complete Resolution of the Poincaré Conjecture</span>
+                    <span class="status-pill status-solved">SOLVED</span>
+                    <a href="https://doi.org/10.5281/zenodo.21781435" target="_blank" class="pub-title">Complete Resolution of the Poincaré Conjecture under the Epsilon Framework (T2×iT2 Toroidal Topology)</a>
                     <a href="https://doi.org/10.5281/zenodo.21781435" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781435</a>
                 </li>
             </ul>
@@ -313,15 +363,18 @@
             <h3>II. Mathematics & Discrete Foundations</h3>
             <ul class="pub-list">
                 <li class="pub-item">
-                    <span class="pub-title">Theoretical Resolution of the Collatz Conjecture</span>
+                    <span class="status-pill status-solved">SOLVED</span>
+                    <a href="https://doi.org/10.5281/zenodo.21783495" target="_blank" class="pub-title">Theoretical Resolution of the Collatz Conjecture via the Epsilon (ε) Framework</a>
                     <a href="https://doi.org/10.5281/zenodo.21783495" target="_blank" class="pub-doi">doi:10.5281/zenodo.21783495</a>
                 </li>
                 <li class="pub-item">
-                    <span class="pub-title">Theoretical Resolution of the 2,000-Year-Old Odd Perfect Number Problem</span>
+                    <span class="status-pill status-solved">SOLVED</span>
+                    <a href="https://doi.org/10.5281/zenodo.21783395" target="_blank" class="pub-title">Theoretical Resolution of the 2,000-Year-Old Odd Perfect Number Problem via the Epsilon (ε) Framework</a>
                     <a href="https://doi.org/10.5281/zenodo.21783395" target="_blank" class="pub-doi">doi:10.5281/zenodo.21783395</a>
                 </li>
                 <li class="pub-item">
-                    <span class="pub-title">Methodological Supplement: Coupling Parameter Alpha Derivation</span>
+                    <span class="status-pill status-open">IN PROGRESS</span>
+                    <a href="https://doi.org/10.5281/zenodo.21781824" target="_blank" class="pub-title">Methodological Supplement: Analytical Derivation of the Coupling Parameter alpha and Experimental Protocol for the Epsilon Framework</a>
                     <a href="https://doi.org/10.5281/zenodo.21781824" target="_blank" class="pub-doi">doi:10.5281/zenodo.21781824</a>
                 </li>
             </ul>
@@ -329,35 +382,43 @@
             <h3>III. Vacuum Plenum Mechanics, Gravitation & Cosmology</h3>
             <ul class="pub-list">
                 <li class="pub-item">
-                    <span class="pub-title">On the Hydro-Electrodynamic Origin of Gravitation</span>
+                    <span class="status-pill status-open">IN PROGRESS</span>
+                    <a href="https://doi.org/10.5281/zenodo.21815732" target="_blank" class="pub-title">On the Hydro-Electrodynamic Origin of Gravitation: A Rigorous Progression from Classical Field Theory to Continuous Vacuum Plenum Mechanics</a>
                     <a href="https://doi.org/10.5281/zenodo.21815732" target="_blank" class="pub-doi">doi:10.5281/zenodo.21815732</a>
                 </li>
                 <li class="pub-item">
-                    <span class="pub-title">The Proof of Singular Boundary Elimination & Natural Renormalization</span>
+                    <span class="status-pill status-open">IN PROGRESS</span>
+                    <a href="https://doi.org/10.5281/zenodo.21808618" target="_blank" class="pub-title">The Proof of Singular Boundary Elimination, Natural Renormalization, and Universal Scaling Unification</a>
                     <a href="https://doi.org/10.5281/zenodo.21808618" target="_blank" class="pub-doi">doi:10.5281/zenodo.21808618</a>
                 </li>
                 <li class="pub-item">
-                    <span class="pub-title">Principles of Geometric Field Tuning and Phase-Lock Mechanics</span>
+                    <span class="status-pill status-open">IN PROGRESS</span>
+                    <a href="https://doi.org/10.5281/zenodo.21784147" target="_blank" class="pub-title">Principles of Geometric Field Tuning and Phase-Lock Mechanics in the Epsilon (ϵ) Framework</a>
                     <a href="https://doi.org/10.5281/zenodo.21784147" target="_blank" class="pub-doi">doi:10.5281/zenodo.21784147</a>
                 </li>
                 <li class="pub-item">
-                    <span class="pub-title">Metric Regularization, Spectral Mass Eigenspaces & Vacuum Debye Screening</span>
+                    <span class="status-pill status-open">IN PROGRESS</span>
+                    <a href="https://doi.org/10.5281/zenodo.21776147" target="_blank" class="pub-title">Metric Regularization, Spectral Mass Eigenspaces, and Vacuum Debye Screening in Dual-Sheeted Compactified T^2 x iT^2 Toroidal Topology</a>
                     <a href="https://doi.org/10.5281/zenodo.21776147" target="_blank" class="pub-doi">doi:10.5281/zenodo.21776147</a>
                 </li>
                 <li class="pub-item">
-                    <span class="pub-title">Emergent Galactic Dynamics & Cosmological Acceleration</span>
+                    <span class="status-pill status-open">IN PROGRESS</span>
+                    <a href="https://doi.org/10.5281/zenodo.21768320" target="_blank" class="pub-title">Emergent Galactic Dynamics & Cosmological Acceleration via Superfluid Plenum Hydrodynamics</a>
                     <a href="https://doi.org/10.5281/zenodo.21768320" target="_blank" class="pub-doi">doi:10.5281/zenodo.21768320</a>
                 </li>
                 <li class="pub-item">
-                    <span class="pub-title">Superfluid Plenum Hydrodynamics: Resolving Superluminal Causality</span>
+                    <span class="status-pill status-open">IN PROGRESS</span>
+                    <a href="https://doi.org/10.5281/zenodo.21768174" target="_blank" class="pub-title">Superfluid Plenum Hydrodynamics: Resolving Superluminal Causality, Preferred Reference Frames, and Vacuum Field Stress</a>
                     <a href="https://doi.org/10.5281/zenodo.21768174" target="_blank" class="pub-doi">doi:10.5281/zenodo.21768174</a>
                 </li>
                 <li class="pub-item">
-                    <span class="pub-title">Topological Derivation of Koide's Formula (Q = 2/3)</span>
+                    <span class="status-pill status-solved">SOLVED</span>
+                    <a href="https://doi.org/10.5281/zenodo.21767522" target="_blank" class="pub-title">Topological Derivation of Koide's Formula (Q = 2/3) via T² × iT² Vacuum Plenum Rotational Manifolds</a>
                     <a href="https://doi.org/10.5281/zenodo.21767522" target="_blank" class="pub-doi">doi:10.5281/zenodo.21767522</a>
                 </li>
                 <li class="pub-item">
-                    <span class="pub-title">Anomalous Field Shear & Thermal Persistence in Rotating Geometry</span>
+                    <span class="status-pill status-open">IN PROGRESS</span>
+                    <a href="https://doi.org/10.5281/zenodo.21776306" target="_blank" class="pub-title">Anomalous Field Shear and Thermal Persistence in Synchronized Counter-Rotating Electromagnetic Geometry</a>
                     <a href="https://doi.org/10.5281/zenodo.21776306" target="_blank" class="pub-doi">doi:10.5281/zenodo.21776306</a>
                 </li>
             </ul>
