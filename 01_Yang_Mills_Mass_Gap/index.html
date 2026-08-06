@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yang-Mills Mass Gap | The Epsilon Framework</title>
+    <!-- KaTeX CSS & JS for LaTeX Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body);"></script>
+    <style>
+        :root { --bg: #0a0f1d; --card: #111827; --accent: #00f2fe; --text: #e2e8f0; --subtext: #94a3b8; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: 40px auto; padding: 20px; }
+        header { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.5rem; background: linear-gradient(45deg, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        .breadcrumb { color: var(--subtext); margin-bottom: 20px; }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .card { background: var(--card); border: 1px solid #1e293b; border-radius: 12px; padding: 25px; margin-bottom: 25px; }
+        h2 { color: var(--accent); margin-top: 0; }
+        .btn { display: inline-block; background: linear-gradient(45deg, #00f2fe, #4facfe); color: #000; font-weight: bold; padding: 10px 20px; border-radius: 8px; text-decoration: none; margin-top: 15px; margin-right: 10px; }
+        .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+        .math-block { background: #070a13; padding: 15px; border-radius: 8px; border-left: 3px solid var(--accent); overflow-x: auto; margin: 15px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="https://probe6621.github.io/Epsilon-Framework/">&larr; Back to Master Framework</a>
+        </div>
+
+        <header>
+            <h1>Yang-Mills Mass Gap Resolution</h1>
+            <p style="color: var(--subtext);">Derivation via Non-Zero Geometric Boundary Condition (\(\partial\epsilon/\partial r \neq 0\))</p>
+        </header>
+
+        <div class="card">
+            <h2>1. The Problem Statement</h2>
+            <p>Standard quantum field theory models non-Abelian gauge fields under continuous spacetime manifolds where spatial coordinates extend down to point zero (\(r = 0\)). This produces ultraviolet divergences, requiring continuous renormalization procedures and failing to account for why non-zero mass excitations exist in quantum chromodynamics (gluon confinement).</p>
+        </div>
+
+        <div class="card">
+            <h2>2. Mathematical Mechanics</h2>
+            <p>Under the \(\epsilon\)-Framework, radial spatial domain integrations are bounded from below by a non-zero lower geometric boundary condition \(\epsilon > 0\):</p>
+            
+            <div class="math-block">
+                $$\int_{0}^{\infty} \mathcal{L}_{YM} \, dr \quad \longrightarrow \quad \int_{\epsilon}^{R_{max}} \mathcal{L}_{YM} \, dr$$
+            </div>
+
+            <p>Imposing a non-zero lower geometric boundary transforms the continuous kinetic matrix spectrum into a discrete operator. The lowest eigenvalue yields a strictly positive ground-state energy floor:</p>
+
+            <div class="math-block">
+                $$\Delta E = E_1 - E_0 > 0$$
+            </div>
+
+            <p>Because energy states cannot collapse into \(r = 0\), infinite singularities disappear, and the Mass Gap \(\Delta E\) emerges naturally as an intrinsic property of space-time geometry.</p>
+        </div>
+
+        <div class="card">
+            <h2>3. Code & Simulation</h2>
+            <p>Run the open-source Python radial field operator simulation directly from the GitHub repository.</p>
+            <a href="https://github.com/probe6621/Epsilon-Framework/blob/main/01_Yang_Mills_Mass_Gap/simulation.py" class="btn">View simulation.py</a>
+            <a href="https://github.com/probe6621/Epsilon-Framework/tree/main/01_Yang_Mills_Mass_Gap" class="btn btn-outline">Sub-Module Repo</a>
+        </div>
+    </div>
+</body>
+</html>
