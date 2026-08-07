@@ -195,6 +195,70 @@
     }
     .kpi b { color: var(--accent); font-size: 1.1rem; display: block; }
 
+    /* Torus image block */
+    .torus-card { text-align: center; }
+
+    .torus-open-btn {
+      border: 0;
+      background: transparent;
+      padding: 0;
+      cursor: zoom-in;
+      width: 100%;
+    }
+
+    .torus-image {
+      max-width: 760px;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 4px 18px rgba(0,0,0,.35);
+    }
+
+    .torus-hint {
+      color: var(--subtext);
+      font-size: .92rem;
+      margin-top: 10px;
+    }
+
+    .torus-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.88);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      z-index: 9999;
+    }
+
+    .torus-modal.open { display: flex; }
+
+    .torus-modal-image {
+      max-width: min(1200px, 96vw);
+      max-height: 90vh;
+      width: auto;
+      height: auto;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      box-shadow: 0 10px 40px rgba(0,0,0,.6);
+    }
+
+    .torus-close {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      color: #e2e8f0;
+      font-size: 28px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
     footer {
       text-align: center;
       color: var(--subtext);
@@ -208,6 +272,11 @@
       .quickstart-grid, .kpi-row { grid-template-columns: 1fr; }
       .pub-item { grid-template-columns: 1fr; align-items: start; }
       h1 { font-size: 2.2rem; }
+    }
+
+    @media (max-width: 640px) {
+      .torus-modal { padding: 12px; }
+      .torus-close { top: 10px; right: 10px; }
     }
   </style>
 </head>
@@ -234,6 +303,34 @@
           Operators regularize into finite, discrete spectra with stable topology-compatible behavior.
         </div>
       </div>
+    </div>
+
+    <div class="card torus-card">
+      <h2>Torus Configurations in Physics</h2>
+      <p style="color: var(--subtext); margin-bottom: 14px;">
+        Visual reference for toroidal boundary/topology intuition used throughout the ε-Framework.
+      </p>
+
+      <button class="torus-open-btn" type="button" onclick="openTorusModal()">
+        <img
+          src="assets/torus-configurations.jpg"
+          alt="Torus configurations in physics diagram with multiple labeled panels"
+          class="torus-image"
+          loading="lazy"
+        />
+      </button>
+
+      <p class="torus-hint">Tap/click image to zoom</p>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div id="torusModal" class="torus-modal" aria-hidden="true" role="dialog" aria-label="Expanded torus image">
+      <button class="torus-close" type="button" onclick="closeTorusModal()" aria-label="Close image">×</button>
+      <img
+        src="assets/torus-configurations.jpg"
+        alt="Expanded torus configurations in physics diagram"
+        class="torus-modal-image"
+      />
     </div>
 
     <div class="card" style="border:1px solid var(--accent); text-align:center;">
@@ -318,6 +415,31 @@
     const modeTitle = document.getElementById("modeTitle");
     const modeDesc = document.getElementById("modeDesc");
     const mathOutput = document.getElementById("mathOutput");
+
+    const torusModal = document.getElementById("torusModal");
+
+    function openTorusModal() {
+      if (!torusModal) return;
+      torusModal.classList.add("open");
+      torusModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeTorusModal() {
+      if (!torusModal) return;
+      torusModal.classList.remove("open");
+      torusModal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    if (torusModal) {
+      torusModal.addEventListener("click", (e) => {
+        if (e.target === torusModal) closeTorusModal();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && torusModal.classList.contains("open")) closeTorusModal();
+      });
+    }
 
     if (slider) {
       slider.addEventListener("input", (e) => {
