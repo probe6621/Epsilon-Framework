@@ -219,6 +219,27 @@
       margin-top: 10px;
     }
 
+    .video-frame-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 460px;
+      margin: 0 auto;
+      aspect-ratio: 9 / 16;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 4px 18px rgba(0,0,0,.35);
+      background: #000;
+    }
+
+    .video-frame-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
     .torus-modal {
       position: fixed;
       inset: 0;
@@ -301,6 +322,29 @@
           Operators regularize into finite, discrete spectra with stable topology-compatible behavior.
         </div>
       </div>
+    </div>
+
+    <div class="card" style="text-align:center; border:1px solid var(--accent);">
+      <h2>Start Here: Unified Commonality Video</h2>
+      <p style="color: var(--subtext); max-width: 760px; margin: 0 auto 14px;">
+        “Is Physics Unified? — Common Solutions to the 7 Millennium Prize Problems”
+      </p>
+
+      <div class="video-frame-wrap" style="margin-bottom: 14px;">
+        <iframe
+          src="https://www.youtube.com/embed/EyPQ6nZ_f5c"
+          title="Is Physics Unified? Common Solutions to the 7 Millennium Prize Problems"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+
+      <a href="https://youtube.com/shorts/EyPQ6nZ_f5c" target="_blank" rel="noopener" class="btn">
+        Watch on YouTube Shorts
+      </a>
+      <a href="https://epsilonframework.org/#publications" class="btn btn-outline">
+        Explore Proofs & DOIs
+      </a>
     </div>
 
     <div class="card torus-card">
@@ -404,7 +448,6 @@
     const modeTitle = document.getElementById("modeTitle");
     const modeDesc = document.getElementById("modeDesc");
     const mathOutput = document.getElementById("mathOutput");
-
     const torusModal = document.getElementById("torusModal");
 
     function openTorusModal() {
