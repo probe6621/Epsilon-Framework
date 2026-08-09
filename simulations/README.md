@@ -2,12 +2,21 @@
 
 Epsilon Framework is a collection of Python-based simulations exploring mathematical and topological ideas, including BSD-style rank verification, P vs NP collapse models, Yang–Mills mass-gap heuristics, and related geometric constructions.
 
-## Requirements
+## Quick start (for beginners)
 
-- Python 3.9+
-- pip
+1. Make sure Python 3 is installed:
+   ```bash
+   python3 --version
+   ```
 
-Install the required packages:
+2. Install dependencies:
+   ```bash
+   python3 -m pip install -r simulations/requirements.txt
+   ```
 
-```bash
-python3 -m pip install --user matplotlib numpy
+3. Run every simulation in one command:
+   ```bash
+   python3 simulations/run_all_simulations.py
+   ```
+
+The runner saves plots as `.png` files in the `simulations/` folder and runs in non-interactive mode so it does not stop waiting for plot windows.
