@@ -9,6 +9,8 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 simulations = [
     "bsd_conjecture.py",
     "collatz_toroidal_decay.py",
+    "emergent_constants_geometry.py",
+    "gravitational_vorticity_compliance.py",
     "hodge_harmonic_phase_locking.py",
     "koide_toroidal_manifold.py",
     "navier_stokes_regularity.py",
