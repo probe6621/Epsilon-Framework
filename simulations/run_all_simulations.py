@@ -1,3 +1,4 @@
+import os
 import subprocess
 import sys
 import time
@@ -38,7 +39,9 @@ def execute_suite():
             continue
 
         try:
-            subprocess.run([sys.executable, str(script_path)], check=True, cwd=str(SCRIPT_DIR))
+            env = os.environ.copy()
+            env["MPLBACKEND"] = "Agg"
+            subprocess.run([sys.executable, str(script_path)], check=True, cwd=str(SCRIPT_DIR), env=env)
             print(f"✅ {sim} completed successfully.")
             passed += 1
         except subprocess.CalledProcessError as e:
