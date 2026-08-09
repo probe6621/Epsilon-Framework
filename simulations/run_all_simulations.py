@@ -14,7 +14,9 @@ simulations = [
     "poincare_epsilon_inversion.py",
     "riemann_phase_locking.py",
     "superfluid_dark_matter_rotation.py",
-    "superfluid_plenum_ftl_phase.py"
+    "superfluid_plenum_ftl_phase.py",
+    "yang_mills_mass_gap.py",
+    "tesla_369_geometry.py"
 ]
 
 def execute_suite():
