@@ -1,7 +1,9 @@
-# run_all_simulations.py
 import subprocess
 import sys
 import time
+from pathlib import Path
+
+SCRIPT_DIR = Path(__file__).resolve().parent
 
 simulations = [
     "bsd_conjecture.py",
@@ -23,14 +25,15 @@ def execute_suite():
     print("=" * 65)
     print("      EPSILON FRAMEWORK MASTER SIMULATION RUNNER      ")
     print("=" * 65)
-    
+
     start_time = time.time()
     passed, failed = 0, 0
 
     for idx, sim in enumerate(simulations, 1):
         print(f"\n[{idx}/{len(simulations)}] Executing {sim}...")
+        script_path = SCRIPT_DIR / sim
         try:
-            subprocess.run([sys.executable, sim], check=True)
+            subprocess.run([sys.executable, str(script_path)], check=True, cwd=str(SCRIPT_DIR))
             print(f"✅ {sim} completed successfully.")
             passed += 1
         except subprocess.CalledProcessError as e:
