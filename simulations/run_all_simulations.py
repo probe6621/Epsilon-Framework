@@ -15,14 +15,14 @@ simulations = [
     "odd_perfect_parity_defect.py",
     "p_vs_np_topological_equivalence.py",
     "poincare_epsilon_inversion.py",
-    "riemann_phase_locking",
+    "riemann_phase_locking.py",
     "superfluid_dark_matter_rotation.py",
     "superfluid_plenum_ftl_phase.py",
     "yang_mills_mass_gap.py",
     "tesla_369_geometry.py"
 ]
 
-def _dependencies_available():
+def _get_missing_dependencies():
     missing = []
     try:
         import numpy  # noqa: F401
@@ -51,7 +51,7 @@ def execute_suite():
     print("      EPSILON FRAMEWORK MASTER SIMULATION RUNNER      ")
     print("=" * 65)
 
-    missing_dependencies = _dependencies_available()
+    missing_dependencies = _get_missing_dependencies()
     if missing_dependencies:
         print(f"\n❌ Missing dependencies: {', '.join(missing_dependencies)}")
         print("Install them with:")

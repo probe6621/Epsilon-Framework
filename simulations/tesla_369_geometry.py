@@ -47,7 +47,7 @@ def run_simulation(steps=12, save_path="tesla_369_geometry.png", show_plot=True)
     ax1.legend(loc="upper right", fontsize=8.5)
 
     # Plot 2
-    ax2.plot(x_axis, scale_roots, "d-", color="gold", linewidth=2.2, label=r"Cosmic Scaling Exponent Roots $(6n \pmod 9)$")
+    ax2.plot(x_axis, scale_roots, "d-", color="gold", linewidth=2.2, label="Cosmic Scaling Exponent Roots (6n mod 9)")
     ax2.set_yticks([3, 6, 9])
     ax2.set_title(r"Tesla Scaling Cycle: $\{6,3,6,9\}$ Toroidal Resonance", fontsize=10, fontweight="bold")
     ax2.set_xlabel(r"Scaling Level $n$")
