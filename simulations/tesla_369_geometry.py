@@ -42,7 +42,7 @@ def run_simulation(steps=12, save_path="tesla_369_geometry.png", show_plot=True)
     ax1.set_yticks(range(1, 10))
     ax1.set_title("Digital Root Separation: Modulo 9 Field Lines", fontsize=10, fontweight="bold")
     ax1.set_xlabel("Iteration Step")
-    ax1.set_ylabel(r"Digital Root Value ($n \pmod 9$)")
+    ax1.set_ylabel("Digital Root Value (n mod 9)")
     ax1.grid(True, linestyle="--", alpha=0.3)
     ax1.legend(loc="upper right", fontsize=8.5)
 
