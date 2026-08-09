@@ -32,6 +32,11 @@ def execute_suite():
     for idx, sim in enumerate(simulations, 1):
         print(f"\n[{idx}/{len(simulations)}] Executing {sim}...")
         script_path = SCRIPT_DIR / sim
+
+        if not script_path.exists():
+            print(f"⚠️ {sim} not found; skipping.")
+            continue
+
         try:
             subprocess.run([sys.executable, str(script_path)], check=True, cwd=str(SCRIPT_DIR))
             print(f"✅ {sim} completed successfully.")
