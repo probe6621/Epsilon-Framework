@@ -1,12 +1,10 @@
-#!/bin/bash
-================================================================================
-EPSILON COHOMOLOGY FORMALIZATION: BUILD & VALIDATION LOOP
-================================================================================
+# Build Validation & Feedback Loop
 
-## BUILD & IMMEDIATE FEEDBACK
+## Overview
+This document describes the build process, error capture, and feedback loop for iterating
+with DeepSeek-Prover-V2 on the three formalization tasks.
 
-This script automates the lake build cycle and captures error feedback for 
-iteration with DeepSeek-Prover-V2.
+## Build & Immediate Feedback
 
 ### STEP 1: Update Dependencies
 ```bash
@@ -65,8 +63,6 @@ lake build
 
 Repeat Steps 2–5 until `lake build` succeeds with no errors.
 
----
-
 ## SUCCESS CRITERIA
 
 ✅ `lake build` produces no errors
@@ -75,9 +71,7 @@ Repeat Steps 2–5 until `lake build` succeeds with no errors.
    - EpsilonCohomology/AlmostComplexStructure.lean
    - EpsilonCohomology/PullbackOperator.lean
 ✅ Proofs use Mathlib lemmas, not excessive `sorry`
-✅ Documentation comments explain remaining gaps (e.g., for integrability)
-
----
+✅ Documentation comments explain remaining gaps
 
 ## COMMON ERRORS & QUICK FIXES
 
@@ -90,13 +84,6 @@ Repeat Steps 2–5 until `lake build` succeeds with no errors.
 
 ### Error: "function expected" on `J.J x v`
 → J.J is a continuous linear map; apply it with `J.J x v` or `(J.J x) v`
-→ Not `J.J x (v)` — this is usually fine, but check associativity
-
-### Error: "sorry not allowed"
-→ This is a warning if the project is in strict mode
-→ Replace with legitimate proofs or use `partial` if acceptable
-
----
 
 ## RUNNING VALIDATION
 
@@ -118,24 +105,3 @@ else
     exit 1
 fi
 ```
-
----
-
-## NEXT STEPS AFTER SUCCESSFUL BUILD
-
-1. Run the full test suite (if available):
-   ```bash
-   lake test
-   ```
-
-2. Generate documentation:
-   ```bash
-   lake doc
-   ```
-
-3. Move to integration with existing EpsilonCohomology.lean:
-   - Import the three new modules in the main file
-   - Link theorems to the existing zero-defect scaffold
-   - Ensure no circular dependencies
-
-================================================================================
