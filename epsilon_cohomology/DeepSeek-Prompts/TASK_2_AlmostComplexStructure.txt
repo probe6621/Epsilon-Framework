@@ -1,0 +1,137 @@
+================================================================================
+DEEPSEEK-PROVER-V2 TASK 2: ALMOST COMPLEX STRUCTURE (High-Precision CoT Mode)
+================================================================================
+
+## FORMAL GOAL
+
+Prove that the almost complex structure J_ε on T(X × T² × iT²) satisfies J_ε² = -id.
+
+## MATHEMATICAL BACKGROUND
+
+An almost complex structure on a smooth manifold M is a (1,1) tensor field
+J : TM → TM (an endomorphism of the tangent bundle) such that:
+  - J² = -id (composition J ∘ J equals negative identity)
+  - J is smooth (depends smoothly on the base point)
+
+On the product manifold X_ε = X × T² × iT², we construct J_ε to act:
+  - On T_x X (tangent to X): inherit any existing structure or act trivially
+  - On T_{[0]} T² ≅ ℝ: the standard complex structure (rotate by 90°): v ↦ -v (after doubling)
+  - On T_{[0]} iT² ≅ ℝ: similar action
+  
+The key property is that J² = -id, which is equivalent to:
+  ∀ v ∈ TM, J(J(v)) = -v
+
+## LEAN THEOREM SIGNATURE TO FILL
+
+theorem epsilonAlmostComplex_squares_to_neg_id
+    (x : M × (ℝ × ℝ) × (ℝ × ℝ)) :
+    let J := epsilonAlmostComplexStructure M
+    ∀ v : TangentSpaceAt (M × (ℝ × ℝ) × (ℝ × ℝ)) x,
+      (J.J x) ((J.J x) v) = -v := by
+  sorry
+
+## HIGH-PRECISION CHAIN-OF-THOUGHT DECOMPOSITION
+
+**Step 1: Understand the Almost Complex Structure Definition**
+- An AlmostComplexStructure is a structure containing:
+  * J : ∀ x, TangentSpaceAt M x →L[ℝ] TangentSpaceAt M x (continuous linear map)
+  * J_smooth : proof that J depends smoothly on x
+  * J_squares_to_neg_id : proof that (J.J x) ∘ (J.J x) = -id
+- We are asked to prove the last property at the algebra level
+
+**Step 2: Understand the Product Tangent Space**
+- If x = (x₀, (t₁, t₂), (s₁, s₂)), then:
+  TangentSpace ℝ (M × ℝ² × ℝ²) x ≅ TangentSpace ℝ M x₀ × ℝ² × ℝ²
+- A tangent vector v = (v_M, (v_t1, v_t2), (v_s1, v_s2))
+
+**Step 3: Define J Component-Wise**
+- J acts on the product as: J(v_M, (v_t1, v_t2), (v_s1, v_s2))
+     = (J_M(v_M), J_T(v_t1, v_t2), J_iT(v_s1, v_s2))
+- where J_M, J_T, J_iT are component-wise structures
+
+**Step 4: Compute J² for Each Component**
+- On T_x M: J_M² = -id (assumed or inherited from existing structure)
+- On T_{[0]} T² ≅ ℝ: The standard complex J acts as multiplication by i, so:
+    J_T(v₁, v₂) = (-v₂, v₁)  [rotation by 90°]
+    J_T²(v₁, v₂) = J_T(-v₂, v₁) = (-v₁, -v₂) = -(v₁, v₂) ✓
+- On T_{[0]} iT² ≅ ℝ: Similarly, J_iT² = -id ✓
+
+**Step 5: Combine Component Results**
+- On the product:
+  J²(v_M, (v_t1, v_t2), (v_s1, v_s2)) 
+    = (J_M²(v_M), J_T²(v_t1, v_t2), J_iT²(v_s1, v_s2))
+    = (-v_M, -(v_t1, v_t2), -(v_s1, v_s2))
+    = -(v_M, (v_t1, v_t2), (v_s1, v_s2))
+- Therefore J² = -id on the entire product
+
+**Step 6: Formalize in Lean**
+- Use ContinuousLinearMap.comp to express J ∘ J
+- Use neg_smul or scalar multiplication to express -id
+- Apply component-wise reasoning via Pi.prod_mk_apply or similar
+
+## TACTIC PROOF SKELETON
+
+```lean
+theorem epsilonAlmostComplex_squares_to_neg_id
+    (x : M × (ℝ × ℝ) × (ℝ × ℝ)) :
+    let J := epsilonAlmostComplexStructure M
+    ∀ v : TangentSpaceAt (M × (ℝ × ℝ) × (ℝ × ℝ)) x,
+      (J.J x) ((J.J x) v) = -v := by
+  intro J v
+  -- Unfold J to the product structure
+  unfold epsilonAlmostComplexStructure at J
+  -- Decompose v into components
+  simp only [Prod.mk.eta] at v
+  -- Apply J twice on each component
+  sorry  -- component-wise computation
+```
+
+Or using a more direct approach:
+```lean
+  intro J v
+  -- Each component satisfies J² = -id
+  have hM := sorry    -- from J_M being almost complex on M
+  have hT := sorry    -- from rotation on T²: (-v₂, v₁) after (-v₁, -v₂) is -(v₁, v₂)
+  have hiT := sorry   -- from rotation on iT²
+  -- Combine using product
+  simp [hM, hT, hiT]
+  ring
+```
+
+## KEY MATHLIB LEMMAS TO USE
+
+- `ContinuousLinearMap.comp`: Composition of continuous linear maps
+- `ContinuousLinearMap.comp_eq_neg_id`: Pattern for J ∘ J = -id
+- `Prod.fst_map`, `Prod.snd_map`: Accessing components of a product map
+- `Neg.neg_mul_self`: Shows that (-1)² = 1, useful for sign reasoning
+- `LinearMap.neg_apply`: Applying the negation map to vectors
+- `Prod.mk_neg`: Negation on products
+
+## VALIDATION
+
+After proof generation, run:
+```bash
+cd epsilon_cohomology
+lake build
+```
+
+Expected output: `No errors` and AlmostComplexStructure.lean compiles.
+
+If Lean reports errors related to:
+- **ContinuousLinearMap composition**: Ensure using ContinuousLinearMap.comp, not ∘_L
+- **Tangent space type mismatch**: Check that v has the correct product type
+- **Missing almost complex structure instance**: Define epsilonAlmostComplexStructure if not provided
+
+## FEEDBACK LOOP
+
+If compilation fails with error:
+```
+<error output>
+```
+
+Suggested fixes:
+- Use `change` to rewrite goals with definitional equality
+- Break the proof into lemmas for each component
+- Use `sorry` for integrability (dJ = 0) — this is future work
+
+================================================================================
