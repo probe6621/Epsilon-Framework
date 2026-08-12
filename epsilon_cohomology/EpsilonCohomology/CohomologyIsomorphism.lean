@@ -41,3 +41,17 @@ lemma comparison_map_surjective_rep (k : ℕ)
   simpa [comparisonLinearMap, inducedCohomologyMap, pullbackForm, hw]
 
 end EpsilonCohomology
+
+/-- Unified bijectivity statement for the comparison map under the explicit zero-defect support
+hypotheses. -/
+theorem zero_defect_comparison_bijective (k : ℕ)
+    (hEq : ∀ {ω η : Xε → ℝ},
+      comparisonLinearMap (X := X) k ⟦ω⟧ = comparisonLinearMap (X := X) k ⟦η⟧ →
+      FormRelation Xε ω η)
+    (hSurj : ∀ (η : X → ℝ), ∃ ω : Xε → ℝ, pullbackForm (X := X) ω = η) :
+    Function.Bijective (comparisonLinearMap (X := X) k) := by
+  constructor
+  · exact comparison_map_injective (X := X) k hEq
+  · exact comparison_map_surjective_rep (X := X) k hSurj
+
+end EpsilonCohomology
