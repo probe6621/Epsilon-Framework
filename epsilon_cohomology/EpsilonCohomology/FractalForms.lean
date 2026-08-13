@@ -146,7 +146,12 @@ theorem fractalScale_uniform_convergence (ω : GradedForm M) :
 theorem fractalScale_preserves_harmonic_uniform (k : ℕ) (ε : ℝ) (ω : GradedForm M) 
     (hω : isFractalHarmonic k 1 ω) :
     ∃ (D : ℝ) (hD : D > 0), isFractalHarmonic k ε (fractalScale ε ω) := by
-  sorry
+  refine ⟨1, by positivity, ?_⟩
+  rw [isFractalHarmonic, fractalLaplacian]
+  ext x
+  simp only [GradedForm.coeff, zero_apply]
+  rw [fractalScale_commutes_differential k ε ω]
+  simp [hω, GradedForm.coeff, zero_apply]
 
 /-- Fractal scaling preserves coupling matrices uniformly -/
 theorem fractalScale_preserves_coupling_uniformly (ε : ℝ) (m n : ℕ) (ω η : GradedForm M) :
