@@ -1158,20 +1158,16 @@ theorem harmonic_projection_toroidal_periodic (k : ℕ) (ε : ℝ) (ω : DegreeK
           (harmonic_projection k ε ω).val {p with φ := p.φ + 2*π} = (harmonic_projection k ε ω).val p := by
   intro hθ hφ p
   constructor
-  · simp only [harmonic_projection]
+  · simp [harmonic_projection]
     rw [hθ]
-    congr 1
-    ext x
-    simp only [ToroidalCoords.ext_iff]
-    rw [add_comm x.θ (2 * π), add_comm p.θ (2 * π)]
-    simp
-  · simp only [harmonic_projection]
+    congr
+    ext <;> simp [ToroidalCoords.ext_iff]
+    ring
+  · simp [harmonic_projection] 
     rw [hφ]
-    congr 1
-    ext x
-    simp only [ToroidalCoords.ext_iff]
-    rw [add_comm x.φ (2 * π), add_comm p.φ (2 * π)]
-    simp
+    congr
+    ext <;> simp [ToroidalCoords.ext_iff]
+    ring
 
 /-- Harmonic projection is Lipschitz continuous in L² norm -/
 theorem harmonic_projection_lipschitz (k : ℕ) (ε : ℝ) :

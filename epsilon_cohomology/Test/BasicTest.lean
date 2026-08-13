@@ -85,7 +85,9 @@ example (ω : GradedForm ToroidalCoords)
           (harmonic_projection 0 1 (DegreeKForm.ofFun 0 ω.coeff)).val p ∧
           (harmonic_projection 0 1 (DegreeKForm.ofFun 0 ω.coeff)).val {p with φ := p.φ + 2*π} = 
           (harmonic_projection 0 1 (DegreeKForm.ofFun 0 ω.coeff)).val p := by
-  sorry  -- Needs implementation
+  intro p
+  have := harmonic_projection_toroidal_periodic 0 1 (DegreeKForm.ofFun 0 ω.coeff) hθ hφ p
+  exact this
 
 /-- Test fractal scaling preserves harmonic projection -/
 example (ω : GradedForm ToroidalCoords) (hω : isFractalHarmonic 0 1 ω) :
@@ -93,7 +95,14 @@ example (ω : GradedForm ToroidalCoords) (hω : isFractalHarmonic 0 1 ω) :
     ∃ (C : ℝ) (hC : C > 0),
     ∀ x, ‖(harmonic_projection 0 1 (DegreeKForm.ofFun 0 (fractalScale 1 ω).coeff)).val x‖ ≤
     C * ‖(harmonic_projection 0 1 (DegreeKForm.ofFun 0 ω.coeff)).val x‖ := by
-  sorry  -- Needs implementation
+  intro hM
+  obtain ⟨C, hC⟩ := fractalScale_preserves_coupling_uniformly 1 0 0 
+    (DegreeKForm.toGraded (harmonic_projection 0 1 (DegreeKForm.ofFun 0 ω.coeff)))
+    (DegreeKForm.toGraded (harmonic_projection 0 1 (DegreeKForm.ofFun 0 ω.coeff)))
+  refine ⟨C, hC, fun x => ?_⟩
+  simp [harmonic_projection, DegreeKForm.ofFun, DegreeKForm.toGraded]
+  rw [fractalScale_commutes_differential 0 1 ω]
+  exact hC x x
 
 /-- Test harmonic projection commutes with fractal scaling -/
 example (ω : GradedForm ToroidalCoords) :
