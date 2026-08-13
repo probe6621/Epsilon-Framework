@@ -925,4 +925,46 @@ theorem hodge_decomposition_de_rham_compatibility (k : ℕ) :
     (d k).ker ∩ (codifferential k).rangeᗮ ≅ deRham_cohomology k M := by
   sorry
 
+/-- The harmonic projection is continuous in the L² norm -/
+theorem harmonic_projection_L2_continuous (k : ℕ) :
+    ∃ C > 0, ∀ (ω : DegreeKForm k M),
+    ∫ x, (harmonic_projection k ω).val x ^ 2 ≤ C * ∫ x, ω.val x ^ 2 := by
+  sorry
+
+/-- The harmonic projection preserves smoothness -/
+theorem harmonic_projection_preserves_smoothness (k : ℕ) (ω : DegreeKForm k M)
+    (hω : Smooth ℝ ℝ ω.val) : Smooth ℝ ℝ (harmonic_projection k ω).val := by
+  sorry
+
+/-- The harmonic projection commutes with the Hodge star -/
+theorem harmonic_projection_hodge_star_commute (k : ℕ) (ω : DegreeKForm k M) :
+    harmonic_projection (n - k) (hodgeStar k ω) = 
+    hodgeStar k (harmonic_projection k ω) := by
+  sorry
+
+/-- The harmonic projection commutes with pullback -/
+theorem harmonic_projection_pullback_commute (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
+    harmonic_projection k (degreeKPullback X k ω) = 
+    degreeKPullback X k (harmonic_projection k ω) := by
+  sorry
+
+/-- The harmonic projection preserves zero-defect forms -/
+theorem harmonic_projection_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
+    harmonic_projection k (DegreeKForm.zeroDefect C ω) = 
+    DegreeKForm.zeroDefect C (harmonic_projection k ω) := by
+  sorry
+
+/-- The harmonic forms are dense in the space of closed forms -/
+theorem harmonic_forms_dense_in_closed (k : ℕ) :
+    closure {ω : DegreeKForm k M | IsHarmonic k ω} = 
+    {ω : DegreeKForm k M | d k ω = 0} := by
+  sorry
+
+/-- The Hodge decomposition is stable under small perturbations -/
+theorem hodge_decomposition_stable (k : ℕ) (ω : DegreeKForm k M) :
+    ∃ ε > 0, ∀ (η : DegreeKForm k M) (hη : ∫ x, η.val x ^ 2 < ε),
+    let hc := Classical.choose (hodge_decomposition k (ω + η))
+    ∫ x, (hc.harmonic.val - (Classical.choose (hodge_decomposition k ω)).harmonic.val) ^ 2 < ε := by
+  sorry
+
 end EpsilonCohomology
