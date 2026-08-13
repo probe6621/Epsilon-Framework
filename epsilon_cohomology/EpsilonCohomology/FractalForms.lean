@@ -7,7 +7,7 @@ import EpsilonCohomology.PlenumConstraints
 
 noncomputable section
 
-variable {n : ℕ} -- Dimension of the manifold
+variable (n : ℕ) -- Dimension of the manifold
 
 namespace EpsilonCohomology
 
@@ -223,7 +223,7 @@ theorem fractalHodgeStar_preserves_harmonicity (k : ℕ) (ε : ℝ) (ω : Graded
   sorry
 
 /-- Enhanced fractal Laplacian with plenum bounds -/
-def fractalLaplacian (k : ℕ) (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
+noncomputable def fractalLaplacian (k : ℕ) (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
   { degree := k,
     coeff := fun x => 
       let Δω := (fractalD k ε (fractalCod k ε ω) + fractalCod k ε (fractalD k ε ω)).coeff x
@@ -249,7 +249,7 @@ def isFractalHarmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M) : Prop :=
   fractalLaplacian k ε ω = 0
 
 /-- Fractal Hodge decomposition -/
-noncomputable def fractal_hodge_decomposition (k : ℕ) (ε : ℝ) (ω : GradedForm M) :
+noncomputable def fractalHodgeDecomposition (k : ℕ) (ε : ℝ) (ω : GradedForm M) :
     ∃ (h : GradedForm M) (e : GradedForm M) (c : GradedForm M),
       isFractalHarmonic k ε h ∧
       ω = h + fractalD (k-1) ε e + fractalCod (k+1) ε c ∧

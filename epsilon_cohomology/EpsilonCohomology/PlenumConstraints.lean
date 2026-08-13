@@ -33,7 +33,7 @@ def toroidalBundleMap (ω : GradedForm ToroidalCoords) (ε : ℝ) : FractalFormB
   scaling := ε,
   forms := fun δ ↦ fractalScale δ ω,
   metric_bound := by
-    obtain ⟨C, hC⟩ := fractalScale_preserves_harmonic_quant 1 ε ω ω (by simp) (plenum_floor ToroidalCoords)
+    obtain ⟨C, hC⟩ := fractalScale_preserves_harmonic 1 ε ω (by simp) (plenum_floor ToroidalCoords)
     refine ⟨C, fun x y ↦ ?_⟩
     simp only [toroidalMetric]
     split
