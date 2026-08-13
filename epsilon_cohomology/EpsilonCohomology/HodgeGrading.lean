@@ -904,16 +904,17 @@ theorem hodge_decomposition_isomorphism (k : ℕ) :
     {ξ : DegreeKForm (k+1) M // ∃ζ, ξ = codifferential (k+2) ζ} := by
   sorry
 
-/-- The harmonic projection operator with fractal coupling -/
-def harmonic_projection (k : ℕ) (ω : DegreeKForm k M) : DegreeKForm k M :=
+/-- The harmonic projection operator with fractal coupling and scaling -/
+def harmonic_projection (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) : DegreeKForm k M :=
   let hc := Classical.choose (hodge_decomposition k ω)
+  let scaled_harmonic := fractalScale ε (DegreeKForm.toGraded hc.harmonic)
   { hc.harmonic with 
     val := fun x => 
-      if crossDensityCoupling k k (DegreeKForm.toGraded hc.harmonic) 
-         (DegreeKForm.toGraded hc.harmonic) = 0 then
+      if crossDensityCoupling k k scaled_harmonic scaled_harmonic = 0 then
         0
       else
-        hc.harmonic.val x }
+        scaled_harmonic.coeff x,
+    degree := k }
 
 /-- The harmonic projection is idempotent -/
 theorem harmonic_projection_idempotent (k : ℕ) (ω : DegreeKForm k M) :

@@ -31,11 +31,15 @@ def fractalCod (k : ℕ) (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
     coeff := fun x => (fractalScale ε ω).coeff x
     smooth := by sorry }
 
-/-- Fractal Hodge star operator -/
+/-- Fractal Hodge star operator preserving harmonicity -/
 def fractalHodgeStar (k : ℕ) (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
   { degree := n - k
     coeff := fun x => (fractalScale ε ω).coeff x
     smooth := by sorry }
+
+theorem fractalHodgeStar_preserves_harmonicity (k : ℕ) (ε : ℝ) (ω : GradedForm M) :
+    isFractalHarmonic k ε ω → isFractalHarmonic (n - k) ε (fractalHodgeStar k ε ω) := by
+  sorry
 
 /-- Fractal Laplacian operator -/
 def fractalLaplacian (k : ℕ) (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
@@ -109,10 +113,11 @@ theorem crossDensity_bilinear (m n : ℕ) (ω₁ ω₂ η : GradedForm M) (a b :
     a * crossDensityCoupling m n ω₁ η + b * crossDensityCoupling m n ω₂ η := by
   sorry
 
-/-- Fractal scaling preserves coupling -/
-theorem fractalScale_preserves_coupling (ε : ℝ) (m n : ℕ) (ω η : GradedForm M) :
-    crossDensityCoupling m n (fractalScale ε ω) (fractalScale ε η) =
-    crossDensityCoupling m n ω η := by
+/-- Fractal scaling preserves coupling and harmonicity -/
+theorem fractalScale_preserves_structure (ε : ℝ) (m n : ℕ) (ω η : GradedForm M) :
+    crossDensityCoupling m n (fractalScale ε ω) (fractalScale ε η) = crossDensityCoupling m n ω η ∧
+    (isFractalHarmonic m ε ω → isFractalHarmonic m ε (fractalScale ε ω)) ∧
+    (isFractalHarmonic n ε η → isFractalHarmonic n ε (fractalScale ε η)) := by
   sorry
 
 /-- Zero-defect condition for coupling matrices -/
