@@ -69,8 +69,8 @@ theorem fractalScale_norm_bound (ε : ℝ) (ω : GradedForm M) :
     exact le_trans (mul_le_mul_of_nonneg_right (le_of_lt hε) (norm_nonneg _)) 
       (by ring_nf; exact add_le_add (hCU x _) hδ.le)
 
-/-- Fractal scaling preserves harmonicity with quantitative bounds -/
-theorem fractalScale_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M) 
+/-- Fractal scaling preserves harmonic forms with quantitative bounds (uniform version) -/
+theorem fractalScale_preserves_harmonic_uniform (k : ℕ) (ε : ℝ) (ω : GradedForm M) 
     (hω : isFractalHarmonic k 1 ω) :
     plenum_floor M → 
     ∃ (D : ℝ) (hD : D > 0), 
