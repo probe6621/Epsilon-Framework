@@ -459,4 +459,49 @@ theorem hodge_decomposition_codifferential_orthogonal (k : ℕ) (ω : DegreeKFor
     ∫ x, (codifferential k hc.exact).val x * (codifferential k hc.coexact).val x = 0 := by
   sorry
 
+/-- The Laplacian preserves orthogonality of harmonic forms -/
+theorem laplacian_preserves_harmonic_orthogonality (k : ℕ) (ω η : DegreeKForm k M) 
+    (hη : IsHarmonic k η) :
+    ∫ x, (hodgeLaplacian k ω).val x * η.val x = 0 := by
+  sorry
+
+/-- The Laplacian preserves integrals of harmonic forms -/
+theorem laplacian_preserves_harmonic_integrals (k : ℕ) (ω : DegreeKForm k M) 
+    (hc : HodgeComponent k M) :
+    ∫ x, (hodgeLaplacian k ω).val x * hc.harmonic.val x =
+    ∫ x, ω.val x * hc.harmonic.val x := by
+  sorry
+
+/-- The Laplacian preserves exactness -/
+theorem laplacian_preserves_exactness (k : ℕ) (ω : DegreeKForm k M) 
+    (hc : HodgeComponent k M) :
+    (hodgeLaplacian k ω).val = hodgeLaplacian (k-1) hc.exact.val := by
+  sorry
+
+/-- The Laplacian preserves coexactness -/
+theorem laplacian_preserves_coexactness (k : ℕ) (ω : DegreeKForm k M) 
+    (hc : HodgeComponent k M) :
+    (hodgeLaplacian k ω).val = hodgeLaplacian (k+1) hc.coexact.val := by
+  sorry
+
+/-- The Laplacian preserves zero-defect forms -/
+theorem laplacian_zero_defect_compatibility (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
+    hodgeLaplacian k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (hodgeLaplacian k ω) := by
+  sorry
+
+/-- The Laplacian preserves pullback -/
+theorem laplacian_pullback_compatibility (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
+    hodgeLaplacian k (degreeKPullback X k ω) = degreeKPullback X k (hodgeLaplacian k ω) := by
+  sorry
+
+/-- The Laplacian preserves Hodge decomposition -/
+theorem laplacian_preserves_decomposition (k : ℕ) (ω : DegreeKForm k M) :
+    let hc := Classical.choose (hodge_decomposition k ω)
+    hodgeLaplacian k ω = 
+      { val := hodgeLaplacian k hc.harmonic + 
+               hodgeLaplacian (k-1) hc.exact +
+               hodgeLaplacian (k+1) hc.coexact,
+        degree := k } := by
+  sorry
+
 end EpsilonCohomology
