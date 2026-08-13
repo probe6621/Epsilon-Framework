@@ -1,4 +1,7 @@
 import Mathlib.Analysis.Calculus.FDeriv.Basic
+import Mathlib.Analysis.NormedSpace.Basic
+import Mathlib.MeasureTheory.Integral.SetIntegral
+import Mathlib.Topology.MetricSpace.Basic
 import EpsilonCohomology.HodgeGrading 
 import EpsilonCohomology.PlenumConstraints
 
@@ -11,6 +14,9 @@ structure FractalFormBundle (M : Type*) where
   base : M
   scaling : ℝ 
   forms : ∀ (ε : ℝ), GradedForm M
+
+/-- Support of a graded form -/
+def support (ω : GradedForm M) : Set M := {x | ω.coeff x ≠ 0}
 
 /-- The zero-defect cross-density coupling matrix C(m,n) -/
 def crossDensityCoupling (m n : ℕ) (ω η : GradedForm M) : ℝ :=
@@ -134,8 +140,8 @@ theorem fractalScale_uniform_convergence (ω : GradedForm M) :
     ∀ x, ‖(fractalScale ε ω).coeff x - ω.coeff x‖ < δ * (plenum_floor M).choose := by
   sorry
 
-/-- Fractal scaling preserves harmonicity uniformly -/
-theorem fractalScale_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M) 
+/-- Fractal scaling preserves harmonicity uniformly (uniform version) -/
+theorem fractalScale_preserves_harmonic_uniform (k : ℕ) (ε : ℝ) (ω : GradedForm M) 
     (hω : isFractalHarmonic k 1 ω) :
     ∃ (D : ℝ) (hD : D > 0), isFractalHarmonic k ε (fractalScale ε ω) := by
   sorry

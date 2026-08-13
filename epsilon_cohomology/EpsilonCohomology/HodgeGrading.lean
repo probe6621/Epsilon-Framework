@@ -276,7 +276,7 @@ theorem hodge_zero_defect_compatibility (C : ℝ) (k : ℕ) (ω : DegreeKForm k 
   sorry
 
 /-- Enhanced Hodge star with fractal scaling -/
-def hodgeStar (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) : DegreeKForm (n - k) M :=
+def hodgeStar (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) : DegreeKForm (ω.degree - k) M :=
   { val := fun p => 
       if plenum_floor M then
         (fractalScale ε (DegreeKForm.toGraded ω)).coeff p
