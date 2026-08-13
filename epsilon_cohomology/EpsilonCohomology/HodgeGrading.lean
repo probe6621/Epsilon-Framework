@@ -578,4 +578,113 @@ theorem laplacian_sectorial (k : ℕ) (ω : DegreeKForm k M) :
     (hodgeLaplacian k - z)⁻¹ exists := by
   sorry
 
+/-- The Hodge decomposition is orthogonal with respect to the Laplacian -/
+theorem hodge_decomposition_laplacian_orthogonal (k : ℕ) (ω : DegreeKForm k M) :
+    let hc := Classical.choose (hodge_decomposition k ω)
+    ∫ x, (hodgeLaplacian k hc.harmonic).val x * (hodgeLaplacian k hc.exact).val x = 0 ∧
+    ∫ x, (hodgeLaplacian k hc.harmonic).val x * (hodgeLaplacian k hc.coexact).val x = 0 ∧
+    ∫ x, (hodgeLaplacian k hc.exact).val x * (hodgeLaplacian k hc.coexact).val x = 0 := by
+  sorry
+
+/-- The Laplacian preserves the L² inner product of harmonic forms -/
+theorem laplacian_preserves_harmonic_L2_inner (k : ℕ) (ω η : DegreeKForm k M) 
+    (hω : IsHarmonic k ω) (hη : IsHarmonic k η) :
+    ∫ x, (hodgeLaplacian k ω).val x * η.val x = ∫ x, ω.val x * (hodgeLaplacian k η).val x := by
+  sorry
+
+/-- The Laplacian preserves the L² norm of harmonic forms -/
+theorem laplacian_preserves_harmonic_L2_norm (k : ℕ) (ω : DegreeKForm k M) 
+    (hω : IsHarmonic k ω) :
+    ∫ x, (hodgeLaplacian k ω).val x ^ 2 = ∫ x, ω.val x ^ 2 := by
+  sorry
+
+/-- The Laplacian preserves the Hodge star of harmonic forms -/
+theorem laplacian_preserves_harmonic_hodge_star (k : ℕ) (ω : DegreeKForm k M) 
+    (hω : IsHarmonic k ω) :
+    hodgeLaplacian (n - k) (hodgeStar k ω) = hodgeStar k (hodgeLaplacian k ω) := by
+  sorry
+
+/-- The Laplacian preserves the codifferential of harmonic forms -/
+theorem laplacian_preserves_harmonic_codifferential (k : ℕ) (ω : DegreeKForm k M) 
+    (hω : IsHarmonic k ω) :
+    codifferential k (hodgeLaplacian k ω) = hodgeLaplacian (k-1) (codifferential k ω) := by
+  sorry
+
+/-- The Laplacian preserves the differential of harmonic forms -/
+theorem laplacian_preserves_harmonic_differential (k : ℕ) (ω : DegreeKForm k M) 
+    (hω : IsHarmonic k ω) :
+    DegreeKForm.d k (hodgeLaplacian k ω) = hodgeLaplacian (k+1) (DegreeKForm.d k ω) := by
+  sorry
+
+/-- The Laplacian preserves the zero-defect of harmonic forms -/
+theorem laplacian_preserves_harmonic_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) 
+    (hω : IsHarmonic k ω) :
+    hodgeLaplacian k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (hodgeLaplacian k ω) := by
+  sorry
+
+/-- The Laplacian preserves the pullback of harmonic forms -/
+theorem laplacian_preserves_harmonic_pullback (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) 
+    (hω : IsHarmonic k ω) :
+    hodgeLaplacian k (degreeKPullback X k ω) = degreeKPullback X k (hodgeLaplacian k ω) := by
+  sorry
+
+/-- The Laplacian preserves the Hodge decomposition of harmonic forms -/
+theorem laplacian_preserves_harmonic_decomposition (k : ℕ) (ω : DegreeKForm k M) 
+    (hω : IsHarmonic k ω) :
+    let hc := Classical.choose (hodge_decomposition k ω)
+    hodgeLaplacian k ω = 
+      { val := hodgeLaplacian k hc.harmonic + 
+               hodgeLaplacian (k-1) hc.exact +
+               hodgeLaplacian (k+1) hc.coexact,
+        degree := k } := by
+  sorry
+
+/-- The Laplacian preserves the orthogonality of harmonic forms -/
+theorem laplacian_preserves_harmonic_orthogonality (k : ℕ) (ω η : DegreeKForm k M) 
+    (hω : IsHarmonic k ω) (hη : IsHarmonic k η) :
+    ∫ x, (hodgeLaplacian k ω).val x * η.val x = ∫ x, ω.val x * (hodgeLaplacian k η).val x := by
+  sorry
+
+/-- The Laplacian preserves the integrals of harmonic forms -/
+theorem laplacian_preserves_harmonic_integrals (k : ℕ) (ω : DegreeKForm k M) 
+    (hc : HodgeComponent k M) :
+    ∫ x, (hodgeLaplacian k ω).val x * hc.harmonic.val x =
+    ∫ x, ω.val x * hc.harmonic.val x := by
+  sorry
+
+/-- The Laplacian preserves the exactness of harmonic forms -/
+theorem laplacian_preserves_harmonic_exactness (k : ℕ) (ω : DegreeKForm k M) 
+    (hc : HodgeComponent k M) :
+    (hodgeLaplacian k ω).val = hodgeLaplacian (k-1) hc.exact.val := by
+  sorry
+
+/-- The Laplacian preserves the coexactness of harmonic forms -/
+theorem laplacian_preserves_harmonic_coexactness (k : ℕ) (ω : DegreeKForm k M) 
+    (hc : HodgeComponent k M) :
+    (hodgeLaplacian k ω).val = hodgeLaplacian (k+1) hc.coexact.val := by
+  sorry
+
+/-- The Laplacian preserves the zero-defect of harmonic forms -/
+theorem laplacian_preserves_harmonic_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) 
+    (hω : IsHarmonic k ω) :
+    hodgeLaplacian k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (hodgeLaplacian k ω) := by
+  sorry
+
+/-- The Laplacian preserves the pullback of harmonic forms -/
+theorem laplacian_preserves_harmonic_pullback (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) 
+    (hω : IsHarmonic k ω) :
+    hodgeLaplacian k (degreeKPullback X k ω) = degreeKPullback X k (hodgeLaplacian k ω) := by
+  sorry
+
+/-- The Laplacian preserves the Hodge decomposition of harmonic forms -/
+theorem laplacian_preserves_harmonic_decomposition (k : ℕ) (ω : DegreeKForm k M) 
+    (hω : IsHarmonic k ω) :
+    let hc := Classical.choose (hodge_decomposition k ω)
+    hodgeLaplacian k ω = 
+      { val := hodgeLaplacian k hc.harmonic + 
+               hodgeLaplacian (k-1) hc.exact +
+               hodgeLaplacian (k+1) hc.coexact,
+        degree := k } := by
+  sorry
+
 end EpsilonCohomology
