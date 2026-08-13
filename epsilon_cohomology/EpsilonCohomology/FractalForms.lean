@@ -158,7 +158,11 @@ theorem fractalScale_preserves_coupling_uniformly (ε : ℝ) (m n : ℕ) (ω η 
 /-- Fractal scaling commutes with differential operators -/
 theorem fractalScale_commutes_differential (k : ℕ) (ε : ℝ) (ω : GradedForm M) :
     fractalD k ε (fractalScale ε ω) = fractalScale ε (fractalD k 1 ω) := by
-  sorry
+  ext x
+  simp only [fractalD, fractalScale, GradedForm.coeff]
+  rw [smul_smul]
+  congr
+  exact (ω.smooth.of_le le_top).fderiv_iterated_apply k x
 
 /-- Fractal scaling preserves harmonic forms with plenum bounds (quantitative version) -/
 theorem fractalScale_preserves_harmonic_quant (k : ℕ) (ε δ : ℝ) (ω η : GradedForm M) 

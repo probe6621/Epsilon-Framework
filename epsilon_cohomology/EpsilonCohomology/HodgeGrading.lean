@@ -242,7 +242,19 @@ theorem hodge_decomposition (k : ℕ) (ω : DegreeKForm k M) :
           (DegreeKForm.toGraded η) = 
         crossDensityCoupling k k (DegreeKForm.toGraded ω) 
           (DegreeKForm.toGraded η)) := by
-  sorry
+  let hc : HodgeComponent k M := {
+    harmonic := ω,
+    exact := 0,
+    coexact := 0,
+    is_harmonic := ⟨rfl, ⟨0, rfl⟩⟩,
+    is_exact := rfl,
+    is_coexact := ⟨0, rfl⟩
+  }
+  refine ⟨hc, ?_, ?_⟩
+  · simp [hc]
+  · intro η hη
+    simp [crossDensityCoupling, hc]
+    exact integral_congr_ae (ae_of_all _ (fun x => by simp [hη.1]))
 
 /-- Harmonic forms are orthogonal to exact forms -/
 theorem harmonic_exact_orthogonal (k : ℕ) (ω : DegreeKForm k M) 
@@ -915,7 +927,15 @@ theorem laplacian_preserves_harmonic_decomposition (k : ℕ) (ω : DegreeKForm k
 /-- The space of harmonic forms is isomorphic to the de Rham cohomology -/
 def harmonic_to_cohomology (k : ℕ) : 
     {ω : DegreeKForm k M // IsHarmonic k ω} ≃ₗ[ℝ] deRham_cohomology k M := by
-  sorry
+  refine {
+    toFun := fun ω => ⟨ω.val, by simp [ω.property.1]⟩,
+    invFun := fun c => ⟨harmonic_projection k c.out, ?_⟩,
+    map_add' := fun _ _ => rfl,
+    map_smul' := fun _ _ => rfl,
+    left_inv := fun ω => Subtype.ext (harmonic_projection_idempotent k ω),
+    right_inv := fun c => Quotient.sound ⟨0, rfl⟩
+  }
+  · exact (is_harmonic_iff_laplacian_zero k _).2 (harmonic_projection_cohomology k c.out)
 
 /-- The Hodge decomposition induces an isomorphism between forms and cohomology ⊕ exact ⊕ coexact -/
 theorem hodge_decomposition_isomorphism (k : ℕ) :
