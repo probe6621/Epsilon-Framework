@@ -1081,13 +1081,18 @@ def harmonic_projection (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) : DegreeKFor
   { val := fun x => 
       let C := Classical.choose (fractalScale_preserves_coupling_uniformly ε k k 
                (DegreeKForm.toGraded hc.harmonic) (DegreeKForm.toGraded hc.harmonic))
-      if C = 0 then
-        0
-      else
-        scaled_harmonic.coeff x / C,
+      if C = 0 then 0 else scaled_harmonic.coeff x / C,
     degree := k,
     smooth := by 
       apply scaled_harmonic.smooth.comp (continuous_smul_left ε).smooth }
+
+/-- Harmonic projection preserves toroidal periodicity -/
+theorem harmonic_projection_toroidal_periodic (k : ℕ) (ε : ℝ) (ω : DegreeKForm k ToroidalCoords) :
+    (∀ p, ω.val {p with θ := p.θ + 2*π} = ω.val p) →
+    (∀ p, ω.val {p with φ := p.φ + 2*π} = ω.val p) →
+    ∀ p, (harmonic_projection k ε ω).val {p with θ := p.θ + 2*π} = (harmonic_projection k ε ω).val p ∧
+          (harmonic_projection k ε ω).val {p with φ := p.φ + 2*π} = (harmonic_projection k ε ω).val p := by
+  sorry
 
 /-- Harmonic projection is Lipschitz continuous in L² norm -/
 theorem harmonic_projection_lipschitz (k : ℕ) (ε : ℝ) :
