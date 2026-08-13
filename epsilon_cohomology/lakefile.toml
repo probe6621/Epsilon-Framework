@@ -23,17 +23,11 @@ git = "https://github.com/leanprover-community/mathlib4.git"
 # Main library configuration
 [[lean_lib]]
 name = "EpsilonCohomology"
-globOptions = {
-  exclude = ["Test/**"]  # Exclude test files from main build
-}
 
 # Test configuration
 [[lean_lib]]
 name = "Tests"
 path = "Test"
-globOptions = {
-  include = ["**/*.lean"]
-}
 
 # Build optimization
 [lean.workers]
