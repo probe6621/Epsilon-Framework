@@ -904,18 +904,29 @@ theorem hodge_decomposition_isomorphism (k : ℕ) :
     {ξ : DegreeKForm (k+1) M // ∃ζ, ξ = codifferential (k+2) ζ} := by
   sorry
 
-/-- The harmonic projection operator with fractal scaling and coupling -/
+/-- Enhanced harmonic projection with stability bounds -/
 def harmonic_projection (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) : DegreeKForm k M :=
   let hc := Classical.choose (hodge_decomposition k ω)
   let scaled_harmonic := fractalScale ε (DegreeKForm.toGraded hc.harmonic)
   { val := fun x => 
-      if crossDensityCoupling k k scaled_harmonic scaled_harmonic = 0 then
-        0
-      else
-        scaled_harmonic.coeff x,
+      let C := Classical.choose (fractalScale_norm_bound ε (DegreeKForm.toGraded hc.harmonic))
+      if C = 0 then 0 else scaled_harmonic.coeff x / C,
     degree := k,
     smooth := by 
       apply scaled_harmonic.smooth.comp (continuous_smul_left ε).smooth }
+
+/-- Harmonic projection is uniformly continuous -/
+theorem harmonic_projection_uniform_continuous (k : ℕ) (ε : ℝ) :
+    ∀ δ > 0, ∃ η > 0, ∀ (ω₁ ω₂ : DegreeKForm k M),
+    (∫ x, (ω₁.val x - ω₂.val x)^2) < η →
+    (∫ x, (harmonic_projection k ε ω₁).val x - (harmonic_projection k ε ω₂).val x)^2 < δ := by
+  sorry
+
+/-- Harmonic projection preserves fractal scaling -/
+theorem harmonic_projection_commutes_scaling (k : ℕ) (ε δ : ℝ) (ω : DegreeKForm k M) :
+    harmonic_projection k ε (DegreeKForm.ofFun k (fractalScale δ (DegreeKForm.toGraded ω)).coeff) =
+    DegreeKForm.ofFun k (fractalScale δ (DegreeKForm.toGraded (harmonic_projection k ε ω)).coeff) := by
+  sorry
 
 /-- Fractal scaling commutes with harmonic projection -/
 theorem fractalScale_harmonic_projection (k : ℕ) (ε δ : ℝ) (ω : DegreeKForm k M) :
