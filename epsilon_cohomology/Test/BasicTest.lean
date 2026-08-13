@@ -55,4 +55,26 @@ example (ω : GradedForm ToroidalCoords) :
     fractalScale 1 (fractalHodgeStar 0 1 ω) := by
   exact fractalHodgeStar_preserves_harmonicity 0 1 ω (by simp)
 
+/-- Test toroidal bundle map preserves harmonic forms -/
+example (ω : GradedForm ToroidalCoords) (hω : isFractalHarmonic 0 1 ω) :
+    plenum_floor ToroidalCoords → 
+    isFractalHarmonic 0 1 (toroidalBundleMap ω 1).forms 1 := by
+  intro hM
+  exact toroidalBundle_preserves_harmonic 0 1 ω hω hM
+
+/-- Test fractal scaling preserves toroidal periodicity -/
+example (ω : GradedForm ToroidalCoords) 
+    (hθ : ∀ p, ω.coeff {p with θ := p.θ + 2*π} = ω.coeff p)
+    (hφ : ∀ p, ω.coeff {p with φ := p.φ + 2*π} = ω.coeff p) :
+    ∀ p, (fractalScale 1 ω).coeff {p with θ := p.θ + 2*π} = (fractalScale 1 ω).coeff p ∧
+          (fractalScale 1 ω).coeff {p with φ := p.φ + 2*π} = (fractalScale 1 ω).coeff p := by
+  exact fractalScale_toroidal_periodic 1 ω hθ hφ
+
+/-- Test toroidal metric scaling properties -/
+example (p q : ToroidalCoords) (hM : plenum_floor ToroidalCoords) :
+    ∃ (C : ℝ) (hC : C > 0),
+    toroidalMetric (fractalScale 1 p) (fractalScale 1 q) ≤ 
+    C * toroidalMetric p q + (plenum_floor ToroidalCoords).choose := by
+  exact toroidalMetric_scaling 1 p q hM
+
 end EpsilonCohomology.Test
