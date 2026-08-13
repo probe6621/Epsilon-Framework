@@ -18,4 +18,14 @@ example (ω : GradedForm ToroidalCoords) (hω : isFractalHarmonic 0 1 ω) :
   apply fractalScale_preserves_harmonic 0 1 ω hω
   exact plenum_floor ToroidalCoords
 
+/-- Test toroidal metric properties -/
+example (p q : ToroidalCoords) : toroidalMetric p q = toroidalMetric q p := by
+  simp [toroidalMetric]
+  split <;> simp [Real.sqrt_eq_rpow, Real.rpow_two]; ring
+
+/-- Test fractal scaling commutes with differential -/
+example (ω : GradedForm ToroidalCoords) (hω : isFractalHarmonic 0 1 ω) :
+    fractalD 0 1 (fractalScale 1 ω) = fractalScale 1 (fractalD 0 1 ω) := by
+  exact fractalScale_commutes_differential 0 1 ω
+
 end EpsilonCohomology.Test
