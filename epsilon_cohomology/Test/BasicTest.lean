@@ -1,5 +1,7 @@
 import EpsilonCohomology.PlenumConstraints
 import Mathlib.Testing.SlimCheck
+import Mathlib.Analysis.NormedSpace.Basic
+import Mathlib.Topology.MetricSpace.Basic
 
 open EpsilonCohomology
 

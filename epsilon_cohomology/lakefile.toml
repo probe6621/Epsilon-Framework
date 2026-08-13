@@ -57,6 +57,6 @@ globOptions = {
   include = ["**/*.lean"]
 }
 
--- Documentation target
+# Documentation target
 [lean.doc]
 root = "EpsilonCohomology"
