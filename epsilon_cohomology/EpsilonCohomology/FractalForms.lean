@@ -7,7 +7,7 @@ import EpsilonCohomology.PlenumConstraints
 
 noncomputable section
 
-variable (n : ℕ) -- Dimension of the manifold
+variable {n : ℕ} -- Dimension of the manifold
 
 namespace EpsilonCohomology
 
@@ -70,7 +70,7 @@ theorem fractalScale_norm_bound (ε : ℝ) (ω : GradedForm M) :
       (by ring_nf; exact add_le_add (hCU x _) hδ.le)
 
 /-- Fractal scaling preserves harmonic forms with quantitative bounds (uniform version) -/
-theorem fractalScale_preserves_harmonic_uniform (k : ℕ) (ε : ℝ) (ω : GradedForm M) 
+theorem fractalScale_preserves_harmonic_uniform' (k : ℕ) (ε : ℝ) (ω : GradedForm M) 
     (hω : isFractalHarmonic k 1 ω) :
     plenum_floor M → 
     ∃ (D : ℝ) (hD : D > 0), 
@@ -210,19 +210,19 @@ theorem fractalScale_hodgeStar (k : ℕ) (ε : ℝ) (ω : GradedForm M) :
   sorry
 
 /-- Fractal differential operator -/
-def fractalD (k : ℕ) (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
+noncomputable def fractalD (k : ℕ) (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
   { degree := k + 1
     coeff := fun x => (fractalScale ε ω).coeff x
     smooth := by sorry }
 
 /-- Fractal codifferential operator -/
-def fractalCod (k : ℕ) (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
+noncomputable def fractalCod (k : ℕ) (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
   { degree := k - 1
     coeff := fun x => (fractalScale ε ω).coeff x
     smooth := by sorry }
 
 /-- Fractal Hodge star operator preserving harmonicity -/
-def fractalHodgeStar (k : ℕ) (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
+noncomputable def fractalHodgeStar (k : ℕ) (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
   { degree := n - k
     coeff := fun x => (fractalScale ε ω).coeff x
     smooth := by sorry }
@@ -258,7 +258,13 @@ def isFractalHarmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M) : Prop :=
   fractalLaplacian k ε ω = 0
 
 /-- Fractal Hodge decomposition -/
-noncomputable def fractalHodgeDecomposition (k : ℕ) (ε : ℝ) (ω : GradedForm M) :
+noncomputable def fractalHodgeDecomposition (k : ℕ) (ε : ℝ) (ω : GradedForm M) : 
+    ∃ (h : GradedForm M) (e : GradedForm M) (c : GradedForm M),
+      isFractalHarmonic k ε h ∧
+      ω = h + fractalD (k-1) ε e + fractalCod (k+1) ε c ∧
+      (∀ (η : GradedForm M), isFractalHarmonic k ε η → 
+        crossDensityCoupling k k h η = crossDensityCoupling k k ω η) := by
+  sorry
     ∃ (h : GradedForm M) (e : GradedForm M) (c : GradedForm M),
       isFractalHarmonic k ε h ∧
       ω = h + fractalD (k-1) ε e + fractalCod (k+1) ε c ∧
