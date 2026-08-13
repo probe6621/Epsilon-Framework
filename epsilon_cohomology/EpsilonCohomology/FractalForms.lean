@@ -1,4 +1,5 @@
 import EpsilonCohomology.HodgeGrading
+import EpsilonCohomology.PlenumConstraints
 import Mathlib.Analysis.Calculus.FDeriv.Basic
 
 noncomputable section
@@ -196,11 +197,22 @@ theorem zero_defect_dense_in_harmonic (k : ℕ) (ε : ℝ) :
     {ω : GradedForm M | isFractalHarmonic k ε ω} := by
   sorry
 
-/-- Zero-defect forms are stable under fractal scaling -/
+/-- Quantitative bounds for zero-defect convergence -/
+theorem zero_defect_convergence_bounds (k : ℕ) (ε δ : ℝ) (C : ℝ) (ω : GradedForm M) :
+    isFractalHarmonic k ε (DegreeKForm.zeroDefect C ω) →
+    ∃ (K L : ℝ) (hK : K > 0) (hL : L > 0),
+    ∀ (η : GradedForm M), 
+    crossDensityCoupling k k ω η ≤ K * C + L * ε ∧
+    (isFractalHarmonic k ε η → 
+     crossDensityCoupling k k (fractalScale δ ω) (fractalScale δ η) ≤ 
+     (K * C + L * ε) * (1 + δ^2)) := by
+  sorry
+
+/-- Zero-defect forms are stable under fractal scaling with explicit rates -/
 theorem zero_defect_scaling_stable (k : ℕ) (ε δ : ℝ) (C : ℝ) (ω : GradedForm M) :
     isFractalHarmonic k ε (DegreeKForm.zeroDefect C ω) →
-    ∃ (D : ℝ) (hD : D > 0), 
-    isFractalHarmonic k (ε * δ) (DegreeKForm.zeroDefect (D * C) (fractalScale δ ω)) := by
+    ∃ (D : ℝ) (hD : D > 0) (rate : ℝ → ℝ) (h_rate : Tendsto rate (𝓝 0) (𝓝 0)),
+    isFractalHarmonic k (ε * δ) (DegreeKForm.zeroDefect (D * C + rate C) (fractalScale δ ω)) := by
   sorry
 
 /-- Fractal Hodge star preserves coupling -/
