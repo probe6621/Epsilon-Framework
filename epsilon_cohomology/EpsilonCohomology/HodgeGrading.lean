@@ -210,4 +210,36 @@ theorem gradedZeroDefect_shift_commutes
     GradedForm.ofDegree (ω.degree + n) (fun p => ω.coeff p + C) := by
   ext <;> simp [GradedForm.shift, GradedForm.ofDegree]
 
+/-- A Hodge decomposition component at degree k -/
+structure HodgeComponent (k : ℕ) (M : Type*) where
+  harmonic : DegreeKForm k M
+  exact : DegreeKForm (k-1) M
+  coexact : DegreeKForm (k+1) M
+
+/-- The Hodge decomposition theorem for degree-k forms -/
+theorem hodge_decomposition (k : ℕ) (ω : DegreeKForm k M) :
+    ∃ (hc : HodgeComponent k M),
+      ω.val = hc.harmonic.val + hc.exact.val + hc.coexact.val := by
+  sorry
+
+/-- Pullback preserves Hodge decomposition components -/
+theorem hodge_pullback_compatibility (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
+    let hc := Classical.choose (hodge_decomposition k ω)
+    degreeKPullback X k ω = 
+      { val := degreeKPullback X k hc.harmonic + 
+               degreeKPullback X (k-1) hc.exact +
+               degreeKPullback X (k+1) hc.coexact,
+        degree := k } := by
+  sorry
+
+/-- Zero-defect correction preserves Hodge components -/
+theorem hodge_zero_defect_compatibility (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
+    let hc := Classical.choose (hodge_decomposition k ω)
+    DegreeKForm.zeroDefect C ω = 
+      { val := DegreeKForm.zeroDefect C hc.harmonic + 
+               DegreeKForm.zeroDefect C hc.exact +
+               DegreeKForm.zeroDefect C hc.coexact,
+        degree := k } := by
+  sorry
+
 end EpsilonCohomology
