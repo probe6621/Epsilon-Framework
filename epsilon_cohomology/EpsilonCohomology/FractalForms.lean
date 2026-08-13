@@ -57,6 +57,17 @@ theorem fractalScale_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M)
     (hω : isFractalHarmonic k 1 ω) : isFractalHarmonic k ε (fractalScale ε ω) := by
   sorry
 
+/-- Fractal scaling preserves Hodge decomposition components -/
+theorem fractalScale_preserves_hodge_decomposition (k : ℕ) (ε : ℝ) (ω : GradedForm M) :
+    let hc := Classical.choose (fractal_hodge_decomposition k 1 ω)
+    fractalScale ε ω = 
+      { degree := ω.degree,
+        coeff := fractalScale ε hc.harmonic + 
+                 fractalScale ε (fractalD (k-1) 1 hc.exact) +
+                 fractalScale ε (fractalCod (k+1) 1 hc.coexact),
+        smooth := by sorry } := by
+  sorry
+
 /-- Fractal scaling preserves the Hodge star -/
 theorem fractalScale_hodgeStar (k : ℕ) (ε : ℝ) (ω : GradedForm M) :
     fractalScale ε (fractalHodgeStar k ε ω) = 
@@ -183,6 +194,13 @@ theorem zero_defect_coupling (C : ℝ) (ε : ℝ) (m n : ℕ) (ω η : GradedFor
 theorem zero_defect_dense_in_harmonic (k : ℕ) (ε : ℝ) :
     closure {ω : GradedForm M | ∃ C > 0, isFractalHarmonic k ε (DegreeKForm.zeroDefect C ω)} = 
     {ω : GradedForm M | isFractalHarmonic k ε ω} := by
+  sorry
+
+/-- Zero-defect forms are stable under fractal scaling -/
+theorem zero_defect_scaling_stable (k : ℕ) (ε δ : ℝ) (C : ℝ) (ω : GradedForm M) :
+    isFractalHarmonic k ε (DegreeKForm.zeroDefect C ω) →
+    ∃ (D : ℝ) (hD : D > 0), 
+    isFractalHarmonic k (ε * δ) (DegreeKForm.zeroDefect (D * C) (fractalScale δ ω)) := by
   sorry
 
 /-- Fractal Hodge star preserves coupling -/

@@ -922,6 +922,13 @@ theorem harmonic_projection_uniform_continuous (k : ℕ) (ε : ℝ) :
     (∫ x, (harmonic_projection k ε ω₁).val x - (harmonic_projection k ε ω₂).val x)^2 < δ := by
   sorry
 
+/-- Harmonic projection is stable under fractal scaling -/
+theorem harmonic_projection_scaling_stable (k : ℕ) (ε δ : ℝ) (ω : DegreeKForm k M) :
+    ∃ (C : ℝ) (hC : C > 0),
+    ∫ x, (harmonic_projection k ε (DegreeKForm.ofFun k (fractalScale δ (DegreeKForm.toGraded ω)).coeff)).val x ^ 2 ≤
+    C * ∫ x, (harmonic_projection k ε ω).val x ^ 2 := by
+  sorry
+
 /-- Harmonic projection preserves fractal scaling -/
 theorem harmonic_projection_commutes_scaling (k : ℕ) (ε δ : ℝ) (ω : DegreeKForm k M) :
     harmonic_projection k ε (DegreeKForm.ofFun k (fractalScale δ (DegreeKForm.toGraded ω)).coeff) =
