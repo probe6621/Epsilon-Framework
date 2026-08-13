@@ -52,14 +52,14 @@ theorem toroidalBundle_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm 
   simp only [isFractalHarmonic, toroidalBundleMap, fractalLaplacian]
   ext x
   simp only [GradedForm.coeff, zero_apply]
-  -- Use that ω is harmonic and scaling preserves harmonicity
-  have := hω
-  simp only [isFractalHarmonic, fractalLaplacian] at this
   rw [fractalScale_commutes_differential k ε ω]
-  simp [this, GradedForm.coeff, zero_apply]
-  -- Handle plenum floor constraint
+  have hω' := hω
+  simp only [isFractalHarmonic, fractalLaplacian] at hω'
+  rw [hω']
+  simp [GradedForm.coeff, zero_apply]
   obtain ⟨ε₀, hε₀⟩ := hM
-  simp [max_eq_left (hε₀.2 x)]
+  rw [max_eq_left (hε₀.2 x)]
+  simp
 
 /-- Enhanced toroidal metric with scaling properties -/
 def toroidalMetric (p q : ToroidalCoords) : ℝ :=
@@ -116,12 +116,19 @@ theorem toroidalMetric_scaling (ε : ℝ) (p q : ToroidalCoords) :
   · refine le_trans (le_max_left _ _) ?_
     rw [max_le_iff]
     refine ⟨?_, (plenum_floor ToroidalCoords).choose_spec.2⟩
-    simp [norm_smul, Real.sqrt_mul (by positivity), mul_assoc]
-    exact le_trans (Real.sqrt_le_sqrt (by ring_nf; exact add_le_add 
+    simp only [norm_smul, Real.sqrt_mul (by positivity)]
+    rw [mul_assoc, mul_comm _ ε, ← mul_assoc]
+    apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
+    refine Real.sqrt_le_sqrt ?_
+    rw [norm_smul, norm_smul]
+    ring_nf
+    exact add_le_add
       (mul_le_mul_of_nonneg_left (pow_le_pow_left (norm_nonneg _) (le_refl _) 2) (by positivity))
-      (mul_le_mul_of_nonneg_left (pow_le_pow_left (norm_nonneg _) (le_refl _) 2) (by positivity))))
-      (by ring_nf; exact le_refl _)
-  · simp [norm_smul, Real.sqrt_mul (by positivity), mul_assoc]
+      (mul_le_mul_of_nonneg_left (pow_le_pow_left (norm_nonneg _) (le_refl _) 2) (by positivity))
+  · simp only [norm_smul, Real.sqrt_mul (by positivity)]
+    rw [mul_assoc, mul_comm _ ε, ← mul_assoc]
+    apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
+    rfl
 
 /-- Induced norm from toroidal metric -/
 def toroidalNorm (p : ToroidalCoords) : ℝ := 
