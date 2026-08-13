@@ -188,6 +188,13 @@ theorem degree_k_differential_commutes_of_zero_defect
       simp [degreeKPullback, DegreeKForm.zeroDefect, DegreeKForm.d, hC]
       rfl
 
+/-- The zero-defect correction commutes with degree-k pullback. -/
+theorem degree_k_zero_defect_pullback_commutes
+    (C : ℝ) (k : ℕ) (ω : DegreeFormSpace k (X × ℝ × ℝ)) :
+    (degreeKPullback X k (DegreeKForm.zeroDefect C ω)).val = 
+    (DegreeKForm.zeroDefect C (degreeKPullback X k ω)).val := by
+  simp [degreeKPullback, DegreeKForm.zeroDefect]
+
 /-- Shifting commutes with zero-defect correction on graded forms. -/
 theorem gradedZeroDefect_shift_commutes
     (C : ℝ) (ω : GradedForm (X × ℝ × ℝ)) (n : ℕ) :
