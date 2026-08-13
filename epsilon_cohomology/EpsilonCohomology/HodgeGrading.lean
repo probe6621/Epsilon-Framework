@@ -295,4 +295,40 @@ theorem hodgeStar_zero_defect_compatibility (C : ℝ) (k : ℕ) (ω : DegreeKFor
     hodgeStar k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (hodgeStar k ω) := by
   sorry
 
+/-- Hodge star preserves Hodge decomposition -/
+theorem hodgeStar_preserves_decomposition (k : ℕ) (ω : DegreeKForm k M) :
+    let hc := Classical.choose (hodge_decomposition k ω)
+    hodgeStar k ω = 
+      { val := hodgeStar k hc.harmonic + 
+               hodgeStar (k-1) hc.exact +
+               hodgeStar (k+1) hc.coexact,
+        degree := n - k } := by
+  sorry
+
+/-- Hodge star preserves orthogonality of harmonic forms -/
+theorem hodgeStar_preserves_harmonic_orthogonality (k : ℕ) (ω η : DegreeKForm k M) 
+    (hη : IsHarmonic k η) :
+    ∫ x, (hodgeStar k ω).val x * (hodgeStar k η).val x = 
+    ∫ x, ω.val x * η.val x := by
+  sorry
+
+/-- Hodge star preserves integrals of harmonic forms -/
+theorem hodgeStar_preserves_harmonic_integrals (k : ℕ) (ω : DegreeKForm k M) 
+    (hc : HodgeComponent k M) :
+    ∫ x, (hodgeStar k ω).val x * (hodgeStar k hc.harmonic).val x =
+    ∫ x, ω.val x * hc.harmonic.val x := by
+  sorry
+
+/-- Hodge star preserves exactness -/
+theorem hodgeStar_preserves_exactness (k : ℕ) (ω : DegreeKForm k M) 
+    (hc : HodgeComponent k M) :
+    (hodgeStar k ω).val = hodgeStar (k-1) hc.exact.val := by
+  sorry
+
+/-- Hodge star preserves coexactness -/
+theorem hodgeStar_preserves_coexactness (k : ℕ) (ω : DegreeKForm k M) 
+    (hc : HodgeComponent k M) :
+    (hodgeStar k ω).val = hodgeStar (k+1) hc.coexact.val := by
+  sorry
+
 end EpsilonCohomology
