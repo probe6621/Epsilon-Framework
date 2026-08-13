@@ -32,7 +32,34 @@ theorem fractalScale_norm_bound (ε : ℝ) (ω : GradedForm M) :
     (ε ≥ 1 → ‖(fractalScale ε ω).coeff x‖ ≥ (plenum_floor M).choose * ‖ω.coeff x‖) ∧
     (∀ δ > 0, ∃ ε₀ > 0, ∀ ε < ε₀, 
       ‖(fractalScale ε ω).coeff x‖ ≤ (C + δ) * ‖ω.coeff x‖) := by
-  sorry
+  intro hM
+  obtain ⟨ε₀, hε₀⟩ := hM
+  -- Use smoothness to get local Lipschitz constant
+  have : ∀ x, ∃ C > 0, ∃ U ∈ 𝓝 x, ∀ y ∈ U, ‖ω.coeff y‖ ≤ C * ‖ω.coeff x‖ := by
+    intro x
+    refine ⟨1 + ‖ω.coeff x‖, by positivity, univ, univ_mem, fun y _ => ?_⟩
+    exact le_trans (norm_le_norm_of_mem (mem_univ _)) (by simp; positivity)
+  choose C hC U hU hCU using this
+  
+  -- Global bound using compactness
+  rcases isCompact_univ.elim_finite_subcover_image (fun x _ => hU x) (by simp) with ⟨s, hs, hcover⟩
+  let C' := s.sup' hs C
+  have hC' : 0 < C' := by
+    refine Finset.sup'_pos _ hs fun x hx => hC x
+    exact nonempty_of_mem hs
+  
+  refine ⟨C', ⟨hC', Finset.le_sup'_of_le _ hs le_rfl⟩, fun x => ?_⟩
+  constructor
+  · exact hCU x (hcover.symm.subset (mem_univ x))
+  constructor
+  · intro hε
+    have := (plenum_floor M).choose_spec.2 x
+    simp [norm_smul, hε, mul_assoc, le_refl]
+  · intro δ hδ
+    refine ⟨ε₀ / (C' + δ), by positivity, fun ε hε => ?_⟩
+    simp [norm_smul, mul_assoc]
+    exact le_trans (mul_le_mul_of_nonneg_right (le_of_lt hε) (norm_nonneg _)) 
+      (by ring_nf; exact add_le_add (hCU x _) hδ.le)
 
 /-- Fractal scaling preserves harmonicity with quantitative bounds -/
 theorem fractalScale_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M) 
