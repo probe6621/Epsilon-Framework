@@ -56,6 +56,11 @@ name = "slim-check"
 rev = "v4.33.0"
 git = "https://github.com/leanprover-community/mathlib4.git"
 
+[[require]]
+name = "mathlib-test"
+rev = "v4.33.0"
+git = "https://github.com/leanprover-community/mathlib4.git"
+
 # Documentation
 [lean.doc]
 root = "EpsilonCohomology"

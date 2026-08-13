@@ -28,4 +28,17 @@ example (ω : GradedForm ToroidalCoords) (hω : isFractalHarmonic 0 1 ω) :
     fractalD 0 1 (fractalScale 1 ω) = fractalScale 1 (fractalD 0 1 ω) := by
   exact fractalScale_commutes_differential 0 1 ω
 
+/-- Test fractal scaling preserves norms -/
+example (ω : GradedForm ToroidalCoords) :
+    plenum_floor ToroidalCoords → 
+    ∃ C > 0, ∀ x, ‖(fractalScale 1 ω).coeff x‖ ≤ C * ‖ω.coeff x‖ := by
+  intro hM
+  exact (fractalScale_norm_bound 1 ω hM).choose_spec
+
+/-- Test toroidal metric triangle inequality -/
+example (x y z : ToroidalCoords) :
+    toroidalMetric x z ≤ toroidalMetric x y + toroidalMetric y z := by
+  simp [toroidalMetric]
+  split <;> simp [Real.sqrt_add_sq_le, add_le_add]
+
 end EpsilonCohomology.Test
