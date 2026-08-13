@@ -53,9 +53,22 @@ theorem fractalScale_commutes_differential (k : ℕ) (ε : ℝ) (ω : GradedForm
     fractalD k ε (fractalScale ε ω) = fractalScale ε (fractalD k 1 ω) := by
   sorry
 
-/-- Fractal scaling preserves harmonic forms -/
+/-- Fractal scaling preserves harmonic forms with quantitative bounds -/
 theorem fractalScale_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M) 
-    (hω : isFractalHarmonic k 1 ω) : isFractalHarmonic k ε (fractalScale ε ω) := by
+    (hω : isFractalHarmonic k 1 ω) : 
+    ∃ (C : ℝ) (hC : C > 0), 
+    isFractalHarmonic k ε (fractalScale ε ω) ∧ 
+    (∀ (η : GradedForm M), isFractalHarmonic k 1 η →
+      crossDensityCoupling k k (fractalScale ε ω) (fractalScale ε η) ≤ 
+      C * crossDensityCoupling k k ω η) := by
+  sorry
+
+/-- Fractal scaling preserves toroidal periodicity -/
+theorem fractalScale_toroidal_periodic (ε : ℝ) (ω : GradedForm ToroidalCoords) :
+    (∀ p, ω.coeff {p with θ := p.θ + 2*π} = ω.coeff p) →
+    (∀ p, ω.coeff {p with φ := p.φ + 2*π} = ω.coeff p) →
+    ∀ p, (fractalScale ε ω).coeff {p with θ := p.θ + 2*π} = (fractalScale ε ω).coeff p ∧
+          (fractalScale ε ω).coeff {p with φ := p.φ + 2*π} = (fractalScale ε ω).coeff p := by
   sorry
 
 /-- Fractal scaling preserves Hodge decomposition components -/
@@ -208,11 +221,13 @@ theorem zero_defect_convergence_bounds (k : ℕ) (ε δ : ℝ) (C : ℝ) (ω : G
      (K * C + L * ε) * (1 + δ^2)) := by
   sorry
 
-/-- Zero-defect forms are stable under fractal scaling with explicit rates -/
-theorem zero_defect_scaling_stable (k : ℕ) (ε δ : ℝ) (C : ℝ) (ω : GradedForm M) :
+/-- Enhanced zero-defect scaling with toroidal constraints -/
+theorem zero_defect_scaling_stable (k : ℕ) (ε δ : ℝ) (C : ℝ) (ω : GradedForm ToroidalCoords) :
     isFractalHarmonic k ε (DegreeKForm.zeroDefect C ω) →
+    plenum_floor ToroidalCoords → 
     ∃ (D : ℝ) (hD : D > 0) (rate : ℝ → ℝ) (h_rate : Tendsto rate (𝓝 0) (𝓝 0)),
-    isFractalHarmonic k (ε * δ) (DegreeKForm.zeroDefect (D * C + rate C) (fractalScale δ ω)) := by
+    isFractalHarmonic k (ε * δ) (DegreeKForm.zeroDefect (D * C + rate C) (fractalScale δ ω)) ∧
+    (∀ p, ‖(fractalScale δ ω).coeff p‖ ≥ (D * C + rate C) * toroidalNorm p) := by
   sorry
 
 /-- Fractal Hodge star preserves coupling -/
