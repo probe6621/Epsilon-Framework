@@ -261,13 +261,16 @@ theorem zero_defect_convergence_bounds (k : ℕ) (ε δ : ℝ) (C : ℝ) (ω : G
       crossDensityCoupling k k (fractalScale ε ω) (fractalScale ε η) ≤ γ) := by
   sorry
 
-/-- Enhanced zero-defect scaling with toroidal constraints -/
+/-- Strong zero-defect preservation with uniform bounds -/
 theorem zero_defect_scaling_stable (k : ℕ) (ε δ : ℝ) (C : ℝ) (ω : GradedForm ToroidalCoords) :
     isFractalHarmonic k ε (DegreeKForm.zeroDefect C ω) →
     plenum_floor ToroidalCoords → 
     ∃ (D : ℝ) (hD : D > 0) (rate : ℝ → ℝ) (h_rate : Tendsto rate (𝓝 0) (𝓝 0)),
     isFractalHarmonic k (ε * δ) (DegreeKForm.zeroDefect (D * C + rate C) (fractalScale δ ω)) ∧
-    (∀ p, ‖(fractalScale δ ω).coeff p‖ ≥ (D * C + rate C) * toroidalNorm p) := by
+    (∀ p, ‖(fractalScale δ ω).coeff p‖ ≥ (D * C + rate C) * toroidalNorm p) ∧
+    (∀ η : GradedForm ToroidalCoords, isFractalHarmonic k ε η →
+      crossDensityCoupling k k (fractalScale δ ω) (fractalScale δ η) ≤
+      (D * C + rate C) * crossDensityCoupling k k ω η + (plenum_floor ToroidalCoords).choose) := by
   sorry
 
 /-- Fractal Hodge star preserves coupling -/
