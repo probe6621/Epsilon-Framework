@@ -10,12 +10,28 @@ namespace EpsilonCohomology
 axiom plenum_floor (M : Type*) [Manifold M] : 
   ∃ ε > 0, ∀ (Q : M), ‖Q‖ ≥ ε
 
-/-- Toroidal inversion coordinates (θ,φ) ∈ T² × iT² -/
+/-- Toroidal inversion coordinates with bundle structure -/
 structure ToroidalCoords where
   θ : ℝ  -- Real angular coordinate
   φ : ℝ  -- Imaginary phase coordinate
   periodic_θ : θ ∈ Set.Icc 0 (2 * π)
   periodic_φ : φ ∈ Set.Icc 0 (2 * π)
+  bundle : FractalFormBundle ToroidalCoords := {
+    base := ⟨θ, φ⟩,
+    scaling := 1,
+    forms := fun ε ↦ {
+      degree := 0,
+      coeff := fun p ↦ if p.1 = θ ∧ p.2 = φ then 1 else 0,
+      smooth := by continuity
+    }
+  }
+
+/-- Induced bundle map for toroidal forms -/
+def toroidalBundleMap (ω : GradedForm ToroidalCoords) (ε : ℝ) : FractalFormBundle ToroidalCoords := {
+  base := ⟨ω.coeff⟩,
+  scaling := ε,
+  forms := fun δ ↦ fractalScale δ ω
+}
 
 /-- Metric on toroidal inversion space -/
 def toroidalMetric (p q : ToroidalCoords) : ℝ :=

@@ -97,12 +97,15 @@ theorem fractalScale_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M)
     (ε < 1 → ∀ p, ‖(fractalScale ε ω).coeff p‖ ≥ (plenum_floor M).choose * ‖ω.coeff p‖) := by
   sorry
 
-/-- Fractal scaling preserves toroidal periodicity -/
-theorem fractalScale_toroidal_periodic (ε : ℝ) (ω : GradedForm ToroidalCoords) :
+/-- Enhanced fractal scaling preserves toroidal structure -/
+theorem fractalScale_toroidal_properties (ε : ℝ) (ω : GradedForm ToroidalCoords) :
     (∀ p, ω.coeff {p with θ := p.θ + 2*π} = ω.coeff p) →
     (∀ p, ω.coeff {p with φ := p.φ + 2*π} = ω.coeff p) →
-    ∀ p, (fractalScale ε ω).coeff {p with θ := p.θ + 2*π} = (fractalScale ε ω).coeff p ∧
-          (fractalScale ε ω).coeff {p with φ := p.φ + 2*π} = (fractalScale ε ω).coeff p := by
+    (∀ p, (fractalScale ε ω).coeff {p with θ := p.θ + 2*π} = (fractalScale ε ω).coeff p ∧
+          (fractalScale ε ω).coeff {p with φ := p.φ + 2*π} = (fractalScale ε ω).coeff p) ∧
+    (∃ (C : ℝ) (hC : C > 0), ∀ p q,
+      ‖(fractalScale ε ω).coeff p - (fractalScale ε ω).coeff q‖ ≤ 
+      C * toroidalMetric p q + (plenum_floor ToroidalCoords).choose) := by
   sorry
 
 /-- Fractal scaling preserves Hodge decomposition components -/
@@ -283,16 +286,25 @@ theorem zero_defect_convergence_bounds (k : ℕ) (ε δ : ℝ) (C : ℝ) (ω : G
       crossDensityCoupling k k (fractalScale ε ω) (fractalScale ε η) ≤ γ) := by
   sorry
 
-/-- Strong zero-defect preservation with uniform bounds -/
-theorem zero_defect_scaling_stable (k : ℕ) (ε δ : ℝ) (C : ℝ) (ω : GradedForm ToroidalCoords) :
+/-- Quantitative zero-defect convergence with toroidal coupling bounds -/
+theorem zero_defect_convergence_rate (k : ℕ) (ε : ℝ) (C : ℝ) (ω : GradedForm ToroidalCoords) :
     isFractalHarmonic k ε (DegreeKForm.zeroDefect C ω) →
     plenum_floor ToroidalCoords → 
-    ∃ (D : ℝ) (hD : D > 0) (rate : ℝ → ℝ) (h_rate : Tendsto rate (𝓝 0) (𝓝 0)),
-    isFractalHarmonic k (ε * δ) (DegreeKForm.zeroDefect (D * C + rate C) (fractalScale δ ω)) ∧
-    (∀ p, ‖(fractalScale δ ω).coeff p‖ ≥ (D * C + rate C) * toroidalNorm p) ∧
-    (∀ η : GradedForm ToroidalCoords, isFractalHarmonic k ε η →
-      crossDensityCoupling k k (fractalScale δ ω) (fractalScale δ η) ≤
-      (D * C + rate C) * crossDensityCoupling k k ω η + (plenum_floor ToroidalCoords).choose) := by
+    ∃ (K L : ℝ) (hK : K > 0) (hL : L > 0) (rate : ℝ → ℝ) (h_rate : Tendsto rate (𝓝 0) (𝓝 0)),
+    (∀ δ > 0, ∀ η : GradedForm ToroidalCoords,
+      crossDensityCoupling k k (fractalScale δ ω) η ≤ 
+      (K * C + L * ε + rate C) * crossDensityCoupling k k ω η) ∧
+    (∀ p, ‖(fractalScale δ ω).coeff p‖ ≥ (K * C + L * ε + rate C) * toroidalNorm p) ∧
+    (∀ γ > 0, ∃ δ₀ > 0, ∀ δ < δ₀,
+      crossDensityCoupling k k (fractalScale δ ω) (fractalScale δ ω) ≤ γ) := by
+  sorry
+
+/-- Toroidal metric compatibility with fractal scaling -/
+theorem fractalScale_toroidal_metric (ε : ℝ) (ω η : GradedForm ToroidalCoords) :
+    plenum_floor ToroidalCoords → 
+    ∃ (C : ℝ) (hC : C > 0),
+    toroidalMetric (fractalScale ε ω) (fractalScale ε η) ≤ 
+    C * toroidalMetric ω η + (plenum_floor ToroidalCoords).choose := by
   sorry
 
 /-- Fractal Hodge star preserves coupling -/
