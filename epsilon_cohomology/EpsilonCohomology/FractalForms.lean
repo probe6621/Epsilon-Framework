@@ -7,7 +7,7 @@ import EpsilonCohomology.PlenumConstraints
 
 noncomputable section
 
-variable (n : ℕ) -- Dimension of the manifold
+variable {n : ℕ} -- Dimension of the manifold
 
 namespace EpsilonCohomology
 
@@ -161,7 +161,7 @@ theorem fractalScale_commutes_differential (k : ℕ) (ε : ℝ) (ω : GradedForm
   sorry
 
 /-- Fractal scaling preserves harmonic forms with plenum bounds (quantitative version) -/
-theorem fractalScale_preserves_harmonic_quant (k : ℕ) (ε : ℝ) (ω : GradedForm M) 
+theorem fractalScale_preserves_harmonic_quant (k : ℕ) (ε δ : ℝ) (ω η : GradedForm M) 
     (hω : isFractalHarmonic k 1 ω) : 
     plenum_floor M → 
     ∃ (C : ℝ) (hC : C > 0), 
@@ -249,7 +249,7 @@ def isFractalHarmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M) : Prop :=
   fractalLaplacian k ε ω = 0
 
 /-- Fractal Hodge decomposition -/
-theorem fractal_hodge_decomposition (k : ℕ) (ε : ℝ) (ω : GradedForm M) :
+noncomputable def fractal_hodge_decomposition (k : ℕ) (ε : ℝ) (ω : GradedForm M) :
     ∃ (h : GradedForm M) (e : GradedForm M) (c : GradedForm M),
       isFractalHarmonic k ε h ∧
       ω = h + fractalD (k-1) ε e + fractalCod (k+1) ε c ∧

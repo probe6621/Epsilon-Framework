@@ -47,6 +47,13 @@ def GradedForm.ofDegree (k : ℕ) (f : M → ℝ) (hf : Smooth ℝ ℝ f) : Grad
 def GradedForm.shift (ω : GradedForm M) (n : ℕ) : GradedForm M :=
   { degree := ω.degree + n, coeff := ω.coeff, smooth := ω.smooth }
 
+/-- The canonical embedding -/
+def embedding_ι (X : Type*) (x : X) : X × ℝ × ℝ := (x, (0, 0))
+
+/-- The embedding is smooth -/
+theorem embedding_smooth (X : Type*) : Smooth ℝ ℝ (embedding_ι X) := by
+  exact smooth_id.prod_mk (smooth_const.prod_mk smooth_const)
+
 /-- Pullback a graded form along the embedding. -/
 def gradedPullback (ω : GradedForm (X × ℝ × ℝ)) : GradedForm X :=
   { degree := ω.degree, 
