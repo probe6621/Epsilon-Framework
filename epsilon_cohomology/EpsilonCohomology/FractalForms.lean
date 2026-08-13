@@ -179,7 +179,27 @@ theorem fractalScale_preserves_harmonic_quant (k : ℕ) (ε δ : ℝ) (ω η : G
       crossDensityCoupling k k (fractalScale ε ω) (fractalScale ε η) ≤ 
       C * crossDensityCoupling k k ω η + (plenum_floor M).choose) ∧
     (ε < 1 → ∀ p, ‖(fractalScale ε ω).coeff p‖ ≥ (plenum_floor M).choose * ‖ω.coeff p‖) := by
-  sorry
+  intro hM
+  obtain ⟨ε₀, hε₀⟩ := hM
+  -- Get uniform bounds from fractal scaling
+  obtain ⟨C, hC⟩ := fractalScale_norm_bound ε ω hM
+  -- Use harmonicity to get coupling estimate
+  have h_coupling : ∀ η, isFractalHarmonic k 1 η → 
+    crossDensityCoupling k k (fractalScale ε ω) (fractalScale ε η) ≤ 
+    C * crossDensityCoupling k k ω η := by
+    intro η hη
+    simp [crossDensityCoupling]
+    apply integral_mono (by simp) (by simp)
+    intro x _
+    exact mul_le_mul (hC.1 x).1 (hC.1 x).1 (norm_nonneg _) (norm_nonneg _)
+  -- Combine with plenum floor constraint
+  refine ⟨C, hC.1, ?_, ?_⟩
+  · exact fractalLaplacian_eq_zero_of_harmonic k ε ω hω hM
+  · constructor
+    · intro η hη
+      exact le_trans (h_coupling η hη) (add_le_add_right (by linarith) _)
+    · intro hε p
+      exact (hC.2.1 p).2 hε
 
 /-- Enhanced fractal scaling preserves toroidal structure -/
 theorem fractalScale_toroidal_properties (ε : ℝ) (ω : GradedForm ToroidalCoords) :
