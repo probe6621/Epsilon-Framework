@@ -1047,18 +1047,31 @@ theorem hodge_decomposition_isomorphism (k : ℕ) :
     {ξ : DegreeKForm (k+1) M // ∃ζ, ξ = codifferential (k+2) ζ} := by
   sorry
 
-/-- The harmonic projection operator -/
+/-- The harmonic projection operator with fractal coupling -/
 def harmonic_projection (k : ℕ) (ω : DegreeKForm k M) : DegreeKForm k M :=
-  (Classical.choose (hodge_decomposition k ω)).harmonic
+  let hc := Classical.choose (hodge_decomposition k ω)
+  { hc.harmonic with 
+    val := fun x => 
+      if crossDensityCoupling k k (DegreeKForm.toGraded hc.harmonic) 
+         (DegreeKForm.toGraded hc.harmonic) = 0 then
+        0
+      else
+        hc.harmonic.val x }
 
 /-- The harmonic projection is idempotent -/
 theorem harmonic_projection_idempotent (k : ℕ) (ω : DegreeKForm k M) :
     harmonic_projection k (harmonic_projection k ω) = harmonic_projection k ω := by
   sorry
 
-/-- The harmonic projection preserves cohomology classes -/
+/-- The harmonic projection preserves cohomology classes with zero-defect limit -/
 theorem harmonic_projection_cohomology (k : ℕ) (ω : DegreeKForm k M) :
-    [harmonic_projection k ω] = [ω] ∈ deRham_cohomology k M := by
+    let hp := harmonic_projection k ω
+    [hp] = [ω] ∈ deRham_cohomology k M ∧
+    (∀ (η : DegreeKForm k M), IsHarmonic k η → 
+      crossDensityCoupling k k (DegreeKForm.toGraded hp) 
+        (DegreeKForm.toGraded η) →
+      crossDensityCoupling k k (DegreeKForm.toGraded ω) 
+        (DegreeKForm.toGraded η)) := by
   sorry
 
 /-- The Hodge star induces the Poincaré duality isomorphism -/
