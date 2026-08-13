@@ -25,3 +25,34 @@ name = "EpsilonCohomology"
 globOptions = {
   exclude = ["Test/**"]  # Exclude test files from main build
 }
+
+# Enable more parallel workers for faster builds
+[lean.workers]
+server = 4
+workers = 4
+
+# Cache build artifacts for faster rebuilds
+[lean.cache]
+enabled = true
+path = ".lake/build_cache"
+
+# Add development dependencies
+[[require]]
+name = "mathlib"
+rev = "v4.33.0"
+doc = "https://leanprover-community.github.io/mathlib4_docs/"
+
+[[require]]
+name = "proofwidgets"
+rev = "v0.0.1"
+-- Test target configuration
+[[lean_lib]]
+name = "Tests"
+path = "Test"
+globOptions = {
+  include = ["**/*.lean"]
+}
+
+-- Documentation target
+[lean.doc]
+root = "EpsilonCohomology"
