@@ -70,7 +70,24 @@ theorem fractalScale_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M)
     (∀ η : GradedForm M, isFractalHarmonic k 1 η →
       crossDensityCoupling k k (fractalScale ε ω) (fractalScale ε η) ≤
       D * crossDensityCoupling k k ω η + (plenum_floor M).choose) := by
-  sorry
+  intro hM
+  obtain ⟨ε₀, hε₀⟩ := hM
+  -- Get uniform bounds from fractal scaling
+  obtain ⟨C, hC⟩ := fractalScale_norm_bound ε ω hM
+  -- Use harmonicity to get coupling estimate
+  have h_coupling : ∀ η, isFractalHarmonic k 1 η → 
+    crossDensityCoupling k k (fractalScale ε ω) (fractalScale ε η) ≤ 
+    C^2 * crossDensityCoupling k k ω η := by
+    intro η hη
+    simp [crossDensityCoupling]
+    apply integral_mono (by simp) (by simp)
+    intro x _
+    exact mul_le_mul (hC.1 x).1 (hC.1 x).1 (norm_nonneg _) (norm_nonneg _)
+  -- Combine with plenum floor constraint
+  refine ⟨C^2, by positivity, ?_, ?_⟩
+  · exact fractalLaplacian_eq_zero_of_harmonic k ε ω hω hM
+  · intro η hη
+    exact le_trans (h_coupling η hη) (add_le_add_right (by linarith) _)
 
 /-- Quantitative convergence as coupling parameters vanish -/
 theorem coupling_convergence (m n : ℕ) (ω η : GradedForm M) :

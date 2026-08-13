@@ -130,7 +130,27 @@ def toroidalNorm (p : ToroidalCoords) : ℝ :=
 theorem toroidal_plenum_constraint (ω : GradedForm ToroidalCoords) (ε : ℝ) :
     plenum_floor ToroidalCoords → 
     ∃ c > 0, ∀ p, ‖ω.coeff p‖ ≥ c * ε * toroidalNorm p := by
-  sorry
+  intro hM
+  obtain ⟨ε₀, hε₀⟩ := hM
+  -- Use smoothness to get local lower bound
+  have : ∀ p, ∃ c > 0, ∃ U ∈ 𝓝 p, ∀ q ∈ U, ‖ω.coeff q‖ ≥ c * toroidalNorm q := by
+    intro p
+    refine ⟨‖ω.coeff p‖ / (2 * toroidalNorm p + 1), by positivity, univ, univ_mem, fun q _ => ?_⟩
+    exact le_trans (div_le_div_of_le_left (norm_nonneg _) (by positivity) 
+      (add_le_add_right (mul_le_mul_of_nonneg_right (le_refl _) (norm_nonneg _)) _)) 
+      (norm_le_norm_of_mem (mem_univ _))
+  choose c hc U hU hcU using this
+  
+  -- Global bound using compactness
+  rcases isCompact_univ.elim_finite_subcover_image (fun p _ => hU p) (by simp) with ⟨s, hs, hcover⟩
+  let c' := s.inf' hs c
+  have hc' : 0 < c' := by
+    refine Finset.inf'_pos _ hs fun p hp => hc p
+    exact nonempty_of_mem hs
+  
+  refine ⟨c' * ε₀, by positivity, fun p => ?_⟩
+  exact le_trans (mul_le_mul_of_nonneg_right (hcU p (hcover.symm.subset (mem_univ p))) (by positivity))
+    (mul_le_mul_of_nonneg_left (hε₀.2 p) (by positivity))
 
 /-- Fractal scaling preserves toroidal periodicity with explicit bounds -/
 theorem fractalScale_toroidal_periodic (ε : ℝ) (ω : GradedForm ToroidalCoords) :
@@ -139,6 +159,17 @@ theorem fractalScale_toroidal_periodic (ε : ℝ) (ω : GradedForm ToroidalCoord
     (∀ p, ω.coeff {p with φ := p.φ + 2*π} = ω.coeff p) →
     ∀ p, (fractalScale ε ω).coeff {p with θ := p.θ + 2*π} = (fractalScale ε ω).coeff p ∧
           (fractalScale ε ω).coeff {p with φ := p.φ + 2*π} = (fractalScale ε ω).coeff p := by
-  sorry
+  intro hM hθ hφ p
+  constructor
+  · simp [fractalScale, GradedForm.coeff]
+    rw [hθ]
+    congr
+    ext <;> simp [ToroidalCoords.ext_iff]
+    ring
+  · simp [fractalScale, GradedForm.coeff] 
+    rw [hφ]
+    congr
+    ext <;> simp [ToroidalCoords.ext_iff]
+    ring
 
 end EpsilonCohomology
