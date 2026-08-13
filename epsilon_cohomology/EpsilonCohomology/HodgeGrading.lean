@@ -889,4 +889,40 @@ theorem laplacian_preserves_harmonic_decomposition (k : ℕ) (ω : DegreeKForm k
         degree := k } := by
   sorry
 
+/-- The space of harmonic forms is isomorphic to the de Rham cohomology -/
+def harmonic_to_cohomology (k : ℕ) : 
+    {ω : DegreeKForm k M // IsHarmonic k ω} ≃ₗ[ℝ] deRham_cohomology k M := by
+  sorry
+
+/-- The Hodge decomposition induces an isomorphism between forms and cohomology ⊕ exact ⊕ coexact -/
+theorem hodge_decomposition_isomorphism (k : ℕ) :
+    DegreeKForm k M ≅ 
+    deRham_cohomology k M ⊕ {η : DegreeKForm (k-1) M // η = d (k-1) η} ⊕ 
+    {ξ : DegreeKForm (k+1) M // ∃ζ, ξ = codifferential (k+2) ζ} := by
+  sorry
+
+/-- The harmonic projection operator -/
+def harmonic_projection (k : ℕ) (ω : DegreeKForm k M) : DegreeKForm k M :=
+  (Classical.choose (hodge_decomposition k ω)).harmonic
+
+/-- The harmonic projection is idempotent -/
+theorem harmonic_projection_idempotent (k : ℕ) (ω : DegreeKForm k M) :
+    harmonic_projection k (harmonic_projection k ω) = harmonic_projection k ω := by
+  sorry
+
+/-- The harmonic projection preserves cohomology classes -/
+theorem harmonic_projection_cohomology (k : ℕ) (ω : DegreeKForm k M) :
+    [harmonic_projection k ω] = [ω] ∈ deRham_cohomology k M := by
+  sorry
+
+/-- The Hodge star induces the Poincaré duality isomorphism -/
+theorem poincare_duality (k : ℕ) :
+    deRham_cohomology k M ≅ₗ[ℝ] (deRham_cohomology (n - k) M)ᘁ := by
+  sorry
+
+/-- The Hodge decomposition is compatible with the de Rham complex -/
+theorem hodge_decomposition_de_rham_compatibility (k : ℕ) :
+    (d k).ker ∩ (codifferential k).rangeᗮ ≅ deRham_cohomology k M := by
+  sorry
+
 end EpsilonCohomology
