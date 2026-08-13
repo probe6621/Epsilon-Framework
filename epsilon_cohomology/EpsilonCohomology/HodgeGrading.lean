@@ -955,7 +955,16 @@ def harmonic_projection (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) : DegreeKFor
       if C = 0 then 0 else scaled_harmonic.coeff x / max C ε_min,
     degree := k,
     smooth := by 
-      apply scaled_harmonic.smooth.comp (continuous_smul_left ε).smooth }
+      apply scaled_harmonic.smooth.comp (continuous_smul_left ε).smooth,
+    -- Add explicit periodicity preservation
+    periodic_θ := by
+      intro p
+      simp [scaled_harmonic, fractalScale, GradedForm.coeff]
+      rw [hc.harmonic.periodic_θ],
+    periodic_φ := by
+      intro p
+      simp [scaled_harmonic, fractalScale, GradedForm.coeff]
+      rw [hc.harmonic.periodic_φ] }
 
 /-- Harmonic projection preserves plenum constraints -/
 theorem harmonic_projection_preserves_plenum (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) :
@@ -1147,7 +1156,18 @@ theorem harmonic_projection_toroidal_periodic (k : ℕ) (ε : ℝ) (ω : DegreeK
     (∀ p, ω.val {p with φ := p.φ + 2*π} = ω.val p) →
     ∀ p, (harmonic_projection k ε ω).val {p with θ := p.θ + 2*π} = (harmonic_projection k ε ω).val p ∧
           (harmonic_projection k ε ω).val {p with φ := p.φ + 2*π} = (harmonic_projection k ε ω).val p := by
-  sorry
+  intro hθ hφ p
+  constructor
+  · simp [harmonic_projection]
+    rw [hθ]
+    congr
+    ext <;> simp [ToroidalCoords.ext_iff]
+    ring
+  · simp [harmonic_projection]
+    rw [hφ]
+    congr
+    ext <;> simp [ToroidalCoords.ext_iff]
+    ring
 
 /-- Harmonic projection is Lipschitz continuous in L² norm -/
 theorem harmonic_projection_lipschitz (k : ℕ) (ε : ℝ) :

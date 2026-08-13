@@ -99,6 +99,9 @@ example (ω : GradedForm ToroidalCoords) (hω : isFractalHarmonic 0 1 ω) :
 example (ω : GradedForm ToroidalCoords) :
     harmonic_projection 0 1 (DegreeKForm.ofFun 0 (fractalScale 1 ω).coeff) =
     DegreeKForm.ofFun 0 (fractalScale 1 (DegreeKForm.toGraded (harmonic_projection 0 1 (DegreeKForm.ofFun 0 ω.coeff))).coeff) := by
-  sorry  -- Needs implementation
+  simp [harmonic_projection, DegreeKForm.ofFun, DegreeKForm.toGraded]
+  ext x
+  rw [fractalScale_commutes_differential 0 1 ω]
+  simp [harmonic_projection_cohomology]
 
 end EpsilonCohomology.Test
