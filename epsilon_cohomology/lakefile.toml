@@ -57,7 +57,12 @@ rev = "v4.33.0"
 git = "https://github.com/leanprover-community/mathlib4.git"
 
 [[require]]
-name = "mathlib-test"
+name = "mathlib-test" 
+rev = "v4.33.0"
+git = "https://github.com/leanprover-community/mathlib4.git"
+
+[[require]]
+name = "mathlib-analysis"
 rev = "v4.33.0"
 git = "https://github.com/leanprover-community/mathlib4.git"
 

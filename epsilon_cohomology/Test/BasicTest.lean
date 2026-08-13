@@ -41,4 +41,18 @@ example (x y z : ToroidalCoords) :
   simp [toroidalMetric]
   split <;> simp [Real.sqrt_add_sq_le, add_le_add]
 
+/-- Test fractal scaling preserves harmonic forms with explicit bounds -/
+example (ω : GradedForm ToroidalCoords) (hω : isFractalHarmonic 0 1 ω) :
+    plenum_floor ToroidalCoords → 
+    ∃ (C : ℝ) (hC : C > 0), 
+    ∀ x, ‖(fractalScale 1 ω).coeff x‖ ≤ C * ‖ω.coeff x‖ := by
+  intro hM
+  exact (fractalScale_norm_bound 1 ω hM).choose_spec
+
+/-- Test fractal scaling commutes with Hodge star -/
+example (ω : GradedForm ToroidalCoords) :
+    fractalHodgeStar 0 1 (fractalScale 1 ω) = 
+    fractalScale 1 (fractalHodgeStar 0 1 ω) := by
+  exact fractalHodgeStar_preserves_harmonicity 0 1 ω (by simp)
+
 end EpsilonCohomology.Test
