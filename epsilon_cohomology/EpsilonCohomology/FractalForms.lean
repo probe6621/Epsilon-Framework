@@ -286,17 +286,19 @@ theorem zero_defect_convergence_bounds (k : ℕ) (ε δ : ℝ) (C : ℝ) (ω : G
       crossDensityCoupling k k (fractalScale ε ω) (fractalScale ε η) ≤ γ) := by
   sorry
 
-/-- Quantitative zero-defect convergence with toroidal coupling bounds -/
+/-- Enhanced zero-defect convergence with explicit toroidal rates -/
 theorem zero_defect_convergence_rate (k : ℕ) (ε : ℝ) (C : ℝ) (ω : GradedForm ToroidalCoords) :
     isFractalHarmonic k ε (DegreeKForm.zeroDefect C ω) →
     plenum_floor ToroidalCoords → 
     ∃ (K L : ℝ) (hK : K > 0) (hL : L > 0) (rate : ℝ → ℝ) (h_rate : Tendsto rate (𝓝 0) (𝓝 0)),
     (∀ δ > 0, ∀ η : GradedForm ToroidalCoords,
       crossDensityCoupling k k (fractalScale δ ω) η ≤ 
-      (K * C + L * ε + rate C) * crossDensityCoupling k k ω η) ∧
+      (K * C + L * ε + rate C) * crossDensityCoupling k k ω η + (plenum_floor ToroidalCoords).choose) ∧
     (∀ p, ‖(fractalScale δ ω).coeff p‖ ≥ (K * C + L * ε + rate C) * toroidalNorm p) ∧
     (∀ γ > 0, ∃ δ₀ > 0, ∀ δ < δ₀,
-      crossDensityCoupling k k (fractalScale δ ω) (fractalScale δ ω) ≤ γ) := by
+      crossDensityCoupling k k (fractalScale δ ω) (fractalScale δ ω) ≤ γ * (1 + δ^2)) ∧
+    (∀ p q, toroidalMetric (fractalScale δ ω p) (fractalScale δ ω q) ≤ 
+      (K * C + L * ε + rate C) * toroidalMetric p q) := by
   sorry
 
 /-- Toroidal metric compatibility with fractal scaling -/

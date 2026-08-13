@@ -26,16 +26,37 @@ structure ToroidalCoords where
     }
   }
 
-/-- Induced bundle map for toroidal forms -/
+/-- Enhanced toroidal bundle map with metric properties -/
 def toroidalBundleMap (ω : GradedForm ToroidalCoords) (ε : ℝ) : FractalFormBundle ToroidalCoords := {
   base := ⟨ω.coeff⟩,
   scaling := ε,
-  forms := fun δ ↦ fractalScale δ ω
+  forms := fun δ ↦ fractalScale δ ω,
+  metric_bound := by
+    obtain ⟨C, hC⟩ := fractalScale_toroidal_metric ε ω ω
+    exact ⟨C, hC⟩
 }
 
-/-- Metric on toroidal inversion space -/
+/-- Bundle map preserves harmonic forms -/
+theorem toroidalBundle_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm ToroidalCoords)
+    (hω : isFractalHarmonic k 1 ω) :
+    plenum_floor ToroidalCoords → 
+    isFractalHarmonic k ε (toroidalBundleMap ω ε).forms ε := by
+  sorry
+
+/-- Enhanced toroidal metric with scaling properties -/
 def toroidalMetric (p q : ToroidalCoords) : ℝ :=
-  Real.sqrt ((p.θ - q.θ)^2 + (p.φ - q.φ)^2)
+  let base := Real.sqrt ((p.θ - q.θ)^2 + (p.φ - q.φ)^2)
+  if plenum_floor ToroidalCoords then
+    max base (plenum_floor ToroidalCoords).choose
+  else base
+
+/-- Toroidal metric is compatible with fractal scaling -/
+theorem toroidalMetric_scaling (ε : ℝ) (p q : ToroidalCoords) :
+    plenum_floor ToroidalCoords → 
+    ∃ (C : ℝ) (hC : C > 0),
+    toroidalMetric (fractalScale ε p) (fractalScale ε q) ≤ 
+    C * ε * toroidalMetric p q + (plenum_floor ToroidalCoords).choose := by
+  sorry
 
 /-- Induced norm from toroidal metric -/
 def toroidalNorm (p : ToroidalCoords) : ℝ := 
