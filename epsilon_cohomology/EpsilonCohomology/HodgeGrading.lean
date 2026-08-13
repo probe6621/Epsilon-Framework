@@ -188,4 +188,11 @@ theorem degree_k_differential_commutes_of_zero_defect
       simp [degreeKPullback, DegreeKForm.zeroDefect, DegreeKForm.d, hC]
       rfl
 
+/-- Shifting commutes with zero-defect correction on graded forms. -/
+theorem gradedZeroDefect_shift_commutes
+    (C : ℝ) (ω : GradedForm (X × ℝ × ℝ)) (n : ℕ) :
+    (GradedForm.ofDegree ω.degree (fun p => ω.coeff p + C)).shift n =
+    GradedForm.ofDegree (ω.degree + n) (fun p => ω.coeff p + C) := by
+  ext <;> simp [GradedForm.shift, GradedForm.ofDegree]
+
 end EpsilonCohomology
