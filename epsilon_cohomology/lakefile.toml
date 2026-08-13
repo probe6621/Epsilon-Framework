@@ -48,7 +48,8 @@ doc = "https://leanprover-community.github.io/mathlib4_docs/"
 name = "proofwidgets"
 rev = "v0.0.1"
 git = "https://github.com/leanprover-community/ProofWidgets4.git"
--- Test target configuration
+
+# Test target configuration
 [[lean_lib]]
 name = "Tests"
 path = "Test"
