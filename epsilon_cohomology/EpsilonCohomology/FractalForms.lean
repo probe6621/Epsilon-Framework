@@ -24,10 +24,20 @@ def fractalScale (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
       apply ω.smooth.comp (continuous_smul_left ε).smooth,
     degree := ω.degree }
 
-/-- Fractal scaling preserves norms uniformly -/
+/-- Fractal scaling preserves norms with plenum floor constraint -/
 theorem fractalScale_norm_bound (ε : ℝ) (ω : GradedForm M) :
+    plenum_floor M → 
     ∃ (C : ℝ) (hC : 0 < C ∧ C ≤ 1), 
-    ∀ x, ‖(fractalScale ε ω).coeff x‖ ≤ C * ‖ω.coeff x‖ := by
+    ∀ x, ‖(fractalScale ε ω).coeff x‖ ≤ C * ‖ω.coeff x‖ ∧
+    (ε ≥ 1 → ‖(fractalScale ε ω).coeff x‖ ≥ (plenum_floor M).choose * ‖ω.coeff x‖) := by
+  sorry
+
+/-- Quantitative convergence as coupling parameters vanish -/
+theorem coupling_convergence (m n : ℕ) (ω η : GradedForm M) :
+    plenum_floor M → 
+    ∀ (δ : ℝ) (hδ : δ > 0), ∃ (ε₀ : ℝ) (hε₀ : ε₀ > 0),
+    ∀ ε < ε₀, crossDensityCoupling m n (fractalScale ε ω) (fractalScale ε η) ≤ 
+    (1 + δ) * crossDensityCoupling m n ω η + δ * (plenum_floor M).choose := by
   sorry
 
 /-- Fractal scaling converges to identity as ε → 1 -/
@@ -53,14 +63,16 @@ theorem fractalScale_commutes_differential (k : ℕ) (ε : ℝ) (ω : GradedForm
     fractalD k ε (fractalScale ε ω) = fractalScale ε (fractalD k 1 ω) := by
   sorry
 
-/-- Fractal scaling preserves harmonic forms with quantitative bounds -/
+/-- Fractal scaling preserves harmonic forms with plenum bounds -/
 theorem fractalScale_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M) 
     (hω : isFractalHarmonic k 1 ω) : 
+    plenum_floor M → 
     ∃ (C : ℝ) (hC : C > 0), 
     isFractalHarmonic k ε (fractalScale ε ω) ∧ 
     (∀ (η : GradedForm M), isFractalHarmonic k 1 η →
       crossDensityCoupling k k (fractalScale ε ω) (fractalScale ε η) ≤ 
-      C * crossDensityCoupling k k ω η) := by
+      C * crossDensityCoupling k k ω η + (plenum_floor M).choose) ∧
+    (ε < 1 → ∀ p, ‖(fractalScale ε ω).coeff p‖ ≥ (plenum_floor M).choose * ‖ω.coeff p‖) := by
   sorry
 
 /-- Fractal scaling preserves toroidal periodicity -/
@@ -204,10 +216,22 @@ theorem zero_defect_coupling (C : ℝ) (ε : ℝ) (m n : ℕ) (ω η : GradedFor
      ∀ δ ∈ Set.Ioo 0 E, isFractalHarmonic n (ε + δ) (DegreeKForm.zeroDefect C η)) := by
   sorry
 
-/-- Zero-defect forms are dense in harmonic forms -/
+/-- Enhanced zero-defect density with plenum constraints -/
 theorem zero_defect_dense_in_harmonic (k : ℕ) (ε : ℝ) :
-    closure {ω : GradedForm M | ∃ C > 0, isFractalHarmonic k ε (DegreeKForm.zeroDefect C ω)} = 
-    {ω : GradedForm M | isFractalHarmonic k ε ω} := by
+    plenum_floor M → 
+    closure {ω : GradedForm M | ∃ C > 0, 
+      isFractalHarmonic k ε (DegreeKForm.zeroDefect C ω) ∧
+      ∀ p, ‖ω.coeff p‖ ≥ (plenum_floor M).choose * C} = 
+    {ω : GradedForm M | isFractalHarmonic k ε ω ∧ 
+      ∀ p, ‖ω.coeff p‖ ≥ (plenum_floor M).choose} := by
+  sorry
+
+/-- Uniform convergence under vanishing coupling -/
+theorem uniform_coupling_convergence (k : ℕ) (ε : ℝ) (ω : GradedForm M) :
+    plenum_floor M → 
+    ∀ (δ : ℝ) (hδ : δ > 0), ∃ (C₀ : ℝ) (hC₀ : C₀ > 0),
+    ∀ C < C₀, crossDensityCoupling k k (DegreeKForm.zeroDefect C ω) ω ≤ 
+    δ * (1 + (plenum_floor M).choose) := by
   sorry
 
 /-- Quantitative bounds for zero-defect convergence -/
