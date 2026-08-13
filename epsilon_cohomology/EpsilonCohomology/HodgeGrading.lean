@@ -1,5 +1,6 @@
 import EpsilonCohomology.CohomologyIsomorphism
 import EpsilonCohomology.ZeroDefectCommutation
+import Mathlib.Geometry.Manifold.ContMdiffMap
 
 noncomputable section
 
@@ -36,18 +37,21 @@ def DegreeFormSpace (k : ℕ) (M : Type*) := DegreeKForm k M
 structure GradedForm (M : Type*) where
   degree : ℕ
   coeff : M → ℝ
+  smooth : Smooth ℝ ℝ coeff
 
 /-- Construct a graded form from a coefficient function at a fixed degree. -/
-def GradedForm.ofDegree (k : ℕ) (f : M → ℝ) : GradedForm M :=
-  { degree := k, coeff := f }
+def GradedForm.ofDegree (k : ℕ) (f : M → ℝ) (hf : Smooth ℝ ℝ f) : GradedForm M :=
+  { degree := k, coeff := f, smooth := hf }
 
 /-- Shift a graded form by a fixed offset. -/
 def GradedForm.shift (ω : GradedForm M) (n : ℕ) : GradedForm M :=
-  { degree := ω.degree + n, coeff := ω.coeff }
+  { degree := ω.degree + n, coeff := ω.coeff, smooth := ω.smooth }
 
 /-- Pullback a graded form along the embedding. -/
 def gradedPullback (ω : GradedForm (X × ℝ × ℝ)) : GradedForm X :=
-  { degree := ω.degree, coeff := fun x => ω.coeff (embedding_ι X x) }
+  { degree := ω.degree, 
+    coeff := fun x => ω.coeff (embedding_ι X x),
+    smooth := ω.smooth.comp (embedding_smooth X) }
 
 /-- A shifted graded form keeps the same coefficient data. -/
 theorem GradedForm.shift_preserves_coeff (ω : GradedForm M) (n : ℕ) :
@@ -84,6 +88,10 @@ theorem graded_filtration_index_compatibility
     (gradedPullback (X := X) ((GradedForm.ofDegree ω.degree (fun p => ω.coeff p + C)).shift n)).degree =
       (gradedPullback (X := X) (GradedForm.ofDegree ω.degree (fun p => ω.coeff p + C))).degree + n := by
   rfl
+
+/-- Pullback preserves smoothness of graded forms. -/
+theorem gradedPullback_preserves_smoothness (ω : GradedForm (X × ℝ × ℝ)) :
+    (gradedPullback (X := X) ω).smooth := ω.smooth.comp (embedding_smooth X)
 
 /-- Pullback preserves the graded degree. -/
 theorem gradedPullback_preserves_degree (ω : GradedForm (X × ℝ × ℝ)) :
