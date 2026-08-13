@@ -33,7 +33,13 @@ def toroidalBundleMap (ω : GradedForm ToroidalCoords) (ε : ℝ) : FractalFormB
   forms := fun δ ↦ fractalScale δ ω,
   metric_bound := by
     obtain ⟨C, hC⟩ := fractalScale_toroidal_metric ε ω ω
-    exact ⟨C, hC⟩
+    refine ⟨C, fun x y ↦ ?_⟩
+    simp only [toroidalMetric]
+    split
+    · refine le_trans (hC x y) ?_
+      rw [max_le_iff]
+      exact ⟨le_trans (hC x y) (le_max_left _ _), (plenum_floor ToroidalCoords).choose_spec.2⟩
+    · exact hC x y
 }
 
 /-- Bundle map preserves harmonic forms -/
@@ -46,9 +52,36 @@ theorem toroidalBundle_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm 
 /-- Enhanced toroidal metric with scaling properties -/
 def toroidalMetric (p q : ToroidalCoords) : ℝ :=
   let base := Real.sqrt ((p.θ - q.θ)^2 + (p.φ - q.φ)^2)
-  if plenum_floor ToroidalCoords then
-    max base (plenum_floor ToroidalCoords).choose
+  if h : plenum_floor ToroidalCoords then
+    max base (h.choose)
   else base
+
+/-- Toroidal metric is indeed a metric -/
+instance : MetricSpace ToroidalCoords where
+  dist := toroidalMetric
+  dist_self x := by 
+    simp [toroidalMetric]
+    split <;> simp
+  dist_comm x y := by 
+    simp [toroidalMetric]
+    split <;> simp [Real.sqrt_eq_rpow, Real.rpow_two]; ring
+  dist_triangle x y z := by
+    simp [toroidalMetric]
+    split
+    · refine le_trans (le_trans (Real.sqrt_le_sqrt ?_) 
+        (Real.sqrt_le_sqrt ?_)) ?_
+      · ring_nf
+        exact add_le_add (pow_le_pow_left (by simp) (dist_triangle _ _ _) 2)
+          (pow_le_pow_left (by simp) (dist_triangle _ _ _) 2)
+      · simp [le_max_iff, (plenum_floor ToroidalCoords).choose_spec.1]
+    · exact dist_triangle x y z
+  eq_of_dist_eq_zero := by
+    simp [toroidalMetric]
+    intro x y h
+    have : (x.θ - y.θ)^2 + (x.φ - y.φ)^2 = 0 := by
+      rw [← Real.sqrt_eq_zero] <;> simp [h]
+    simp at this
+    exact ToroidalCoords.ext x y (by linarith) (by linarith)
 
 /-- Toroidal metric is compatible with fractal scaling -/
 theorem toroidalMetric_scaling (ε : ℝ) (p q : ToroidalCoords) :

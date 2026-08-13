@@ -58,7 +58,30 @@ theorem fractalScale_convergence_rate (ω : GradedForm M) :
     plenum_floor M → 
     ∃ (L : ℝ) (hL : L > 0), ∀ ε,
     ∫ x, ‖(fractalScale ε ω).coeff x - ω.coeff x‖^2 ≤ L * (1 - ε)^2 * (plenum_floor M).choose^2 := by
-  sorry
+  intro hM
+  obtain ⟨ε₀, hε₀⟩ := hM
+  -- Use smoothness to get Lipschitz constant L
+  have : ∃ L > 0, ∀ x y, ‖ω.coeff x - ω.coeff y‖ ≤ L * ‖x - y‖ := by
+    apply ContDiff.exists_lipschitzWith
+    exact ω.smooth.of_le le_top
+  obtain ⟨L, hL, hLip⟩ := this
+  -- Main estimate using Lipschitz and plenum floor
+  refine ⟨L * (volume (univ : Set M)).toReal, by positivity, fun ε ↦ ?_⟩
+  calc ∫ x, ‖(fractalScale ε ω).coeff x - ω.coeff x‖^2 
+    = ∫ x, ‖ω.coeff (ε • x) - ω.coeff x‖^2 := rfl
+  _ ≤ ∫ x, (L * ‖(ε • x) - x‖)^2 := ?_
+  _ = ∫ x, L^2 * (1 - ε)^2 * ‖x‖^2 := by 
+    simp [norm_smul, mul_pow]; ring
+  _ ≤ L^2 * (1 - ε)^2 * ∫ x, ‖x‖^2 := by 
+    rw [integral_mul_left]; apply integral_mono (by simp) 
+    · exact (continuous_norm.pow 2).integrable_of_hasCompactSupport 
+        (hasCompactSupport_def.2 ⟨1, fun x hx ↦ by simp [hx]⟩)
+  _ ≤ L * (1 - ε)^2 * ε₀^2 := ?_
+  · apply integral_mono (by simp) (by simp)
+    intro x _
+    exact pow_le_pow_left (norm_nonneg _) (hLip _ _) _
+  · have := (plenum_floor M).choose_spec.1
+    simp [mul_assoc, mul_comm _ ε₀^2, mul_le_mul_left (by positivity)]
 
 /-- Uniform convergence of fractal scaling -/
 theorem fractalScale_uniform_convergence (ω : GradedForm M) :
