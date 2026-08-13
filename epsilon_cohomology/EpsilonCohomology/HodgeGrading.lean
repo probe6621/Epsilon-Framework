@@ -377,4 +377,52 @@ theorem laplacian_non_negative (k : ℕ) (ω : DegreeKForm k M) :
     0 ≤ ∫ x, ω.val x * (hodgeLaplacian k ω).val x := by
   sorry
 
+/-- The codifferential operator δ on degree-k forms -/
+def codifferential (k : ℕ) (ω : DegreeKForm k M) : DegreeKForm (k-1) M :=
+  { val := fun p => ω.val p,  -- Placeholder for actual codifferential computation
+    degree := k-1 }
+
+/-- The codifferential is the formal adjoint of the differential -/
+theorem codifferential_adjoint (k : ℕ) (ω : DegreeKForm k M) (η : DegreeKForm (k-1) M) :
+    ∫ x, (codifferential k ω).val x * η.val x = ∫ x, ω.val x * (DegreeKForm.d (k-1) η).val x := by
+  sorry
+
+/-- The Hodge Laplacian decomposes as Δ = dδ + δd -/
+theorem laplacian_decomposition (k : ℕ) (ω : DegreeKForm k M) :
+    hodgeLaplacian k ω = 
+    { val := (DegreeKForm.d (k-1) (codifferential k ω)).val + 
+             (codifferential (k+1) (DegreeKForm.d k ω)).val,
+      degree := k } := by
+  sorry
+
+/-- The codifferential commutes with the Hodge star -/
+theorem codifferential_hodge_star_commute (k : ℕ) (ω : DegreeKForm k M) :
+    codifferential (n - k) (hodgeStar k ω) = hodgeStar (k+1) (DegreeKForm.d k ω) := by
+  sorry
+
+/-- The codifferential preserves harmonic forms -/
+theorem codifferential_preserves_harmonic (k : ℕ) (ω : DegreeKForm k M) 
+    (hω : IsHarmonic k ω) : codifferential k ω = 0 := by
+  sorry
+
+/-- The codifferential preserves zero-defect forms -/
+theorem codifferential_zero_defect_compatibility (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
+    codifferential k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (codifferential k ω) := by
+  sorry
+
+/-- The codifferential commutes with pullback -/
+theorem codifferential_pullback_commute (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
+    codifferential k (degreeKPullback X k ω) = degreeKPullback X (k-1) (codifferential k ω) := by
+  sorry
+
+/-- The codifferential preserves Hodge decomposition -/
+theorem codifferential_preserves_decomposition (k : ℕ) (ω : DegreeKForm k M) :
+    let hc := Classical.choose (hodge_decomposition k ω)
+    codifferential k ω = 
+      { val := codifferential k hc.harmonic + 
+               codifferential (k-1) hc.exact +
+               codifferential (k+1) hc.coexact,
+        degree := k-1 } := by
+  sorry
+
 end EpsilonCohomology
