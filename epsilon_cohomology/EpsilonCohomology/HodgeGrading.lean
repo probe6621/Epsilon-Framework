@@ -949,7 +949,8 @@ def harmonic_projection (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) : DegreeKFor
   let hc := Classical.choose (hodge_decomposition k ω)
   let scaled_harmonic := fractalScale ε (DegreeKForm.toGraded hc.harmonic)
   { val := fun x => 
-      let C := Classical.choose (fractalScale_norm_bound ε (DegreeKForm.toGraded hc.harmonic))
+      let C := Classical.choose (fractalScale_preserves_coupling_uniformly ε k k 
+               (DegreeKForm.toGraded hc.harmonic) (DegreeKForm.toGraded hc.harmonic))
       let ε_min := (plenum_floor M).choose
       if C = 0 then 0 else scaled_harmonic.coeff x / max C ε_min,
     degree := k,
