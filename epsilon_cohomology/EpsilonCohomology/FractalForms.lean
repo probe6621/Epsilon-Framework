@@ -15,9 +15,18 @@ structure FractalFormBundle (M : Type*) where
 def crossDensityCoupling (m n : ℕ) (ω η : GradedForm M) : ℝ :=
   ∫ x, ω.coeff x * η.coeff x * (if x ∈ support ω ∧ x ∈ support η then 1 else 0)
 
-/-- Fractal scaling operator -/
+/-- Fractal scaling operator with metric preservation -/
 def fractalScale (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
-  { ω with coeff := fun x => ω.coeff (ε • x) }
+  { ω with 
+    coeff := fun x => ω.coeff (ε • x),
+    smooth := by 
+      apply ω.smooth.comp (continuous_smul_left ε).smooth }
+
+/-- Fractal scaling preserves the Hodge star -/
+theorem fractalScale_hodgeStar (k : ℕ) (ε : ℝ) (ω : GradedForm M) :
+    fractalScale ε (fractalHodgeStar k ε ω) = 
+    fractalHodgeStar k ε (fractalScale ε ω) := by
+  sorry
 
 /-- Fractal differential operator -/
 def fractalD (k : ℕ) (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
@@ -120,10 +129,12 @@ theorem fractalScale_preserves_structure (ε : ℝ) (m n : ℕ) (ω η : GradedF
     (isFractalHarmonic n ε η → isFractalHarmonic n ε (fractalScale ε η)) := by
   sorry
 
-/-- Zero-defect condition for coupling matrices -/
-theorem zero_defect_coupling (C : ℝ) (m n : ℕ) (ω η : GradedForm M) :
-    crossDensityCoupling m n (DegreeKForm.zeroDefect C ω) η =
-    crossDensityCoupling m n ω (DegreeKForm.zeroDefect C η) := by
+/-- Zero-defect condition for coupling matrices with fractal scaling -/
+theorem zero_defect_coupling (C : ℝ) (ε : ℝ) (m n : ℕ) (ω η : GradedForm M) :
+    crossDensityCoupling m n (DegreeKForm.zeroDefect C (fractalScale ε ω)) η =
+    crossDensityCoupling m n ω (DegreeKForm.zeroDefect C (fractalScale ε η)) ∧
+    (∀ (k : ℕ), crossDensityCoupling k k (fractalScale ε ω) (fractalScale ε ω) = 0 → 
+      crossDensityCoupling k k ω ω = 0) := by
   sorry
 
 /-- Fractal Hodge star preserves coupling -/
