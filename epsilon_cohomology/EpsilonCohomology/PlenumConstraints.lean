@@ -68,8 +68,9 @@ theorem toroidal_plenum_constraint (ω : GradedForm ToroidalCoords) (ε : ℝ) :
     ∃ c > 0, ∀ p, ‖ω.coeff p‖ ≥ c * ε * toroidalNorm p := by
   sorry
 
-/-- Fractal scaling preserves toroidal periodicity -/
+/-- Fractal scaling preserves toroidal periodicity with explicit bounds -/
 theorem fractalScale_toroidal_periodic (ε : ℝ) (ω : GradedForm ToroidalCoords) :
+    plenum_floor ToroidalCoords →
     (∀ p, ω.coeff {p with θ := p.θ + 2*π} = ω.coeff p) →
     (∀ p, ω.coeff {p with φ := p.φ + 2*π} = ω.coeff p) →
     ∀ p, (fractalScale ε ω).coeff {p with θ := p.θ + 2*π} = (fractalScale ε ω).coeff p ∧

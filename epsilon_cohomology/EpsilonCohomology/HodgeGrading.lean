@@ -210,6 +210,8 @@ theorem gradedZeroDefect_shift_commutes
     GradedForm.ofDegree (ω.degree + n) (fun p => ω.coeff p + C) := by
   ext <;> simp [GradedForm.shift, GradedForm.ofDegree]
 
+instance : Manifold M (𝓘(ℝ)) := by infer_instance
+
 /-- A form is harmonic if it's in the kernel of both d and d* -/
 def IsHarmonic (k : ℕ) (ω : DegreeKForm k M) : Prop :=
   ω = DegreeKForm.d k ω ∧ 
