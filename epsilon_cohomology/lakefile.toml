@@ -39,7 +39,7 @@ path = ".lake/build_cache"
 # Add development dependencies
 [[require]]
 name = "mathlib"
-scope = "leanprover-community"
+scope = "leanprover-community" 
 rev = "v4.33.0"
 git = "https://github.com/leanprover-community/mathlib4.git"
 doc = "https://leanprover-community.github.io/mathlib4_docs/"
