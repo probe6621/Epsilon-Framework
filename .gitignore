@@ -1,0 +1,4 @@
+.aider*
+epsilon_cohomology/.lake_build.log
+run_deepseek_task.sh
+tasks/

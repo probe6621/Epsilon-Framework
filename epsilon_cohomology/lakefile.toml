@@ -1,18 +1,25 @@
 name = "epsilon_cohomology"
 version = "0.1.0"
-keywords = ["math"]
 defaultTargets = ["EpsilonCohomology"]
+keywords = ["math", "cohomology", "topology"]
+description = "Formalization of epsilon-cohomology with fractal scaling properties"
+
+[package]
+license = "Apache-2.0"
+authors = ["Your Name"]
 
 [leanOptions]
-pp.unicode.fun = true # pretty-prints `fun a ↦ b`
+pp.unicode.fun = true
 relaxedAutoImplicit = false
 weak.linter.mathlibStandardSet = true
 maxSynthPendingDepth = 3
+linter.missingDocs = true
 
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
 rev = "v4.33.0"
+git = "https://github.com/leanprover-community/mathlib4.git"
 
 [[lean_lib]]
 name = "EpsilonCohomology"
