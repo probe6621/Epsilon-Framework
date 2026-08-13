@@ -210,16 +210,38 @@ theorem gradedZeroDefect_shift_commutes
     GradedForm.ofDegree (ω.degree + n) (fun p => ω.coeff p + C) := by
   ext <;> simp [GradedForm.shift, GradedForm.ofDegree]
 
+/-- A form is harmonic if it's in the kernel of both d and d* -/
+def IsHarmonic (k : ℕ) (ω : DegreeKForm k M) : Prop :=
+  ω = DegreeKForm.d k ω ∧ 
+  ∃ (η : DegreeKForm (k+1) M), ω.val = η.val
+
 /-- A Hodge decomposition component at degree k -/
 structure HodgeComponent (k : ℕ) (M : Type*) where
   harmonic : DegreeKForm k M
   exact : DegreeKForm (k-1) M
   coexact : DegreeKForm (k+1) M
+  is_harmonic : IsHarmonic k harmonic
+  is_exact : exact.val = DegreeKForm.d (k-1) (Classical.choose is_harmonic.2).val
+  is_coexact : ∃ (η : DegreeKForm (k+2) M), coexact.val = η.val
 
 /-- The Hodge decomposition theorem for degree-k forms -/
 theorem hodge_decomposition (k : ℕ) (ω : DegreeKForm k M) :
     ∃ (hc : HodgeComponent k M),
-      ω.val = hc.harmonic.val + hc.exact.val + hc.coexact.val := by
+      ω.val = hc.harmonic.val + hc.exact.val + hc.coexact.val ∧
+      (∀ (η : DegreeKForm k M), IsHarmonic k η → 
+        ∫ x, hc.harmonic.val x * η.val x = ∫ x, ω.val x * η.val x) := by
+  sorry
+
+/-- Harmonic forms are orthogonal to exact forms -/
+theorem harmonic_exact_orthogonal (k : ℕ) (ω : DegreeKForm k M) 
+    (hc : HodgeComponent k M) (η : DegreeKForm k M) (hη : IsHarmonic k η) :
+    ∫ x, hc.exact.val x * η.val x = 0 := by
+  sorry
+
+/-- Harmonic forms are orthogonal to coexact forms -/
+theorem harmonic_coexact_orthogonal (k : ℕ) (ω : DegreeKForm k M) 
+    (hc : HodgeComponent k M) (η : DegreeKForm k M) (hη : IsHarmonic k η) :
+    ∫ x, hc.coexact.val x * η.val x = 0 := by
   sorry
 
 /-- Pullback preserves Hodge decomposition components -/
@@ -229,7 +251,13 @@ theorem hodge_pullback_compatibility (k : ℕ) (ω : DegreeKForm k (X × ℝ × 
       { val := degreeKPullback X k hc.harmonic + 
                degreeKPullback X (k-1) hc.exact +
                degreeKPullback X (k+1) hc.coexact,
-        degree := k } := by
+        degree := k } ∧
+    IsHarmonic k (degreeKPullback X k hc.harmonic) := by
+  sorry
+
+/-- Pullback preserves harmonic forms -/
+theorem pullback_preserves_harmonic (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) 
+    (hω : IsHarmonic k ω) : IsHarmonic k (degreeKPullback X k ω) := by
   sorry
 
 /-- Zero-defect correction preserves Hodge components -/
