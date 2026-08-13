@@ -273,10 +273,21 @@ theorem hodge_zero_defect_compatibility (C : ℝ) (k : ℕ) (ω : DegreeKForm k 
         degree := k } := by
   sorry
 
-/-- The Hodge star operator on degree-k forms -/
-def hodgeStar (k : ℕ) (ω : DegreeKForm k M) : DegreeKForm (n - k) M :=
-  { val := fun p => ω.val p,
-    degree := n - k }
+/-- Enhanced Hodge star with fractal scaling -/
+def hodgeStar (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) : DegreeKForm (n - k) M :=
+  { val := fun p => 
+      if plenum_floor M then
+        (fractalScale ε (DegreeKForm.toGraded ω)).coeff p
+      else ω.val p,
+    degree := n - k,
+    smooth := by 
+      apply (fractalScale ε (DegreeKForm.toGraded ω)).smooth }
+
+/-- Hodge star preserves fractal scaling -/
+theorem hodgeStar_fractal_commute (k : ℕ) (ε δ : ℝ) (ω : DegreeKForm k M) :
+    hodgeStar k ε (DegreeKForm.ofFun k (fractalScale δ (DegreeKForm.toGraded ω)).coeff) =
+    DegreeKForm.ofFun (n - k) (fractalScale δ (DegreeKForm.toGraded (hodgeStar k ε ω)).coeff) := by
+  sorry
 
 /-- The Hodge star is an involution up to sign -/
 theorem hodgeStar_involution (k : ℕ) (ω : DegreeKForm k M) :

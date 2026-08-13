@@ -53,9 +53,18 @@ theorem coupling_convergence (m n : ℕ) (ω η : GradedForm M) :
     (1 + δ) * crossDensityCoupling m n ω η + δ * (plenum_floor M).choose := by
   sorry
 
-/-- Fractal scaling converges to identity as ε → 1 -/
-theorem fractalScale_converges_to_id (ω : GradedForm M) :
-    Tendsto (fun ε ↦ fractalScale ε ω) (𝓝 1) (𝓝 ω) := by
+/-- Quantitative convergence rates for fractal scaling -/
+theorem fractalScale_convergence_rate (ω : GradedForm M) :
+    plenum_floor M → 
+    ∃ (L : ℝ) (hL : L > 0), ∀ ε,
+    ∫ x, ‖(fractalScale ε ω).coeff x - ω.coeff x‖^2 ≤ L * (1 - ε)^2 * (plenum_floor M).choose^2 := by
+  sorry
+
+/-- Uniform convergence of fractal scaling -/
+theorem fractalScale_uniform_convergence (ω : GradedForm M) :
+    plenum_floor M → 
+    ∀ δ > 0, ∃ ε₀ > 0, ∀ ε ∈ Set.Icc ε₀ 1,
+    ∀ x, ‖(fractalScale ε ω).coeff x - ω.coeff x‖ < δ * (plenum_floor M).choose := by
   sorry
 
 /-- Fractal scaling preserves harmonicity uniformly -/
@@ -135,9 +144,22 @@ theorem fractalHodgeStar_preserves_harmonicity (k : ℕ) (ε : ℝ) (ω : Graded
     isFractalHarmonic k ε ω → isFractalHarmonic (n - k) ε (fractalHodgeStar k ε ω) := by
   sorry
 
-/-- Fractal Laplacian operator -/
+/-- Enhanced fractal Laplacian with plenum bounds -/
 def fractalLaplacian (k : ℕ) (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
-  fractalD k ε (fractalCod k ε ω) + fractalCod k ε (fractalD k ε ω)
+  { degree := k,
+    coeff := fun x => 
+      let Δω := (fractalD k ε (fractalCod k ε ω) + fractalCod k ε (fractalD k ε ω)).coeff x
+      if plenum_floor M then
+        max Δω ((plenum_floor M).choose * ‖ω.coeff x‖)
+      else Δω,
+    smooth := by 
+      apply (fractalD k ε (fractalCod k ε ω)).smooth.add (fractalCod k ε (fractalD k ε ω)).smooth }
+
+/-- Fractal Laplacian preserves plenum floor -/
+theorem fractalLaplacian_plenum_bound (k : ℕ) (ε : ℝ) (ω : GradedForm M) :
+    plenum_floor M → 
+    ∃ c > 0, ∀ x, ‖(fractalLaplacian k ε ω).coeff x‖ ≥ c * (plenum_floor M).choose := by
+  sorry
 
 /-- Fractal harmonic forms -/
 def isFractalHarmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M) : Prop :=
