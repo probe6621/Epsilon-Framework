@@ -1,5 +1,6 @@
 name = "epsilon_cohomology"
 version = "0.1.0"
+defaultTargets = ["EpsilonCohomology"]
 keywords = ["math", "cohomology", "topology"]
 description = "Formalization of epsilon-cohomology with fractal scaling properties"
 
@@ -12,60 +13,13 @@ pp.unicode.fun = true
 relaxedAutoImplicit = false
 weak.linter.mathlibStandardSet = true
 maxSynthPendingDepth = 3
-linter.missingDocs = true  # Enable documentation warnings
+linter.missingDocs = true
 
 [[require]]
 name = "mathlib"
-scope = "leanprover-community" 
+scope = "leanprover-community"
 rev = "v4.33.0"
 git = "https://github.com/leanprover-community/mathlib4.git"
 
-# Main library configuration
 [[lean_lib]]
 name = "EpsilonCohomology"
-
-# Test configuration
-[[lean_lib]]
-name = "Tests"
-path = "Test"
-
-# Build optimization
-[lean.workers]
-server = 4
-workers = 4
-
-[lean.cache]
-enabled = true
-path = ".lake/build_cache"
-
-# Dependencies
-[[require]]
-name = "mathlib"
-scope = "leanprover-community" 
-rev = "v4.33.0"
-git = "https://github.com/leanprover-community/mathlib4.git"
-doc = "https://leanprover-community.github.io/mathlib4_docs/"
-
-[[require]]
-name = "proofwidgets"
-rev = "v0.0.1"
-git = "https://github.com/leanprover-community/ProofWidgets4.git"
-
-[[require]]
-name = "slim-check"
-rev = "v4.33.0"
-git = "https://github.com/leanprover-community/mathlib4.git"
-
-[[require]]
-name = "mathlib-test" 
-rev = "v4.33.0"
-git = "https://github.com/leanprover-community/mathlib4.git"
-
-[[require]]
-name = "mathlib-analysis"
-rev = "v4.33.0"
-git = "https://github.com/leanprover-community/mathlib4.git"
-
-# Documentation
-[lean.doc]
-root = "EpsilonCohomology"

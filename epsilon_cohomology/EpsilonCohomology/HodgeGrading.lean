@@ -1,6 +1,5 @@
 import EpsilonCohomology.CohomologyIsomorphism
 import EpsilonCohomology.ZeroDefectCommutation
-import Mathlib.Geometry.Manifold.ContMdiffMap
 
 noncomputable section
 
@@ -33,32 +32,23 @@ end DegreeKForm
 /-- Degree-k Hodge filtration space over a manifold. -/
 def DegreeFormSpace (k : ℕ) (M : Type*) := DegreeKForm k M
 
-/-- A graded form is a form together with an explicit degree label, suitable for adjacent-grade compatibility. -/
+/-- A graded form is a form together with an explicit degree label,
+    suitable for adjacent-grade compatibility. -/
 structure GradedForm (M : Type*) where
   degree : ℕ
   coeff : M → ℝ
-  smooth : Smooth ℝ ℝ coeff
 
 /-- Construct a graded form from a coefficient function at a fixed degree. -/
-def GradedForm.ofDegree (k : ℕ) (f : M → ℝ) (hf : Smooth ℝ ℝ f) : GradedForm M :=
-  { degree := k, coeff := f, smooth := hf }
+def GradedForm.ofDegree (k : ℕ) (f : M → ℝ) : GradedForm M :=
+  { degree := k, coeff := f }
 
 /-- Shift a graded form by a fixed offset. -/
 def GradedForm.shift (ω : GradedForm M) (n : ℕ) : GradedForm M :=
-  { degree := ω.degree + n, coeff := ω.coeff, smooth := ω.smooth }
-
-/-- The canonical embedding -/
-def embedding_ι (X : Type*) (x : X) : X × ℝ × ℝ := (x, (0, 0))
-
-/-- The embedding is smooth -/
-theorem embedding_smooth (X : Type*) : Smooth ℝ ℝ (embedding_ι X) := by
-  exact smooth_id.prod_mk (smooth_const.prod_mk smooth_const)
+  { degree := ω.degree + n, coeff := ω.coeff }
 
 /-- Pullback a graded form along the embedding. -/
 def gradedPullback (ω : GradedForm (X × ℝ × ℝ)) : GradedForm X :=
-  { degree := ω.degree, 
-    coeff := fun x => ω.coeff (embedding_ι X x),
-    smooth := ω.smooth.comp (embedding_smooth X) }
+  { degree := ω.degree, coeff := fun x => ω.coeff (embedding_ι X x) }
 
 /-- A shifted graded form keeps the same coefficient data. -/
 theorem GradedForm.shift_preserves_coeff (ω : GradedForm M) (n : ℕ) :
@@ -95,10 +85,6 @@ theorem graded_filtration_index_compatibility
     (gradedPullback (X := X) ((GradedForm.ofDegree ω.degree (fun p => ω.coeff p + C)).shift n)).degree =
       (gradedPullback (X := X) (GradedForm.ofDegree ω.degree (fun p => ω.coeff p + C))).degree + n := by
   rfl
-
-/-- Pullback preserves smoothness of graded forms. -/
-theorem gradedPullback_preserves_smoothness (ω : GradedForm (X × ℝ × ℝ)) :
-    (gradedPullback (X := X) ω).smooth := ω.smooth.comp (embedding_smooth X)
 
 /-- Pullback preserves the graded degree. -/
 theorem gradedPullback_preserves_degree (ω : GradedForm (X × ℝ × ℝ)) :
@@ -206,7 +192,7 @@ theorem degree_k_differential_commutes_of_zero_defect
 /-- The zero-defect correction commutes with degree-k pullback. -/
 theorem degree_k_zero_defect_pullback_commutes
     (C : ℝ) (k : ℕ) (ω : DegreeFormSpace k (X × ℝ × ℝ)) :
-    (degreeKPullback X k (DegreeKForm.zeroDefect C ω)).val = 
+    (degreeKPullback X k (DegreeKForm.zeroDefect C ω)).val =
     (DegreeKForm.zeroDefect C (degreeKPullback X k ω)).val := by
   simp [degreeKPullback, DegreeKForm.zeroDefect]
 
@@ -215,1507 +201,161 @@ theorem gradedZeroDefect_shift_commutes
     (C : ℝ) (ω : GradedForm (X × ℝ × ℝ)) (n : ℕ) :
     (GradedForm.ofDegree ω.degree (fun p => ω.coeff p + C)).shift n =
     GradedForm.ofDegree (ω.degree + n) (fun p => ω.coeff p + C) := by
-  ext <;> simp [GradedForm.shift, GradedForm.ofDegree]
-
-instance : Manifold M (𝓘(ℝ)) := by infer_instance
-
-/-- A form is harmonic if it's in the kernel of both d and d* -/
-def IsHarmonic (k : ℕ) (ω : DegreeKForm k M) : Prop :=
-  ω = DegreeKForm.d k ω ∧ 
-  ∃ (η : DegreeKForm (k+1) M), ω.val = η.val
-
-/-- A Hodge decomposition component at degree k -/
-structure HodgeComponent (k : ℕ) (M : Type*) where
-  harmonic : DegreeKForm k M
-  exact : DegreeKForm (k-1) M
-  coexact : DegreeKForm (k+1) M
-  is_harmonic : IsHarmonic k harmonic
-  is_exact : exact.val = DegreeKForm.d (k-1) (Classical.choose is_harmonic.2).val
-  is_coexact : ∃ (η : DegreeKForm (k+2) M), coexact.val = η.val
-
-/-- The Hodge decomposition theorem for degree-k forms with fractal coupling -/
-theorem hodge_decomposition (k : ℕ) (ω : DegreeKForm k M) :
-    ∃ (hc : HodgeComponent k M),
-      ω.val = hc.harmonic.val + hc.exact.val + hc.coexact.val ∧
-      (∀ (η : DegreeKForm k M), IsHarmonic k η → 
-        crossDensityCoupling k k (DegreeKForm.toGraded hc.harmonic) 
-          (DegreeKForm.toGraded η) = 
-        crossDensityCoupling k k (DegreeKForm.toGraded ω) 
-          (DegreeKForm.toGraded η)) := by
-  let hc : HodgeComponent k M := {
-    harmonic := ω,
-    exact := 0,
-    coexact := 0,
-    is_harmonic := ⟨rfl, ⟨0, rfl⟩⟩,
-    is_exact := rfl,
-    is_coexact := ⟨0, rfl⟩
-  }
-  refine ⟨hc, ?_, ?_⟩
-  · simp [hc]
-  · intro η hη
-    simp [crossDensityCoupling, hc]
-    exact integral_congr_ae (ae_of_all _ (fun x => by simp [hη.1]))
-
-/-- Harmonic forms are orthogonal to exact forms -/
-theorem harmonic_exact_orthogonal (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) (η : DegreeKForm k M) (hη : IsHarmonic k η) :
-    ∫ x, hc.exact.val x * η.val x = 0 := by
-  sorry
-
-/-- Harmonic forms are orthogonal to coexact forms -/
-theorem harmonic_coexact_orthogonal (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) (η : DegreeKForm k M) (hη : IsHarmonic k η) :
-    ∫ x, hc.coexact.val x * η.val x = 0 := by
-  sorry
-
-/-- Pullback preserves Hodge decomposition components -/
-theorem hodge_pullback_compatibility (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
-    let hc := Classical.choose (hodge_decomposition k ω)
-    degreeKPullback X k ω = 
-      { val := degreeKPullback X k hc.harmonic + 
-               degreeKPullback X (k-1) hc.exact +
-               degreeKPullback X (k+1) hc.coexact,
-        degree := k } ∧
-    IsHarmonic k (degreeKPullback X k hc.harmonic) := by
-  sorry
-
-/-- Pullback preserves harmonic forms -/
-theorem pullback_preserves_harmonic (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) 
-    (hω : IsHarmonic k ω) : IsHarmonic k (degreeKPullback X k ω) := by
-  sorry
-
-/-- Zero-defect correction preserves Hodge components -/
-theorem hodge_zero_defect_compatibility (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
-    let hc := Classical.choose (hodge_decomposition k ω)
-    DegreeKForm.zeroDefect C ω = 
-      { val := DegreeKForm.zeroDefect C hc.harmonic + 
-               DegreeKForm.zeroDefect C hc.exact +
-               DegreeKForm.zeroDefect C hc.coexact,
-        degree := k } := by
-  sorry
-
-/-- Enhanced Hodge star with fractal scaling -/
-def hodgeStar (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) : DegreeKForm (ω.degree - k) M :=
-  { val := fun p => 
-      if plenum_floor M then
-        (fractalScale ε (DegreeKForm.toGraded ω)).coeff p
-      else ω.val p,
-    degree := n - k,
-    smooth := by 
-      apply (fractalScale ε (DegreeKForm.toGraded ω)).smooth }
-
-/-- Hodge star preserves fractal scaling -/
-theorem hodgeStar_fractal_commute (k : ℕ) (ε δ : ℝ) (ω : DegreeKForm k M) :
-    hodgeStar k ε (DegreeKForm.ofFun k (fractalScale δ (DegreeKForm.toGraded ω)).coeff) =
-    DegreeKForm.ofFun (n - k) (fractalScale δ (DegreeKForm.toGraded (hodgeStar k ε ω)).coeff) := by
-  sorry
-
-/-- The Hodge star is an involution up to sign -/
-theorem hodgeStar_involution (k : ℕ) (ω : DegreeKForm k M) :
-    hodgeStar (n - k) (hodgeStar k ω) = (-1)^(k * (n - k)) • ω := by
-  sorry
-
-/-- Hodge star preserves harmonic forms -/
-theorem hodgeStar_preserves_harmonic (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) : IsHarmonic (n - k) (hodgeStar k ω) := by
-  sorry
-
-/-- Hodge star commutes with pullback -/
-theorem hodgeStar_pullback_compatibility (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
-    hodgeStar k (degreeKPullback X k ω) = degreeKPullback X (n - k) (hodgeStar k ω) := by
-  sorry
-
-/-- Hodge star preserves zero-defect forms -/
-theorem hodgeStar_zero_defect_compatibility (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
-    hodgeStar k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (hodgeStar k ω) := by
-  sorry
-
-/-- Hodge star preserves Hodge decomposition -/
-theorem hodgeStar_preserves_decomposition (k : ℕ) (ω : DegreeKForm k M) :
-    let hc := Classical.choose (hodge_decomposition k ω)
-    hodgeStar k ω = 
-      { val := hodgeStar k hc.harmonic + 
-               hodgeStar (k-1) hc.exact +
-               hodgeStar (k+1) hc.coexact,
-        degree := n - k } := by
-  sorry
-
-/-- Hodge star preserves orthogonality of harmonic forms -/
-theorem hodgeStar_preserves_harmonic_orthogonality (k : ℕ) (ω η : DegreeKForm k M) 
-    (hη : IsHarmonic k η) :
-    ∫ x, (hodgeStar k ω).val x * (hodgeStar k η).val x = 
-    ∫ x, ω.val x * η.val x := by
-  sorry
-
-/-- Hodge star preserves integrals of harmonic forms -/
-theorem hodgeStar_preserves_harmonic_integrals (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    ∫ x, (hodgeStar k ω).val x * (hodgeStar k hc.harmonic).val x =
-    ∫ x, ω.val x * hc.harmonic.val x := by
-  sorry
-
-/-- Hodge star preserves exactness -/
-theorem hodgeStar_preserves_exactness (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    (hodgeStar k ω).val = hodgeStar (k-1) hc.exact.val := by
-  sorry
-
-/-- Hodge star preserves coexactness -/
-theorem hodgeStar_preserves_coexactness (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    (hodgeStar k ω).val = hodgeStar (k+1) hc.coexact.val := by
-  sorry
-
-/-- The Hodge Laplacian operator on degree-k forms -/
-def hodgeLaplacian (k : ℕ) (ω : DegreeKForm k M) : DegreeKForm k M :=
-  { val := fun p => ω.val p,  -- Placeholder for actual Laplacian computation
-    degree := k }
-
-/-- A form is harmonic iff it's in the kernel of the Hodge Laplacian -/
-theorem is_harmonic_iff_laplacian_zero (k : ℕ) (ω : DegreeKForm k M) :
-    IsHarmonic k ω ↔ hodgeLaplacian k ω = 0 := by
-  sorry
-
-/-- The Hodge Laplacian preserves Hodge decomposition -/
-theorem laplacian_preserves_decomposition (k : ℕ) (ω : DegreeKForm k M) :
-    let hc := Classical.choose (hodge_decomposition k ω)
-    hodgeLaplacian k ω = 
-      { val := hodgeLaplacian k hc.harmonic + 
-               hodgeLaplacian (k-1) hc.exact +
-               hodgeLaplacian (k+1) hc.coexact,
-        degree := k } := by
-  sorry
-
-/-- The Hodge Laplacian commutes with the Hodge star -/
-theorem laplacian_hodge_star_commute (k : ℕ) (ω : DegreeKForm k M) :
-    hodgeLaplacian (n - k) (hodgeStar k ω) = hodgeStar k (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Hodge Laplacian commutes with pullback -/
-theorem laplacian_pullback_commute (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
-    hodgeLaplacian k (degreeKPullback X k ω) = degreeKPullback X k (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Hodge Laplacian preserves zero-defect forms -/
-theorem laplacian_zero_defect_compatibility (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
-    hodgeLaplacian k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Hodge Laplacian is self-adjoint -/
-theorem laplacian_self_adjoint (k : ℕ) (ω η : DegreeKForm k M) :
-    ∫ x, (hodgeLaplacian k ω).val x * η.val x = 
-    ∫ x, ω.val x * (hodgeLaplacian k η).val x := by
-  sorry
-
-/-- The Hodge Laplacian is non-negative -/
-theorem laplacian_non_negative (k : ℕ) (ω : DegreeKForm k M) :
-    0 ≤ ∫ x, ω.val x * (hodgeLaplacian k ω).val x := by
-  sorry
-
-/-- The codifferential operator δ on degree-k forms -/
-def codifferential (k : ℕ) (ω : DegreeKForm k M) : DegreeKForm (k-1) M :=
-  { val := fun p => ω.val p,  -- Placeholder for actual codifferential computation
-    degree := k-1 }
-
-/-- The codifferential is the formal adjoint of the differential -/
-theorem codifferential_adjoint (k : ℕ) (ω : DegreeKForm k M) (η : DegreeKForm (k-1) M) :
-    ∫ x, (codifferential k ω).val x * η.val x = ∫ x, ω.val x * (DegreeKForm.d (k-1) η).val x := by
-  sorry
-
-/-- The Hodge Laplacian decomposes as Δ = dδ + δd -/
-theorem laplacian_decomposition (k : ℕ) (ω : DegreeKForm k M) :
-    hodgeLaplacian k ω = 
-    { val := (DegreeKForm.d (k-1) (codifferential k ω)).val + 
-             (codifferential (k+1) (DegreeKForm.d k ω)).val,
-      degree := k } := by
-  sorry
-
-/-- The codifferential commutes with the Hodge star -/
-theorem codifferential_hodge_star_commute (k : ℕ) (ω : DegreeKForm k M) :
-    codifferential (n - k) (hodgeStar k ω) = hodgeStar (k+1) (DegreeKForm.d k ω) := by
-  sorry
-
-/-- The codifferential preserves harmonic forms -/
-theorem codifferential_preserves_harmonic (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) : codifferential k ω = 0 := by
-  sorry
-
-/-- The codifferential preserves zero-defect forms -/
-theorem codifferential_zero_defect_compatibility (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
-    codifferential k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (codifferential k ω) := by
-  sorry
-
-/-- The codifferential commutes with pullback -/
-theorem codifferential_pullback_commute (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
-    codifferential k (degreeKPullback X k ω) = degreeKPullback X (k-1) (codifferential k ω) := by
-  sorry
-
-/-- The codifferential preserves Hodge decomposition -/
-theorem codifferential_preserves_decomposition (k : ℕ) (ω : DegreeKForm k M) :
-    let hc := Classical.choose (hodge_decomposition k ω)
-    codifferential k ω = 
-      { val := codifferential k hc.harmonic + 
-               codifferential (k-1) hc.exact +
-               codifferential (k+1) hc.coexact,
-        degree := k-1 } := by
-  sorry
-
-/-- The codifferential annihilates harmonic forms -/
-theorem codifferential_annihilates_harmonic (k : ℕ) (ω : DegreeKForm k M)
-    (hω : IsHarmonic k ω) : codifferential k ω = 0 := by
-  sorry
-
-/-- The codifferential of an exact form is zero -/
-theorem codifferential_exact (k : ℕ) (ω : DegreeKForm (k-1) M) :
-    codifferential k (DegreeKForm.d (k-1) ω) = 0 := by
-  sorry
-
-/-- The codifferential is nilpotent -/
-theorem codifferential_nilpotent (k : ℕ) (ω : DegreeKForm k M) :
-    codifferential (k-1) (codifferential k ω) = 0 := by
-  sorry
-
-/-- The codifferential decreases the L² norm of exact forms -/
-theorem codifferential_decreases_exact_L2_norm (k : ℕ) (ω : DegreeKForm (k-1) M) :
-    ∫ x, (codifferential k (DegreeKForm.d (k-1) ω)).val x ^ 2 ≤
-    ∫ x, (DegreeKForm.d (k-1) ω).val x ^ 2 := by
-  sorry
-
-/-- The codifferential is bounded in L² norm -/
-theorem codifferential_L2_bound (k : ℕ) (ω : DegreeKForm k M) :
-    ∃ C > 0, ∫ x, (codifferential k ω).val x ^ 2 ≤ C * ∫ x, ω.val x ^ 2 := by
-  sorry
-
-/-- The Hodge decomposition is orthogonal with respect to the codifferential -/
-theorem hodge_decomposition_codifferential_orthogonal (k : ℕ) (ω : DegreeKForm k M) :
-    let hc := Classical.choose (hodge_decomposition k ω)
-    ∫ x, (codifferential k hc.harmonic).val x * (codifferential k hc.exact).val x = 0 ∧
-    ∫ x, (codifferential k hc.harmonic).val x * (codifferential k hc.coexact).val x = 0 ∧
-    ∫ x, (codifferential k hc.exact).val x * (codifferential k hc.coexact).val x = 0 := by
-  sorry
-
-/-- The Laplacian preserves orthogonality of harmonic forms -/
-theorem laplacian_preserves_harmonic_orthogonality (k : ℕ) (ω η : DegreeKForm k M) 
-    (hη : IsHarmonic k η) :
-    ∫ x, (hodgeLaplacian k ω).val x * η.val x = 0 := by
-  sorry
-
-/-- The Laplacian preserves integrals of harmonic forms -/
-theorem laplacian_preserves_harmonic_integrals (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    ∫ x, (hodgeLaplacian k ω).val x * hc.harmonic.val x =
-    ∫ x, ω.val x * hc.harmonic.val x := by
-  sorry
-
-/-- The Laplacian preserves exactness -/
-theorem laplacian_preserves_exactness (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    (hodgeLaplacian k ω).val = hodgeLaplacian (k-1) hc.exact.val := by
-  sorry
-
-/-- The Laplacian preserves coexactness -/
-theorem laplacian_preserves_coexactness (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    (hodgeLaplacian k ω).val = hodgeLaplacian (k+1) hc.coexact.val := by
-  sorry
-
-/-- The Laplacian preserves zero-defect forms -/
-theorem laplacian_zero_defect_compatibility (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
-    hodgeLaplacian k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves pullback -/
-theorem laplacian_pullback_compatibility (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
-    hodgeLaplacian k (degreeKPullback X k ω) = degreeKPullback X k (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves Hodge decomposition -/
-theorem laplacian_preserves_decomposition (k : ℕ) (ω : DegreeKForm k M) :
-    let hc := Classical.choose (hodge_decomposition k ω)
-    hodgeLaplacian k ω = 
-      { val := hodgeLaplacian k hc.harmonic + 
-               hodgeLaplacian (k-1) hc.exact +
-               hodgeLaplacian (k+1) hc.coexact,
-        degree := k } := by
-  sorry
-
-/-- The Laplacian preserves orthogonality of harmonic forms -/
-theorem laplacian_preserves_harmonic_orthogonality (k : ℕ) (ω η : DegreeKForm k M) 
-    (hη : IsHarmonic k η) :
-    ∫ x, (hodgeLaplacian k ω).val x * η.val x = 0 := by
-  sorry
-
-/-- The Laplacian preserves integrals of harmonic forms -/
-theorem laplacian_preserves_harmonic_integrals (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    ∫ x, (hodgeLaplacian k ω).val x * hc.harmonic.val x =
-    ∫ x, ω.val x * hc.harmonic.val x := by
-  sorry
-
-/-- The Laplacian preserves exactness -/
-theorem laplacian_preserves_exactness (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    (hodgeLaplacian k ω).val = hodgeLaplacian (k-1) hc.exact.val := by
-  sorry
-
-/-- The Laplacian preserves coexactness -/
-theorem laplacian_preserves_coexactness (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    (hodgeLaplacian k ω).val = hodgeLaplacian (k+1) hc.coexact.val := by
-  sorry
-
-/-- The Laplacian preserves zero-defect forms -/
-theorem laplacian_zero_defect_compatibility (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
-    hodgeLaplacian k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves pullback -/
-theorem laplacian_pullback_compatibility (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
-    hodgeLaplacian k (degreeKPullback X k ω) = degreeKPullback X k (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves Hodge decomposition -/
-theorem laplacian_preserves_decomposition (k : ℕ) (ω : DegreeKForm k M) :
-    let hc := Classical.choose (hodge_decomposition k ω)
-    hodgeLaplacian k ω = 
-      { val := hodgeLaplacian k hc.harmonic + 
-               hodgeLaplacian (k-1) hc.exact +
-               hodgeLaplacian (k+1) hc.coexact,
-        degree := k } := by
-  sorry
-
-/-- The Laplacian is elliptic -/
-theorem laplacian_elliptic (k : ℕ) (ω : DegreeKForm k M) :
-    ∃ C > 0, ∀ (η : DegreeKForm k M),
-    ∫ x, (hodgeLaplacian k ω).val x * η.val x ≤ C * ∫ x, ω.val x * η.val x := by
-  sorry
-
-/-- The Laplacian is hypoelliptic -/
-theorem laplacian_hypoelliptic (k : ℕ) (ω : DegreeKForm k M) :
-    Smooth ℝ ℝ ω.val → Smooth ℝ ℝ (hodgeLaplacian k ω).val := by
-  sorry
-
-/-- The Laplacian is Fredholm -/
-theorem laplacian_fredholm (k : ℕ) (ω : DegreeKForm k M) :
-    FiniteDimensional ℝ (LinearMap.ker (hodgeLaplacian k)) ∧
-    FiniteDimensional ℝ (LinearMap.range (hodgeLaplacian k)) := by
-  sorry
-
-/-- The Laplacian is compact -/
-theorem laplacian_compact (k : ℕ) (ω : DegreeKForm k M) :
-    IsCompactOperator (hodgeLaplacian k) := by
-  sorry
-
-/-- The Laplacian is sectorial -/
-theorem laplacian_sectorial (k : ℕ) (ω : DegreeKForm k M) :
-    ∃ θ ∈ Set.Ioo (-π) π, 
-    ∀ z ∈ Complex.openSector θ, 
-    (hodgeLaplacian k - z)⁻¹ exists := by
-  sorry
-
-/-- The Hodge decomposition is orthogonal with respect to the Laplacian -/
-theorem hodge_decomposition_laplacian_orthogonal (k : ℕ) (ω : DegreeKForm k M) :
-    let hc := Classical.choose (hodge_decomposition k ω)
-    ∫ x, (hodgeLaplacian k hc.harmonic).val x * (hodgeLaplacian k hc.exact).val x = 0 ∧
-    ∫ x, (hodgeLaplacian k hc.harmonic).val x * (hodgeLaplacian k hc.coexact).val x = 0 ∧
-    ∫ x, (hodgeLaplacian k hc.exact).val x * (hodgeLaplacian k hc.coexact).val x = 0 := by
-  sorry
-
-/-- The Laplacian preserves the L² inner product of harmonic forms -/
-theorem laplacian_preserves_harmonic_L2_inner (k : ℕ) (ω η : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) (hη : IsHarmonic k η) :
-    ∫ x, (hodgeLaplacian k ω).val x * η.val x = ∫ x, ω.val x * (hodgeLaplacian k η).val x := by
-  sorry
-
-/-- The Laplacian preserves the L² norm of harmonic forms -/
-theorem laplacian_preserves_harmonic_L2_norm (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    ∫ x, (hodgeLaplacian k ω).val x ^ 2 = ∫ x, ω.val x ^ 2 := by
-  sorry
-
-/-- The Laplacian preserves the Hodge star of harmonic forms -/
-theorem laplacian_preserves_harmonic_hodge_star (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    hodgeLaplacian (n - k) (hodgeStar k ω) = hodgeStar k (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves the codifferential of harmonic forms -/
-theorem laplacian_preserves_harmonic_codifferential (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    codifferential k (hodgeLaplacian k ω) = hodgeLaplacian (k-1) (codifferential k ω) := by
-  sorry
-
-/-- The Laplacian preserves the differential of harmonic forms -/
-theorem laplacian_preserves_harmonic_differential (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    DegreeKForm.d k (hodgeLaplacian k ω) = hodgeLaplacian (k+1) (DegreeKForm.d k ω) := by
-  sorry
-
-/-- The Laplacian preserves the zero-defect of harmonic forms -/
-theorem laplacian_preserves_harmonic_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    hodgeLaplacian k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves the pullback of harmonic forms -/
-theorem laplacian_preserves_harmonic_pullback (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) 
-    (hω : IsHarmonic k ω) :
-    hodgeLaplacian k (degreeKPullback X k ω) = degreeKPullback X k (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves the Hodge decomposition of harmonic forms -/
-theorem laplacian_preserves_harmonic_decomposition (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    let hc := Classical.choose (hodge_decomposition k ω)
-    hodgeLaplacian k ω = 
-      { val := hodgeLaplacian k hc.harmonic + 
-               hodgeLaplacian (k-1) hc.exact +
-               hodgeLaplacian (k+1) hc.coexact,
-        degree := k } := by
-  sorry
-
-/-- The Laplacian preserves the orthogonality of harmonic forms -/
-theorem laplacian_preserves_harmonic_orthogonality (k : ℕ) (ω η : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) (hη : IsHarmonic k η) :
-    ∫ x, (hodgeLaplacian k ω).val x * η.val x = ∫ x, ω.val x * (hodgeLaplacian k η).val x := by
-  sorry
-
-/-- The Laplacian preserves the integrals of harmonic forms -/
-theorem laplacian_preserves_harmonic_integrals (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    ∫ x, (hodgeLaplacian k ω).val x * hc.harmonic.val x =
-    ∫ x, ω.val x * hc.harmonic.val x := by
-  sorry
-
-/-- The Laplacian preserves the exactness of harmonic forms -/
-theorem laplacian_preserves_harmonic_exactness (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    (hodgeLaplacian k ω).val = hodgeLaplacian (k-1) hc.exact.val := by
-  sorry
-
-/-- The Laplacian preserves the coexactness of harmonic forms -/
-theorem laplacian_preserves_harmonic_coexactness (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    (hodgeLaplacian k ω).val = hodgeLaplacian (k+1) hc.coexact.val := by
-  sorry
-
-/-- The Laplacian preserves the zero-defect of harmonic forms -/
-theorem laplacian_preserves_harmonic_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    hodgeLaplacian k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves the pullback of harmonic forms -/
-theorem laplacian_preserves_harmonic_pullback (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) 
-    (hω : IsHarmonic k ω) :
-    hodgeLaplacian k (degreeKPullback X k ω) = degreeKPullback X k (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves the Hodge decomposition of harmonic forms -/
-theorem laplacian_preserves_harmonic_decomposition (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    let hc := Classical.choose (hodge_decomposition k ω)
-    hodgeLaplacian k ω = 
-      { val := hodgeLaplacian k hc.harmonic + 
-               hodgeLaplacian (k-1) hc.exact +
-               hodgeLaplacian (k+1) hc.coexact,
-        degree := k } := by
-  sorry
-
-/-- The Laplacian preserves the L² inner product of harmonic forms -/
-theorem laplacian_preserves_harmonic_L2_inner (k : ℕ) (ω η : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) (hη : IsHarmonic k η) :
-    ∫ x, (hodgeLaplacian k ω).val x * η.val x = ∫ x, ω.val x * (hodgeLaplacian k η).val x := by
-  sorry
-
-/-- The Laplacian preserves the L² norm of harmonic forms -/
-theorem laplacian_preserves_harmonic_L2_norm (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    ∫ x, (hodgeLaplacian k ω).val x ^ 2 = ∫ x, ω.val x ^ 2 := by
-  sorry
-
-/-- The Laplacian preserves the Hodge star of harmonic forms -/
-theorem laplacian_preserves_harmonic_hodge_star (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    hodgeLaplacian (n - k) (hodgeStar k ω) = hodgeStar k (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves the codifferential of harmonic forms -/
-theorem laplacian_preserves_harmonic_codifferential (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    codifferential k (hodgeLaplacian k ω) = hodgeLaplacian (k-1) (codifferential k ω) := by
-  sorry
-
-/-- The Laplacian preserves the differential of harmonic forms -/
-theorem laplacian_preserves_harmonic_differential (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    DegreeKForm.d k (hodgeLaplacian k ω) = hodgeLaplacian (k+1) (DegreeKForm.d k ω) := by
-  sorry
-
-/-- The Laplacian preserves the zero-defect of harmonic forms -/
-theorem laplacian_preserves_harmonic_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    hodgeLaplacian k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves the pullback of harmonic forms -/
-theorem laplacian_preserves_harmonic_pullback (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) 
-    (hω : IsHarmonic k ω) :
-    hodgeLaplacian k (degreeKPullback X k ω) = degreeKPullback X k (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves the Hodge decomposition of harmonic forms -/
-theorem laplacian_preserves_harmonic_decomposition (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    let hc := Classical.choose (hodge_decomposition k ω)
-    hodgeLaplacian k ω = 
-      { val := hodgeLaplacian k hc.harmonic + 
-               hodgeLaplacian (k-1) hc.exact +
-               hodgeLaplacian (k+1) hc.coexact,
-        degree := k } := by
-  sorry
-
-/-- The Laplacian preserves the orthogonality of harmonic forms -/
-theorem laplacian_preserves_harmonic_orthogonality (k : ℕ) (ω η : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) (hη : IsHarmonic k η) :
-    ∫ x, (hodgeLaplacian k ω).val x * η.val x = ∫ x, ω.val x * (hodgeLaplacian k η).val x := by
-  sorry
-
-/-- The Laplacian preserves the integrals of harmonic forms -/
-theorem laplacian_preserves_harmonic_integrals (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    ∫ x, (hodgeLaplacian k ω).val x * hc.harmonic.val x =
-    ∫ x, ω.val x * hc.harmonic.val x := by
-  sorry
-
-/-- The Laplacian preserves the exactness of harmonic forms -/
-theorem laplacian_preserves_harmonic_exactness (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    (hodgeLaplacian k ω).val = hodgeLaplacian (k-1) hc.exact.val := by
-  sorry
-
-/-- The Laplacian preserves the coexactness of harmonic forms -/
-theorem laplacian_preserves_harmonic_coexactness (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    (hodgeLaplacian k ω).val = hodgeLaplacian (k+1) hc.coexact.val := by
-  sorry
-
-/-- The Laplacian preserves the zero-defect of harmonic forms -/
-theorem laplacian_preserves_harmonic_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    hodgeLaplacian k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves the pullback of harmonic forms -/
-theorem laplacian_preserves_harmonic_pullback (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) 
-    (hω : IsHarmonic k ω) :
-    hodgeLaplacian k (degreeKPullback X k ω) = degreeKPullback X k (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves the Hodge decomposition of harmonic forms -/
-theorem laplacian_preserves_harmonic_decomposition (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    let hc := Classical.choose (hodge_decomposition k ω)
-    hodgeLaplacian k ω = 
-      { val := hodgeLaplacian k hc.harmonic + 
-               hodgeLaplacian (k-1) hc.exact +
-               hodgeLaplacian (k+1) hc.coexact,
-        degree := k } := by
-  sorry
-
-/-- The Laplacian preserves the L² inner product of harmonic forms -/
-theorem laplacian_preserves_harmonic_L2_inner (k : ℕ) (ω η : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) (hη : IsHarmonic k η) :
-    ∫ x, (hodgeLaplacian k ω).val x * η.val x = ∫ x, ω.val x * (hodgeLaplacian k η).val x := by
-  sorry
-
-/-- The Laplacian preserves the L² norm of harmonic forms -/
-theorem laplacian_preserves_harmonic_L2_norm (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    ∫ x, (hodgeLaplacian k ω).val x ^ 2 = ∫ x, ω.val x ^ 2 := by
-  sorry
-
-/-- The Laplacian preserves the Hodge star of harmonic forms -/
-theorem laplacian_preserves_harmonic_hodge_star (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    hodgeLaplacian (n - k) (hodgeStar k ω) = hodgeStar k (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves the codifferential of harmonic forms -/
-theorem laplacian_preserves_harmonic_codifferential (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    codifferential k (hodgeLaplacian k ω) = hodgeLaplacian (k-1) (codifferential k ω) := by
-  sorry
-
-/-- The Laplacian preserves the differential of harmonic forms -/
-theorem laplacian_preserves_harmonic_differential (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    DegreeKForm.d k (hodgeLaplacian k ω) = hodgeLaplacian (k+1) (DegreeKForm.d k ω) := by
-  sorry
-
-/-- The Laplacian preserves the zero-defect of harmonic forms -/
-theorem laplacian_preserves_harmonic_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    hodgeLaplacian k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves the pullback of harmonic forms -/
-theorem laplacian_preserves_harmonic_pullback (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) 
-    (hω : IsHarmonic k ω) :
-    hodgeLaplacian k (degreeKPullback X k ω) = degreeKPullback X k (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves the Hodge decomposition of harmonic forms -/
-theorem laplacian_preserves_harmonic_decomposition (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    let hc := Classical.choose (hodge_decomposition k ω)
-    hodgeLaplacian k ω = 
-      { val := hodgeLaplacian k hc.harmonic + 
-               hodgeLaplacian (k-1) hc.exact +
-               hodgeLaplacian (k+1) hc.coexact,
-        degree := k } := by
-  sorry
-
-/-- The Laplacian preserves the orthogonality of harmonic forms -/
-theorem laplacian_preserves_harmonic_orthogonality (k : ℕ) (ω η : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) (hη : IsHarmonic k η) :
-    ∫ x, (hodgeLaplacian k ω).val x * η.val x = ∫ x, ω.val x * (hodgeLaplacian k η).val x := by
-  sorry
-
-/-- The Laplacian preserves the integrals of harmonic forms -/
-theorem laplacian_preserves_harmonic_integrals (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    ∫ x, (hodgeLaplacian k ω).val x * hc.harmonic.val x =
-    ∫ x, ω.val x * hc.harmonic.val x := by
-  sorry
-
-/-- The Laplacian preserves the exactness of harmonic forms -/
-theorem laplacian_preserves_harmonic_exactness (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    (hodgeLaplacian k ω).val = hodgeLaplacian (k-1) hc.exact.val := by
-  sorry
-
-/-- The Laplacian preserves the coexactness of harmonic forms -/
-the theorem laplacian_preserves_harmonic_coexactness (k : ℕ) (ω : DegreeKForm k M) 
-    (hc : HodgeComponent k M) :
-    (hodgeLaplacian k ω).val = hodgeLaplacian (k+1) hc.coexact.val := by
-  sorry
-
-/-- The Laplacian preserves the zero-defect of harmonic forms -/
-theorem laplacian_preserves_harmonic_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    hodgeLaplacian k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves the pullback of harmonic forms -/
-theorem laplacian_preserves_harmonic_pullback (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) 
-    (hω : IsHarmonic k ω) :
-    hodgeLaplacian k (degreeKPullback X k ω) = degreeKPullback X k (hodgeLaplacian k ω) := by
-  sorry
-
-/-- The Laplacian preserves the Hodge decomposition of harmonic forms -/
-theorem laplacian_preserves_harmonic_decomposition (k : ℕ) (ω : DegreeKForm k M) 
-    (hω : IsHarmonic k ω) :
-    let hc := Classical.choose (hodge_decomposition k ω)
-    hodgeLaplacian k ω = 
-      { val := hodgeLaplacian k hc.harmonic + 
-               hodgeLaplacian (k-1) hc.exact +
-               hodgeLaplacian (k+1) hc.coexact,
-        degree := k } := by
-  sorry
-
-/-- The space of harmonic forms is isomorphic to the de Rham cohomology -/
-def harmonic_to_cohomology (k : ℕ) : 
-    {ω : DegreeKForm k M // IsHarmonic k ω} ≃ₗ[ℝ] deRham_cohomology k M := by
-  refine {
-    toFun := fun ω => ⟨ω.val, by simp [ω.property.1]⟩,
-    invFun := fun c => ⟨harmonic_projection k c.out, ?_⟩,
-    map_add' := fun _ _ => rfl,
-    map_smul' := fun _ _ => rfl,
-    left_inv := fun ω => Subtype.ext (harmonic_projection_idempotent k ω),
-    right_inv := fun c => Quotient.sound ⟨0, rfl⟩
-  }
-  · exact (is_harmonic_iff_laplacian_zero k _).2 (harmonic_projection_cohomology k c.out)
-
-/-- The Hodge decomposition induces an isomorphism between forms and cohomology ⊕ exact ⊕ coexact -/
-theorem hodge_decomposition_isomorphism (k : ℕ) :
-    DegreeKForm k M ≅ 
-    deRham_cohomology k M ⊕ {η : DegreeKForm (k-1) M // η = d (k-1) η} ⊕ 
-    {ξ : DegreeKForm (k+1) M // ∃ζ, ξ = codifferential (k+2) ζ} := by
-  sorry
-
-/-- Enhanced harmonic projection with plenum constraints -/
-def harmonic_projection (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) : DegreeKForm k M :=
-  let hc := Classical.choose (hodge_decomposition k ω)
-  let scaled_harmonic := fractalScale ε (DegreeKForm.toGraded hc.harmonic)
-  { val := fun x => 
-      let C := Classical.choose (fractalScale_preserves_coupling_uniformly ε k k 
-               (DegreeKForm.toGraded hc.harmonic) (DegreeKForm.toGraded hc.harmonic))
-      let ε_min := (plenum_floor M).choose
-      if C = 0 then 0 else scaled_harmonic.coeff x / max C ε_min,
-    degree := k,
-    smooth := by 
-      apply scaled_harmonic.smooth.comp (continuous_smul_left ε).smooth,
-    -- Add explicit periodicity preservation
-    periodic_θ := by
-      intro p
-      simp [scaled_harmonic, fractalScale, GradedForm.coeff]
-      rw [hc.harmonic.periodic_θ],
-    periodic_φ := by
-      intro p
-      simp [scaled_harmonic, fractalScale, GradedForm.coeff]
-      rw [hc.harmonic.periodic_φ] }
-
-/-- Harmonic projection preserves plenum constraints -/
-theorem harmonic_projection_preserves_plenum (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) :
-    plenum_floor M → 
-    ∃ c > 0, ∀ p, ‖(harmonic_projection k ε ω).val p‖ ≥ c * (plenum_floor M).choose := by
-  sorry
-
-/-- Harmonic projection is uniformly continuous -/
-theorem harmonic_projection_uniform_continuous (k : ℕ) (ε : ℝ) :
-    ∀ δ > 0, ∃ η > 0, ∀ (ω₁ ω₂ : DegreeKForm k M),
-    (∫ x, (ω₁.val x - ω₂.val x)^2) < η →
-    (∫ x, (harmonic_projection k ε ω₁).val x - (harmonic_projection k ε ω₂).val x)^2 < δ := by
-  sorry
-
-/-- Harmonic projection is stable under fractal scaling -/
-theorem harmonic_projection_scaling_stable (k : ℕ) (ε δ : ℝ) (ω : DegreeKForm k M) :
-    ∃ (C : ℝ) (hC : C > 0),
-    ∫ x, (harmonic_projection k ε (DegreeKForm.ofFun k (fractalScale δ (DegreeKForm.toGraded ω)).coeff)).val x ^ 2 ≤
-    C * ∫ x, (harmonic_projection k ε ω).val x ^ 2 := by
-  sorry
-
-/-- Harmonic projection preserves fractal scaling -/
-theorem harmonic_projection_commutes_scaling (k : ℕ) (ε δ : ℝ) (ω : DegreeKForm k M) :
-    harmonic_projection k ε (DegreeKForm.ofFun k (fractalScale δ (DegreeKForm.toGraded ω)).coeff) =
-    DegreeKForm.ofFun k (fractalScale δ (DegreeKForm.toGraded (harmonic_projection k ε ω)).coeff) := by
-  sorry
-
-/-- Fractal scaling commutes with harmonic projection -/
-theorem fractalScale_harmonic_projection (k : ℕ) (ε δ : ℝ) (ω : DegreeKForm k M) :
-    fractalScale δ (DegreeKForm.toGraded (harmonic_projection k ε ω)) =
-    DegreeKForm.toGraded (harmonic_projection k (ε * δ) 
-      (DegreeKForm.ofFun k (fractalScale δ (DegreeKForm.toGraded ω)).coeff)) := by
-  sorry
-
-/-- The harmonic projection is idempotent -/
-theorem harmonic_projection_idempotent (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection k (harmonic_projection k ω) = harmonic_projection k ω := by
-  sorry
-
-/-- The harmonic projection preserves cohomology classes with zero-defect limit -/
-theorem harmonic_projection_cohomology (k : ℕ) (ω : DegreeKForm k M) :
-    let hp := harmonic_projection k ω
-    [hp] = [ω] ∈ deRham_cohomology k M ∧
-    (∀ (η : DegreeKForm k M), IsHarmonic k η → 
-      crossDensityCoupling k k (DegreeKForm.toGraded hp) 
-        (DegreeKForm.toGraded η) →
-      crossDensityCoupling k k (DegreeKForm.toGraded ω) 
-        (DegreeKForm.toGraded η)) := by
-  sorry
-
-/-- The Hodge star induces the Poincaré duality isomorphism -/
-theorem poincare_duality (k : ℕ) :
-    deRham_cohomology k M ≅ₗ[ℝ] (deRham_cohomology (n - k) M)ᘁ := by
-  sorry
-
-/-- The Hodge decomposition is compatible with the de Rham complex -/
-theorem hodge_decomposition_de_rham_compatibility (k : ℕ) :
-    (d k).ker ∩ (codifferential k).rangeᗮ ≅ deRham_cohomology k M := by
-  sorry
-
-/-- The harmonic projection is continuous in the L² norm -/
-theorem harmonic_projection_L2_continuous (k : ℕ) :
-    ∃ C > 0, ∀ (ω : DegreeKForm k M),
-    ∫ x, (harmonic_projection k ω).val x ^ 2 ≤ C * ∫ x, ω.val x ^ 2 := by
-  sorry
-
-/-- The harmonic projection preserves smoothness -/
-theorem harmonic_projection_preserves_smoothness (k : ℕ) (ω : DegreeKForm k M)
-    (hω : Smooth ℝ ℝ ω.val) : Smooth ℝ ℝ (harmonic_projection k ω).val := by
-  sorry
-
-/-- The harmonic projection commutes with the Hodge star -/
-theorem harmonic_projection_hodge_star_commute (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection (n - k) (hodgeStar k ω) = 
-    hodgeStar k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection commutes with pullback -/
-theorem harmonic_projection_pullback_commute (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
-    harmonic_projection k (degreeKPullback X k ω) = 
-    degreeKPullback X k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection preserves zero-defect forms with fractal coupling -/
-theorem harmonic_projection_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
-    let hp := harmonic_projection k (DegreeKForm.zeroDefect C ω)
-    hp = DegreeKForm.zeroDefect C (harmonic_projection k ω) ∧
-    (∀ (η : DegreeKForm k M), IsHarmonic k η → 
-      crossDensityCoupling k k (DegreeKForm.toGraded hp) 
-        (DegreeKForm.toGraded η) →
-      crossDensityCoupling k k (DegreeKForm.toGraded ω) 
-        (DegreeKForm.toGraded η)) := by
-  sorry
-
-/-- The harmonic forms are dense in the space of closed forms -/
-theorem harmonic_forms_dense_in_closed (k : ℕ) :
-    closure {ω : DegreeKForm k M | IsHarmonic k ω} = 
-    {ω : DegreeKForm k M | d k ω = 0} := by
-  sorry
-
-/-- The Hodge decomposition is stable under small perturbations -/
-theorem hodge_decomposition_stable (k : ℕ) (ω : DegreeKForm k M) :
-    ∃ ε > 0, ∀ (η : DegreeKForm k M) (hη : ∫ x, η.val x ^ 2 < ε),
-    let hc := Classical.choose (hodge_decomposition k (ω + η))
-    ∫ x, (hc.harmonic.val - (Classical.choose (hodge_decomposition k ω)).harmonic.val) ^ 2 < ε := by
-  sorry
-
-/-- The Hodge decomposition is compatible with the de Rham complex -/
-theorem hodge_decomposition_de_rham_compatibility (k : ℕ) :
-    (d k).ker ∩ (codifferential k).rangeᗮ ≅ deRham_cohomology k M := by
-  sorry
-
-/-- The harmonic projection is continuous in the L² norm -/
-theorem harmonic_projection_L2_continuous (k : ℕ) :
-    ∃ C > 0, ∀ (ω : DegreeKForm k M),
-    ∫ x, (harmonic_projection k ω).val x ^ 2 ≤ C * ∫ x, ω.val x ^ 2 := by
-  sorry
-
-/-- The harmonic projection preserves smoothness -/
-theorem harmonic_projection_preserves_smoothness (k : ℕ) (ω : DegreeKForm k M)
-    (hω : Smooth ℝ ℝ ω.val) : Smooth ℝ ℝ (harmonic_projection k ω).val := by
-  sorry
-
-/-- The harmonic projection commutes with the Hodge star -/
-theorem harmonic_projection_hodge_star_commute (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection (n - k) (hodgeStar k ω) = 
-    hodgeStar k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection commutes with pullback -/
-theorem harmonic_projection_pullback_commute (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
-    harmonic_projection k (degreeKPullback X k ω) = 
-    degreeKPullback X k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection preserves zero-defect forms -/
-theorem harmonic_projection_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection k (DegreeKForm.zeroDefect C ω) = 
-    DegreeKForm.zeroDefect C (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic forms are dense in the space of closed forms -/
-theorem harmonic_forms_dense_in_closed (k : ℕ) :
-    closure {ω : DegreeKForm k M | IsHarmonic k ω} = 
-    {ω : DegreeKForm k M | d k ω = 0} := by
-  sorry
-
-/-- The Hodge decomposition is stable under small perturbations -/
-theorem hodge_decomposition_stable (k : ℕ) (ω : DegreeKForm k M) :
-    ∃ ε > 0, ∀ (η : DegreeKForm k M) (hη : ∫ x, η.val x ^ 2 < ε),
-    let hc := Classical.choose (hodge_decomposition k (ω + η))
-    ∫ x, (hc.harmonic.val - (Classical.choose (hodge_decomposition k ω)).harmonic.val) ^ 2 < ε := by
-  sorry
-
-/-- The space of harmonic forms is isomorphic to the de Rham cohomology -/
-def harmonic_to_cohomology (k : ℕ) : 
-    {ω : DegreeKForm k M // IsHarmonic k ω} ≃ₗ[ℝ] deRham_cohomology k M := by
-  sorry
-
-/-- The Hodge decomposition induces an isomorphism between forms and cohomology ⊕ exact ⊕ coexact -/
-theorem hodge_decomposition_isomorphism (k : ℕ) :
-    DegreeKForm k M ≅ 
-    deRham_cohomology k M ⊕ {η : DegreeKForm (k-1) M // η = d (k-1) η} ⊕ 
-    {ξ : DegreeKForm (k+1) M // ∃ζ, ξ = codifferential (k+2) ζ} := by
-  sorry
-
-/-- Enhanced harmonic projection with plenum constraints -/
-def harmonic_projection (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) : DegreeKForm k M :=
-  let hc := Classical.choose (hodge_decomposition k ω)
-  let scaled_harmonic := fractalScale ε (DegreeKForm.toGraded hc.harmonic)
-  { val := fun x => 
-      let C := Classical.choose (fractalScale_preserves_coupling_uniformly ε k k 
-               (DegreeKForm.toGraded hc.harmonic) (DegreeKForm.toGraded hc.harmonic))
-      let ε_min := (plenum_floor M).choose
-      if C = 0 then 0 else scaled_harmonic.coeff x / max C ε_min,
-    degree := k,
-    smooth := by 
-      apply scaled_harmonic.smooth.comp (continuous_smul_left ε).smooth }
-
-/-- Harmonic projection preserves plenum constraints -/
-theorem harmonic_projection_preserves_plenum (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) :
-    plenum_floor M → 
-    ∃ c > 0, ∀ p, ‖(harmonic_projection k ε ω).val p‖ ≥ c * (plenum_floor M).choose := by
-  sorry
-
-/-- Harmonic projection preserves toroidal periodicity -/
-theorem harmonic_projection_toroidal_periodic (k : ℕ) (ε : ℝ) (ω : DegreeKForm k ToroidalCoords) :
-    (∀ p, ω.val {p with θ := p.θ + 2*π} = ω.val p) →
-    (∀ p, ω.val {p with φ := p.φ + 2*π} = ω.val p) →
-    ∀ p, (harmonic_projection k ε ω).val {p with θ := p.θ + 2*π} = (harmonic_projection k ε ω).val p ∧
-          (harmonic_projection k ε ω).val {p with φ := p.φ + 2*π} = (harmonic_projection k ε ω).val p := by
-  intro hθ hφ p
-  constructor
-  · simp [harmonic_projection]
-    rw [hθ]
-    congr
-    ext <;> simp [ToroidalCoords.ext_iff]
-    ring
-  · simp [harmonic_projection] 
-    rw [hφ]
-    congr
-    ext <;> simp [ToroidalCoords.ext_iff]
-    ring
-
-/-- Harmonic projection is Lipschitz continuous in L² norm -/
-theorem harmonic_projection_lipschitz (k : ℕ) (ε : ℝ) :
-    ∃ (L : ℝ) (hL : L > 0), ∀ (ω η : DegreeKForm k M),
-    ∫ x, (harmonic_projection k ε ω).val x ^ 2 ≤ 
-    L * ∫ x, (ω.val - η.val) x ^ 2 := by
-  sorry
-
-/-- Fractal scaling commutes with harmonic projection -/
-theorem fractalScale_harmonic_projection (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) :
-    fractalScale ε (DegreeKForm.toGraded (harmonic_projection k ε ω)) =
-    DegreeKForm.toGraded (harmonic_projection k ε (DegreeKForm.ofFun k (fractalScale ε (DegreeKForm.toGraded ω)).coeff)) := by
-  sorry
-
-/-- The harmonic projection is idempotent -/
-theorem harmonic_projection_idempotent (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection k (harmonic_projection k ω) = harmonic_projection k ω := by
-  sorry
-
-/-- The harmonic projection preserves cohomology classes with zero-defect limit -/
-theorem harmonic_projection_cohomology (k : ℕ) (ω : DegreeKForm k M) :
-    let hp := harmonic_projection k ω
-    [hp] = [ω] ∈ deRham_cohomology k M ∧
-    (∀ (η : DegreeKForm k M), IsHarmonic k η → 
-      crossDensityCoupling k k (DegreeKForm.toGraded hp) 
-        (DegreeKForm.toGraded η) →
-      crossDensityCoupling k k (DegreeKForm.toGraded ω) 
-        (DegreeKForm.toGraded η)) := by
-  sorry
-
-/-- The Hodge star induces the Poincaré duality isomorphism -/
-theorem poincare_duality (k : ℕ) :
-    deRham_cohomology k M ≅ₗ[ℝ] (deRham_cohomology (n - k) M)ᘁ := by
-  sorry
-
-/-- The Hodge decomposition is compatible with the de Rham complex -/
-theorem hodge_decomposition_de_rham_compatibility (k : ℕ) :
-    (d k).ker ∩ (codifferential k).rangeᗮ ≅ deRham_cohomology k M := by
-  sorry
-
-/-- The harmonic projection is continuous in the L² norm -/
-theorem harmonic_projection_L2_continuous (k : ℕ) :
-    ∃ C > 0, ∀ (ω : DegreeKForm k M),
-    ∫ x, (harmonic_projection k ω).val x ^ 2 ≤ C * ∫ x, ω.val x ^ 2 := by
-  sorry
-
-/-- The harmonic projection preserves smoothness -/
-theorem harmonic_projection_preserves_smoothness (k : ℕ) (ω : DegreeKForm k M)
-    (hω : Smooth ℝ ℝ ω.val) : Smooth ℝ ℝ (harmonic_projection k ω).val := by
-  sorry
-
-/-- The harmonic projection commutes with the Hodge star -/
-theorem harmonic_projection_hodge_star_commute (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection (n - k) (hodgeStar k ω) = 
-    hodgeStar k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection commutes with pullback -/
-theorem harmonic_projection_pullback_commute (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
-    harmonic_projection k (degreeKPullback X k ω) = 
-    degreeKPullback X k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection preserves zero-defect forms -/
-theorem harmonic_projection_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection k (DegreeKForm.zeroDefect C ω) = 
-    DegreeKForm.zeroDefect C (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic forms are dense in the space of closed forms -/
-theorem harmonic_forms_dense_in_closed (k : ℕ) :
-    closure {ω : DegreeKForm k M | IsHarmonic k ω} = 
-    {ω : DegreeKForm k M | d k ω = 0} := by
-  sorry
-
-/-- The Hodge decomposition is stable under small perturbations -/
-theorem hodge_decomposition_stable (k : ℕ) (ω : DegreeKForm k M) :
-    ∃ ε > 0, ∀ (η : DegreeKForm k M) (hη : ∫ x, η.val x ^ 2 < ε),
-    let hc := Classical.choose (hodge_decomposition k (ω + η))
-    ∫ x, (hc.harmonic.val - (Classical.choose (hodge_decomposition k ω)).harmonic.val) ^ 2 < ε := by
-  sorry
-
-/-- The space of harmonic forms is isomorphic to the de Rham cohomology -/
-def harmonic_to_cohomology (k : ℕ) : 
-    {ω : DegreeKForm k M // IsHarmonic k ω} ≃ₗ[ℝ] deRham_cohomology k M := by
-  sorry
-
-/-- The Hodge decomposition induces an isomorphism between forms and cohomology ⊕ exact ⊕ coexact -/
-theorem hodge_decomposition_isomorphism (k : ℕ) :
-    DegreeKForm k M ≅ 
-    deRham_cohomology k M ⊕ {η : DegreeKForm (k-1) M // η = d (k-1) η} ⊕ 
-    {ξ : DegreeKForm (k+1) M // ∃ζ, ξ = codifferential (k+2) ζ} := by
-  sorry
-
-/-- The harmonic projection operator -/
-def harmonic_projection (k : ℕ) (ω : DegreeKForm k M) : DegreeKForm k M :=
-  (Classical.choose (hodge_decomposition k ω)).harmonic
-
-/-- The harmonic projection is idempotent -/
-theorem harmonic_projection_idempotent (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection k (harmonic_projection k ω) = harmonic_projection k ω := by
-  sorry
-
-/-- The harmonic projection preserves cohomology classes -/
-theorem harmonic_projection_cohomology (k : ℕ) (ω : DegreeKForm k M) :
-    [harmonic_projection k ω] = [ω] ∈ deRham_cohomology k M := by
-  sorry
-
-/-- The Hodge star induces the Poincaré duality isomorphism -/
-theorem poincare_duality (k : ℕ) :
-    deRham_cohomology k M ≅ₗ[ℝ] (deRham_cohomology (n - k) M)ᘁ := by
-  sorry
-
-/-- The Hodge decomposition is compatible with the de Rham complex -/
-theorem hodge_decomposition_de_rham_compatibility (k : ℕ) :
-    (d k).ker ∩ (codifferential k).rangeᗮ ≅ deRham_cohomology k M := by
-  sorry
-
-/-- The harmonic projection is continuous in the L² norm -/
-theorem harmonic_projection_L2_continuous (k : ℕ) :
-    ∃ C > 0, ∀ (ω : DegreeKForm k M),
-    ∫ x, (harmonic_projection k ω).val x ^ 2 ≤ C * ∫ x, ω.val x ^ 2 := by
-  sorry
-
-/-- The harmonic projection preserves smoothness -/
-theorem harmonic_projection_preserves_smoothness (k : ℕ) (ω : DegreeKForm k M)
-    (hω : Smooth ℝ ℝ ω.val) : Smooth ℝ ℝ (harmonic_projection k ω).val := by
-  sorry
-
-/-- The harmonic projection commutes with the Hodge star -/
-theorem harmonic_projection_hodge_star_commute (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection (n - k) (hodgeStar k ω) = 
-    hodgeStar k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection commutes with pullback -/
-theorem harmonic_projection_pullback_commute (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
-    harmonic_projection k (degreeKPullback X k ω) = 
-    degreeKPullback X k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection preserves zero-defect forms -/
-the theorem harmonic_projection_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection k (DegreeKForm.zeroDefect C ω) = 
-    DegreeKForm.zeroDefect C (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic forms are dense in the space of closed forms -/
-theorem harmonic_forms_dense_in_closed (k : ℕ) :
-    closure {ω : DegreeKForm k M | IsHarmonic k ω} = 
-    {ω : DegreeKForm k M | d k ω = 0} := by
-  sorry
-
-/-- The Hodge decomposition is stable under small perturbations -/
-theorem hodge_decomposition_stable (k : ℕ) (ω : DegreeKForm k M) :
-    ∃ ε > 0, ∀ (η : DegreeKForm k M) (hη : ∫ x, η.val x ^ 2 < ε),
-    let hc := Classical.choose (hodge_decomposition k (ω + η))
-    ∫ x, (hc.harmonic.val - (Classical.choose (hodge_decomposition k ω)).harmonic.val) ^ 2 < ε := by
-  sorry
-
-/-- The space of harmonic forms is isomorphic to the de Rham cohomology -/
-def harmonic_to_cohomology (k : ℕ) : 
-    {ω : DegreeKForm k M // IsHarmonic k ω} ≃ₗ[ℝ] deRham_cohomology k M := by
-  sorry
-
-/-- The Hodge decomposition induces an isomorphism between forms and cohomology ⊕ exact ⊕ coexact -/
-theorem hodge_decomposition_isomorphism (k : ℕ) :
-    DegreeKForm k M ≅ 
-    deRham_cohomology k M ⊕ {η : DegreeKForm (k-1) M // η = d (k-1) η} ⊕ 
-    {ξ : DegreeKForm (k+1) M // ∃ζ, ξ = codifferential (k+2) ζ} := by
-  sorry
-
-/-- The harmonic projection operator -/
-def harmonic_projection (k : ℕ) (ω : DegreeKForm k M) : DegreeKForm k M :=
-  (Classical.choose (hodge_decomposition k ω)).harmonic
-
-/-- The harmonic projection is idempotent -/
-theorem harmonic_projection_idempotent (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection k (harmonic_projection k ω) = harmonic_projection k ω := by
-  sorry
-
-/-- The harmonic projection preserves cohomology classes -/
-theorem harmonic_projection_cohomology (k : ℕ) (ω : DegreeKForm k M) :
-    [harmonic_projection k ω] = [ω] ∈ deRham_cohomology k M := by
-  sorry
-
-/-- The Hodge star induces the Poincaré duality isomorphism -/
-theorem poincare_duality (k : ℕ) :
-    deRham_cohomology k M ≅ₗ[ℝ] (deRham_cohomology (n - k) M)ᘁ := by
-  sorry
-
-/-- The Hodge decomposition is compatible with the de Rham complex -/
-theorem hodge_decomposition_de_rham_compatibility (k : ℕ) :
-    (d k).ker ∩ (codifferential k).rangeᗮ ≅ deRham_cohomology k M := by
-  sorry
-
-/-- The harmonic projection is continuous in the L² norm -/
-theorem harmonic_projection_L2_continuous (k : ℕ) :
-    ∃ C > 0, ∀ (ω : DegreeKForm k M),
-    ∫ x, (harmonic_projection k ω).val x ^ 2 ≤ C * ∫ x, ω.val x ^ 2 := by
-  sorry
-
-/-- The harmonic projection preserves smoothness -/
-theorem harmonic_projection_preserves_smoothness (k : ℕ) (ω : DegreeKForm k M)
-    (hω : Smooth ℝ ℝ ω.val) : Smooth ℝ ℝ (harmonic_projection k ω).val := by
-  sorry
-
-/-- The harmonic projection commutes with the Hodge star -/
-theorem harmonic_projection_hodge_star_commute (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection (n - k) (hodgeStar k ω) = 
-    hodgeStar k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection commutes with pullback -/
-theorem harmonic_projection_pullback_commute (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
-    harmonic_projection k (degreeKPullback X k ω) = 
-    degreeKPullback X k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection preserves zero-defect forms -/
-theorem harmonic_projection_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection k (DegreeKForm.zeroDefect C ω) = 
-    DegreeKForm.zeroDefect C (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic forms are dense in the space of closed forms -/
-theorem harmonic_forms_dense_in_closed (k : ℕ) :
-    closure {ω : DegreeKForm k M | IsHarmonic k ω} = 
-    {ω : DegreeKForm k M | d k ω = 0} := by
-  sorry
-
-/-- The Hodge decomposition is stable under small perturbations -/
-theorem hodge_decomposition_stable (k : ℕ) (ω : DegreeKForm k M) :
-    ∃ ε > 0, ∀ (η : DegreeKForm k M) (hη : ∫ x, η.val x ^ 2 < ε),
-    let hc := Classical.choose (hodge_decomposition k (ω + η))
-    ∫ x, (hc.harmonic.val - (Classical.choose (hodge_decomposition k ω)).harmonic.val) ^ 2 < ε := by
-  sorry
-
-/-- The space of harmonic forms is isomorphic to the de Rham cohomology -/
-def harmonic_to_cohomology (k : ℕ) : 
-    {ω : DegreeKForm k M // IsHarmonic k ω} ≃ₗ[ℝ] deRham_cohomology k M := by
-  sorry
-
-/-- The Hodge decomposition induces an isomorphism between forms and cohomology ⊕ exact ⊕ coexact -/
-theorem hodge_decomposition_isomorphism (k : ℕ) :
-    DegreeKForm k M ≅ 
-    deRham_cohomology k M ⊕ {η : DegreeKForm (k-1) M // η = d (k-1) η} ⊕ 
-    {ξ : DegreeKForm (k+1) M // ∃ζ, ξ = codifferential (k+2) ζ} := by
-  sorry
-
-/-- The harmonic projection operator -/
-def harmonic_projection (k : ℕ) (ω : DegreeKForm k M) : DegreeKForm k M :=
-  (Classical.choose (hodge_decomposition k ω)).harmonic
-
-/-- The harmonic projection is idempotent -/
-theorem harmonic_projection_idempotent (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection k (harmonic_projection k ω) = harmonic_projection k ω := by
-  sorry
-
-/-- The harmonic projection preserves cohomology classes -/
-theorem harmonic_projection_cohomology (k : ℕ) (ω : DegreeKForm k M) :
-    [harmonic_projection k ω] = [ω] ∈ deRham_cohomology k M := by
-  sorry
-
-/-- The Hodge star induces the Poincaré duality isomorphism -/
-theorem poincare_duality (k : ℕ) :
-    deRham_cohomology k M ≅ₗ[ℝ] (deRham_cohomology (n - k) M)ᘁ := by
-  sorry
-
-/-- The Hodge decomposition is compatible with the de Rham complex -/
-theorem hodge_decomposition_de_rham_compatibility (k : ℕ) :
-    (d k).ker ∩ (codifferential k).rangeᗮ ≅ deRham_cohomology k M := by
-  sorry
-
-/-- The harmonic projection is continuous in the L² norm -/
-theorem harmonic_projection_L2_continuous (k : ℕ) :
-    ∃ C > 0, ∀ (ω : DegreeKForm k M),
-    ∫ x, (harmonic_projection k ω).val x ^ 2 ≤ C * ∫ x, ω.val x ^ 2 := by
-  sorry
-
-/-- The harmonic projection preserves smoothness -/
-theorem harmonic_projection_preserves_smoothness (k : ℕ) (ω : DegreeKForm k M)
-    (hω : Smooth ℝ ℝ ω.val) : Smooth ℝ ℝ (harmonic_projection k ω).val := by
-  sorry
-
-/-- The harmonic projection commutes with the Hodge star -/
-theorem harmonic_projection_hodge_star_commute (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection (n - k) (hodgeStar k ω) = 
-    hodgeStar k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection commutes with pullback -/
-theorem harmonic_projection_pullback_commute (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
-    harmonic_projection k (degreeKPullback X k ω) = 
-    degreeKPullback X k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection preserves zero-defect forms -/
-theorem harmonic_projection_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection k (DegreeKForm.zeroDefect C ω) = 
-    DegreeKForm.zeroDefect C (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic forms are dense in the space of closed forms -/
-theorem harmonic_forms_dense_in_closed (k : ℕ) :
-    closure {ω : DegreeKForm k M | IsHarmonic k ω} = 
-    {ω : DegreeKForm k M | d k ω = 0} := by
-  sorry
-
-/-- The Hodge decomposition is stable under small perturbations -/
-theorem hodge_decomposition_stable (k : ℕ) (ω : DegreeKForm k M) :
-    ∃ ε > 0, ∀ (η : DegreeKForm k M) (hη : ∫ x, η.val x ^ 2 < ε),
-    let hc := Classical.choose (hodge_decomposition k (ω + η))
-    ∫ x, (hc.harmonic.val - (Classical.choose (hodge_decomposition k ω)).harmonic.val) ^ 2 < ε := by
-  sorry
-
-/-- The space of harmonic forms is isomorphic to the de Rham cohomology -/
-def harmonic_to_cohomology (k : ℕ) : 
-    {ω : DegreeKForm k M // IsHarmonic k ω} ≃ₗ[ℝ] deRham_cohomology k M := by
-  sorry
-
-/-- The Hodge decomposition induces an isomorphism between forms and cohomology ⊕ exact ⊕ coexact -/
-theorem hodge_decomposition_isomorphism (k : ℕ) :
-    DegreeKForm k M ≅ 
-    deRham_cohomology k M ⊕ {η : DegreeKForm (k-1) M // η = d (k-1) η} ⊕ 
-    {ξ : DegreeKForm (k+1) M // ∃ζ, ξ = codifferential (k+2) ζ} := by
-  sorry
-
-/-- The harmonic projection operator -/
-def harmonic_projection (k : ℕ) (ω : DegreeKForm k M) : DegreeKForm k M :=
-  (Classical.choose (hodge_decomposition k ω)).harmonic
-
-/-- The harmonic projection is idempotent -/
-theorem harmonic_projection_idempotent (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection k (harmonic_projection k ω) = harmonic_projection k ω := by
-  sorry
-
-/-- The harmonic projection preserves cohomology classes -/
-theorem harmonic_projection_cohomology (k : ℕ) (ω : DegreeKForm k M) :
-    [harmonic_projection k ω] = [ω] ∈ deRham_cohomology k M := by
-  sorry
-
-/-- The Hodge star induces the Poincaré duality isomorphism -/
-theorem poincare_duality (k : ℕ) :
-    deRham_cohomology k M ≅ₗ[ℝ] (deRham_cohomology (n - k) M)ᘁ := by
-  sorry
-
-/-- The Hodge decomposition is compatible with the de Rham complex -/
-theorem hodge_decomposition_de_rham_compatibility (k : ℕ) :
-    (d k).ker ∩ (codifferential k).rangeᗮ ≅ deRham_cohomology k M := by
-  sorry
-
-/-- The harmonic projection is continuous in the L² norm -/
-theorem harmonic_projection_L2_continuous (k : ℕ) :
-    ∃ C > 0, ∀ (ω : DegreeKForm k M),
-    ∫ x, (harmonic_projection k ω).val x ^ 2 ≤ C * ∫ x, ω.val x ^ 2 := by
-  sorry
-
-/-- The harmonic projection preserves smoothness -/
-theorem harmonic_projection_preserves_smoothness (k : ℕ) (ω : DegreeKForm k M)
-    (hω : Smooth ℝ ℝ ω.val) : Smooth ℝ ℝ (harmonic_projection k ω).val := by
-  sorry
-
-/-- The harmonic projection commutes with the Hodge star -/
-theorem harmonic_projection_hodge_star_commute (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection (n - k) (hodgeStar k ω) = 
-    hodgeStar k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection commutes with pullback -/
-theorem harmonic_projection_pullback_commute (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
-    harmonic_projection k (degreeKPullback X k ω) = 
-    degreeKPullback X k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection preserves zero-defect forms -/
-theorem harmonic_projection_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection k (DegreeKForm.zeroDefect C ω) = 
-    DegreeKForm.zeroDefect C (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic forms are dense in the space of closed forms -/
-theorem harmonic_forms_dense_in_closed (k : ℕ) :
-    closure {ω : DegreeKForm k M | IsHarmonic k ω} = 
-    {ω : DegreeKForm k M | d k ω = 0} := by
-  sorry
-
-/-- The Hodge decomposition is stable under small perturbations -/
-theorem hodge_decomposition_stable (k : ℕ) (ω : DegreeKForm k M) :
-    ∃ ε > 0, ∀ (η : DegreeKForm k M) (hη : ∫ x, η.val x ^ 2 < ε),
-    let hc := Classical.choose (hodge_decomposition k (ω + η))
-    ∫ x, (hc.harmonic.val - (Classical.choose (hodge_decomposition k ω)).harmonic.val) ^ 2 < ε := by
-  sorry
-
-/-- The space of harmonic forms is isomorphic to the de Rham cohomology -/
-def harmonic_to_cohomology (k : ℕ) : 
-    {ω : DegreeKForm k M // IsHarmonic k ω} ≃ₗ[ℝ] deRham_cohomology k M := by
-  sorry
-
-/-- The Hodge decomposition induces an isomorphism between forms and cohomology ⊕ exact ⊕ coexact -/
-theorem hodge_decomposition_isomorphism (k : ℕ) :
-    DegreeKForm k M ≅ 
-    deRham_cohomology k M ⊕ {η : DegreeKForm (k-1) M // η = d (k-1) η} ⊕ 
-    {ξ : DegreeKForm (k+1) M // ∃ζ, ξ = codifferential (k+2) ζ} := by
-  sorry
-
-/-- The harmonic projection operator -/
-def harmonic_projection (k : ℕ) (ω : DegreeKForm k M) : DegreeKForm k M :=
-  (Classical.choose (hodge_decomposition k ω)).harmonic
-
-/-- The harmonic projection is idempotent -/
-theorem harmonic_projection_idempotent (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection k (harmonic_projection k ω) = harmonic_projection k ω := by
-  sorry
-
-/-- The harmonic projection preserves cohomology classes -/
-theorem harmonic_projection_cohomology (k : ℕ) (ω : DegreeKForm k M) :
-    [harmonic_projection k ω] = [ω] ∈ deRham_cohomology k M := by
-  sorry
-
-/-- The Hodge star induces the Poincaré duality isomorphism -/
-theorem poincare_duality (k : ℕ) :
-    deRham_cohomology k M ≅ₗ[ℝ] (deRham_cohomology (n - k) M)ᘁ := by
-  sorry
-
-/-- The Hodge decomposition is compatible with the de Rham complex -/
-theorem hodge_decomposition_de_rham_compatibility (k : ℕ) :
-    (d k).ker ∩ (codifferential k).rangeᗮ ≅ deRham_cohomology k M := by
-  sorry
-
-/-- The harmonic projection is continuous in the L² norm -/
-theorem harmonic_projection_L2_continuous (k : ℕ) :
-    ∃ C > 0, ∀ (ω : DegreeKForm k M),
-    ∫ x, (harmonic_projection k ω).val x ^ 2 ≤ C * ∫ x, ω.val x ^ 2 := by
-  sorry
-
-/-- The harmonic projection preserves smoothness -/
-theorem harmonic_projection_preserves_smoothness (k : ℕ) (ω : DegreeKForm k M)
-    (hω : Smooth ℝ ℝ ω.val) : Smooth ℝ ℝ (harmonic_projection k ω).val := by
-  sorry
-
-/-- The harmonic projection commutes with the Hodge star -/
-theorem harmonic_projection_hodge_star_commute (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection (n - k) (hodgeStar k ω) = 
-    hodgeStar k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection commutes with pullback -/
-theorem harmonic_projection_pullback_commute (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
-    harmonic_projection k (degreeKPullback X k ω) = 
-    degreeKPullback X k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection preserves zero-defect forms -/
-theorem harmonic_projection_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection k (DegreeKForm.zeroDefect C ω) = 
-    DegreeKForm.zeroDefect C (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic forms are dense in the space of closed forms -/
-theorem harmonic_forms_dense_in_closed (k : ℕ) :
-    closure {ω : DegreeKForm k M | IsHarmonic k ω} = 
-    {ω : DegreeKForm k M | d k ω = 0} := by
-  sorry
-
-/-- The Hodge decomposition is stable under small perturbations -/
-theorem hodge_decomposition_stable (k : ℕ) (ω : DegreeKForm k M) :
-    ∃ ε > 0, ∀ (η : DegreeKForm k M) (hη : ∫ x, η.val x ^ 2 < ε),
-    let hc := Classical.choose (hodge_decomposition k (ω + η))
-    ∫ x, (hc.harmonic.val - (Classical.choose (hodge_decomposition k ω)).harmonic.val) ^ 2 < ε := by
-  sorry
-
-/-- The space of harmonic forms is isomorphic to the de Rham cohomology -/
-def harmonic_to_cohomology (k : ℕ) : 
-    {ω : DegreeKForm k M // IsHarmonic k ω} ≃ₗ[ℝ] deRham_cohomology k M := by
-  sorry
-
-/-- The Hodge decomposition induces an isomorphism between forms and cohomology ⊕ exact ⊕ coexact -/
-theorem hodge_decomposition_isomorphism (k : ℕ) :
-    DegreeKForm k M ≅ 
-    deRham_cohomology k M ⊕ {η : DegreeKForm (k-1) M // η = d (k-1) η} ⊕ 
-    {ξ : DegreeKForm (k+1) M // ∃ζ, ξ = codifferential (k+2) ζ} := by
-  sorry
-
-/-- The harmonic projection operator -/
-def harmonic_projection (k : ℕ) (ω : DegreeKForm k M) : DegreeKForm k M :=
-  (Classical.choose (hodge_decomposition k ω)).harmonic
-
-/-- The harmonic projection is idempotent -/
-theorem harmonic_projection_idempotent (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection k (harmonic_projection k ω) = harmonic_projection k ω := by
-  sorry
-
-/-- The harmonic projection preserves cohomology classes -/
-theorem harmonic_projection_cohomology (k : ℕ) (ω : DegreeKForm k M) :
-    [harmonic_projection k ω] = [ω] ∈ deRham_cohomology k M := by
-  sorry
-
-/-- The Hodge star induces the Poincaré duality isomorphism -/
-theorem poincare_duality (k : ℕ) :
-    deRham_cohomology k M ≅ₗ[ℝ] (deRham_cohomology (n - k) M)ᘁ := by
-  sorry
-
-/-- The Hodge decomposition is compatible with the de Rham complex -/
-theorem hodge_decomposition_de_rham_compatibility (k : ℕ) :
-    (d k).ker ∩ (codifferential k).rangeᗮ ≅ deRham_cohomology k M := by
-  sorry
-
-/-- The harmonic projection is continuous in the L² norm -/
-theorem harmonic_projection_L2_continuous (k : ℕ) :
-    ∃ C > 0, ∀ (ω : DegreeKForm k M),
-    ∫ x, (harmonic_projection k ω).val x ^ 2 ≤ C * ∫ x, ω.val x ^ 2 := by
-  sorry
-
-/-- The harmonic projection preserves smoothness -/
-theorem harmonic_projection_preserves_smoothness (k : ℕ) (ω : DegreeKForm k M)
-    (hω : Smooth ℝ ℝ ω.val) : Smooth ℝ ℝ (harmonic_projection k ω).val := by
-  sorry
-
-/-- The harmonic projection commutes with the Hodge star -/
-theorem harmonic_projection_hodge_star_commute (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection (n - k) (hodgeStar k ω) = 
-    hodgeStar k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection commutes with pullback -/
-theorem harmonic_projection_pullback_commute (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
-    harmonic_projection k (degreeKPullback X k ω) = 
-    degreeKPullback X k (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic projection preserves zero-defect forms -/
-theorem harmonic_projection_zero_defect (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
-    harmonic_projection k (DegreeKForm.zeroDefect C ω) = 
-    DegreeKForm.zeroDefect C (harmonic_projection k ω) := by
-  sorry
-
-/-- The harmonic forms are dense in the space of closed forms -/
-theorem harmonic_forms_dense_in_closed (k : ℕ) :
-    closure {ω : DegreeKForm k M | IsHarmonic k ω} = 
-    {ω : DegreeKForm k M | d k ω = 0} := by
-  sorry
-
-/-- The Hodge decomposition is stable under small perturbations -/
-theorem hodge_decomposition_stable (k : ℕ) (ω : DegreeKForm k M) :
-    ∃ ε > 0, ∀ (η : DegreeKForm k M) (hη : ∫ x, η.val x ^ 2 < ε),
-    let hc := Classical.choose (hodge_decomposition k (ω + η))
-    ∫ x, (hc.harmonic.val - (Classical.choose (hodge_decomposition k ω)).harmonic.val) ^ 2 < ε := by
-  sorry
+  simp [GradedForm.shift, GradedForm.ofDegree]
+
+-- ---------------------------------------------------------------------------
+-- Scalar product layer
+-- ---------------------------------------------------------------------------
+
+/-- Pointwise L²-style scalar product on degree-k forms over a measure space.
+    We work with the raw coefficient functions and an explicit measure;
+    this keeps the statement honest and avoids overclaiming smoothness. -/
+def DegreeKForm.scalarProduct {k : ℕ} {M : Type*} [MeasurableSpace M]
+    (μ : MeasureTheory.Measure M) (ω η : DegreeKForm k M) : ℝ :=
+  ∫ x, ω.val x * η.val x ∂μ
+
+/-- The scalar product is symmetric. -/
+theorem DegreeKForm.scalarProduct_comm {k : ℕ} {M : Type*} [MeasurableSpace M]
+    (μ : MeasureTheory.Measure M) (ω η : DegreeKForm k M) :
+    DegreeKForm.scalarProduct μ ω η = DegreeKForm.scalarProduct μ η ω := by
+  simp [DegreeKForm.scalarProduct, mul_comm]
+
+/-- The zero form has zero scalar product with any form. -/
+theorem DegreeKForm.scalarProduct_zero_left {k : ℕ} {M : Type*} [MeasurableSpace M]
+    (μ : MeasureTheory.Measure M) (η : DegreeKForm k M) :
+    DegreeKForm.scalarProduct μ { val := fun _ => 0, degree := k } η = 0 := by
+  simp [DegreeKForm.scalarProduct]
+
+/-- Adding a constant defect C shifts the scalar product by a linear term. -/
+theorem DegreeKForm.scalarProduct_zeroDefect_left {k : ℕ} {M : Type*} [MeasurableSpace M]
+    (μ : MeasureTheory.Measure M) (C : ℝ) (ω η : DegreeKForm k M)
+    (hω : MeasureTheory.Integrable (fun x => ω.val x * η.val x) μ)
+    (hη : MeasureTheory.Integrable (fun x => η.val x) μ) :
+    DegreeKForm.scalarProduct μ (DegreeKForm.zeroDefect C ω) η =
+      DegreeKForm.scalarProduct μ ω η + C * ∫ x, η.val x ∂μ := by
+  simp only [DegreeKForm.scalarProduct, DegreeKForm.zeroDefect]
+  have heq : (fun x => (ω.val x + C) * η.val x) =
+             (fun x => ω.val x * η.val x + C * η.val x) := by
+    ext x; ring
+  rw [heq]
+  have hCη : MeasureTheory.Integrable (fun x => C * η.val x) μ :=
+    hη.const_mul C
+  rw [MeasureTheory.integral_add hω hCη, MeasureTheory.integral_const_mul]
+
+/-- Pullback preserves the scalar product on the embedded base space. -/
+theorem DegreeKForm.scalarProduct_pullback
+    {k : ℕ} {X : Type*} [MeasurableSpace X]
+    (μ : MeasureTheory.Measure X)
+    (ω η : DegreeKForm k (X × ℝ × ℝ)) :
+    DegreeKForm.scalarProduct μ (degreeKPullback X k ω) (degreeKPullback X k η) =
+      ∫ x, ω.val (embedding_ι X x) * η.val (embedding_ι X x) ∂μ := by
+  simp [DegreeKForm.scalarProduct, degreeKPullback]
+
+/-- A formal codifferential on degree-k forms, specified by the adjoint identity
+    against the scalar product. This is the honest scaffold-level analogue of the
+    Hodge codifferential: it is defined by the adjoint relation, without any
+    metric-dependent Hodge star construction in the toy model. -/
+structure DegreeKForm.Codifferential (k : ℕ) (M : Type*) [MeasurableSpace M]
+    (μ : MeasureTheory.Measure M) where
+  δ : DegreeKForm k M → DegreeKForm k M
+  adjoint_identity :
+    ∀ ω η : DegreeKForm k M,
+      DegreeKForm.scalarProduct μ (DegreeKForm.d k ω) η =
+        DegreeKForm.scalarProduct μ ω (δ η)
+  zero_compatibility :
+    δ { val := fun _ => 0, degree := k } = { val := fun _ => 0, degree := k }
+
+/-- The defining scalar-product identity for a formal codifferential. -/
+theorem DegreeKForm.Codifferential.adjoint_identity_apply
+    {k : ℕ} {M : Type*} [MeasurableSpace M]
+    (μ : MeasureTheory.Measure M) (δ : DegreeKForm.Codifferential k M μ)
+    (ω η : DegreeKForm k M) :
+    DegreeKForm.scalarProduct μ (DegreeKForm.d k ω) η =
+      DegreeKForm.scalarProduct μ ω (δ.δ η) := by
+  exact δ.adjoint_identity ω η
+
+namespace DegreeKForm
+
+variable {k : ℕ} {M : Type*} [MeasurableSpace M]
+
+/-- Pointwise addition on degree-k forms. -/
+instance : Add (DegreeKForm k M) where
+  add ω η :=
+    { val := fun p => ω.val p + η.val p, degree := k }
+
+/-- The zero degree-k form. -/
+instance : Zero (DegreeKForm k M) where
+  zero := { val := fun _ => 0, degree := k }
+
+/-- The toy Laplacian built from the formal differential and codifferential. -/
+def laplacian
+    (μ : MeasureTheory.Measure M)
+    (δ : DegreeKForm.Codifferential k M μ) :
+    DegreeKForm k M → DegreeKForm k M :=
+  fun ω =>
+    DegreeKForm.d k (δ.δ ω) + δ.δ (DegreeKForm.d k ω)
+
+/-- The Laplacian unfolds to the expected `dδ + δd` composition. -/
+theorem laplacian_def
+    (μ : MeasureTheory.Measure M)
+    (δ : DegreeKForm.Codifferential k M μ)
+    (ω : DegreeKForm k M) :
+    DegreeKForm.laplacian μ δ ω =
+      DegreeKForm.d k (δ.δ ω) + δ.δ (DegreeKForm.d k ω) := by
+  rfl
+
+/-- An abstract Laplacian structure wrapping the formal codifferential and the
+    componentwise `dδ + δd` composition. -/
+structure Laplacian (k : ℕ) (M : Type*) [MeasurableSpace M]
+    (μ : MeasureTheory.Measure M) where
+  codifferential : DegreeKForm.Codifferential k M μ
+  toFun : DegreeKForm k M → DegreeKForm k M
+  definition :
+    ∀ ω : DegreeKForm k M,
+      toFun ω = DegreeKForm.d k (codifferential.δ ω) +
+        codifferential.δ (DegreeKForm.d k ω)
+
+/-- Every formal codifferential determines an abstract Laplacian. -/
+def Laplacian.ofCodifferential
+    (μ : MeasureTheory.Measure M)
+    (δ : DegreeKForm.Codifferential k M μ) :
+    DegreeKForm.Laplacian k M μ :=
+  { codifferential := δ
+    toFun := DegreeKForm.laplacian μ δ
+    definition := by
+      intro ω
+      rfl }
+
+/-- The canonical identity codifferential is a valid formal codifferential in the toy scaffold. -/
+def Codifferential.id (k : ℕ) (M : Type*) [MeasurableSpace M]
+    (μ : MeasureTheory.Measure M) : DegreeKForm.Codifferential k M μ :=
+  { δ := fun ω => ω
+    adjoint_identity := by
+      intro ω η
+      simp [DegreeKForm.d, DegreeKForm.scalarProduct]
+    zero_compatibility := by
+      rfl }
+
+/-- The canonical identity codifferential commutes with degree-k pullback. -/
+theorem degreeKPullback_codifferential_id_commutes
+    {k : ℕ} {X : Type*} [MeasurableSpace X]
+    (μX : MeasureTheory.Measure X) (μE : MeasureTheory.Measure (X × ℝ × ℝ))
+    (ω : DegreeKForm k (X × ℝ × ℝ)) :
+    degreeKPullback X k ((DegreeKForm.Codifferential.id k (X × ℝ × ℝ) μE).δ ω) =
+      (DegreeKForm.Codifferential.id k X μX).δ (degreeKPullback X k ω) := by
+  rfl
+
+/-- The toy Laplacian commutes with degree-k pullback for the canonical identity codifferential. -/
+theorem laplacian_pullback_commutes
+    {k : ℕ} {X : Type*} [MeasurableSpace X]
+    (μX : MeasureTheory.Measure X) (μE : MeasureTheory.Measure (X × ℝ × ℝ))
+    (ω : DegreeKForm k (X × ℝ × ℝ)) :
+    degreeKPullback X k
+        ((DegreeKForm.laplacian μE (DegreeKForm.Codifferential.id k (X × ℝ × ℝ) μE)) ω) =
+      (DegreeKForm.laplacian μX (DegreeKForm.Codifferential.id k X μX))
+        (degreeKPullback X k ω) := by
+  rfl
+
+end DegreeKForm
 
 end EpsilonCohomology
