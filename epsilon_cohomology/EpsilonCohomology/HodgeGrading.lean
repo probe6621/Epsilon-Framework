@@ -425,4 +425,38 @@ theorem codifferential_preserves_decomposition (k : ℕ) (ω : DegreeKForm k M) 
         degree := k-1 } := by
   sorry
 
+/-- The codifferential annihilates harmonic forms -/
+theorem codifferential_annihilates_harmonic (k : ℕ) (ω : DegreeKForm k M)
+    (hω : IsHarmonic k ω) : codifferential k ω = 0 := by
+  sorry
+
+/-- The codifferential of an exact form is zero -/
+theorem codifferential_exact (k : ℕ) (ω : DegreeKForm (k-1) M) :
+    codifferential k (DegreeKForm.d (k-1) ω) = 0 := by
+  sorry
+
+/-- The codifferential is nilpotent -/
+theorem codifferential_nilpotent (k : ℕ) (ω : DegreeKForm k M) :
+    codifferential (k-1) (codifferential k ω) = 0 := by
+  sorry
+
+/-- The codifferential decreases the L² norm of exact forms -/
+theorem codifferential_decreases_exact_L2_norm (k : ℕ) (ω : DegreeKForm (k-1) M) :
+    ∫ x, (codifferential k (DegreeKForm.d (k-1) ω)).val x ^ 2 ≤
+    ∫ x, (DegreeKForm.d (k-1) ω).val x ^ 2 := by
+  sorry
+
+/-- The codifferential is bounded in L² norm -/
+theorem codifferential_L2_bound (k : ℕ) (ω : DegreeKForm k M) :
+    ∃ C > 0, ∫ x, (codifferential k ω).val x ^ 2 ≤ C * ∫ x, ω.val x ^ 2 := by
+  sorry
+
+/-- The Hodge decomposition is orthogonal with respect to the codifferential -/
+theorem hodge_decomposition_codifferential_orthogonal (k : ℕ) (ω : DegreeKForm k M) :
+    let hc := Classical.choose (hodge_decomposition k ω)
+    ∫ x, (codifferential k hc.harmonic).val x * (codifferential k hc.exact).val x = 0 ∧
+    ∫ x, (codifferential k hc.harmonic).val x * (codifferential k hc.coexact).val x = 0 ∧
+    ∫ x, (codifferential k hc.exact).val x * (codifferential k hc.coexact).val x = 0 := by
+  sorry
+
 end EpsilonCohomology
