@@ -270,4 +270,29 @@ theorem hodge_zero_defect_compatibility (C : ℝ) (k : ℕ) (ω : DegreeKForm k 
         degree := k } := by
   sorry
 
+/-- The Hodge star operator on degree-k forms -/
+def hodgeStar (k : ℕ) (ω : DegreeKForm k M) : DegreeKForm (n - k) M :=
+  { val := fun p => ω.val p,
+    degree := n - k }
+
+/-- The Hodge star is an involution up to sign -/
+theorem hodgeStar_involution (k : ℕ) (ω : DegreeKForm k M) :
+    hodgeStar (n - k) (hodgeStar k ω) = (-1)^(k * (n - k)) • ω := by
+  sorry
+
+/-- Hodge star preserves harmonic forms -/
+theorem hodgeStar_preserves_harmonic (k : ℕ) (ω : DegreeKForm k M) 
+    (hω : IsHarmonic k ω) : IsHarmonic (n - k) (hodgeStar k ω) := by
+  sorry
+
+/-- Hodge star commutes with pullback -/
+theorem hodgeStar_pullback_compatibility (k : ℕ) (ω : DegreeKForm k (X × ℝ × ℝ)) :
+    hodgeStar k (degreeKPullback X k ω) = degreeKPullback X (n - k) (hodgeStar k ω) := by
+  sorry
+
+/-- Hodge star preserves zero-defect forms -/
+theorem hodgeStar_zero_defect_compatibility (C : ℝ) (k : ℕ) (ω : DegreeKForm k M) :
+    hodgeStar k (DegreeKForm.zeroDefect C ω) = DegreeKForm.zeroDefect C (hodgeStar k ω) := by
+  sorry
+
 end EpsilonCohomology
