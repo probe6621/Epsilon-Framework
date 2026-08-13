@@ -7,6 +7,8 @@ import EpsilonCohomology.PlenumConstraints
 
 noncomputable section
 
+variable (n : ℕ) -- Dimension of the manifold
+
 namespace EpsilonCohomology
 
 /-- A fractal form bundle over manifold M with scaling parameter ε -/
@@ -158,8 +160,8 @@ theorem fractalScale_commutes_differential (k : ℕ) (ε : ℝ) (ω : GradedForm
     fractalD k ε (fractalScale ε ω) = fractalScale ε (fractalD k 1 ω) := by
   sorry
 
-/-- Fractal scaling preserves harmonic forms with plenum bounds -/
-theorem fractalScale_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M) 
+/-- Fractal scaling preserves harmonic forms with plenum bounds (quantitative version) -/
+theorem fractalScale_preserves_harmonic_quant (k : ℕ) (ε : ℝ) (ω : GradedForm M) 
     (hω : isFractalHarmonic k 1 ω) : 
     plenum_floor M → 
     ∃ (C : ℝ) (hC : C > 0), 
@@ -230,6 +232,11 @@ def fractalLaplacian (k : ℕ) (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
       else Δω,
     smooth := by 
       apply (fractalD k ε (fractalCod k ε ω)).smooth.add (fractalCod k ε (fractalD k ε ω)).smooth }
+
+/-- Harmonic forms are in kernel of fractal Laplacian -/
+theorem fractalLaplacian_eq_zero_of_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M)
+    (hω : isFractalHarmonic k ε ω) : fractalLaplacian k ε ω = 0 := by
+  exact hω
 
 /-- Fractal Laplacian preserves plenum floor -/
 theorem fractalLaplacian_plenum_bound (k : ℕ) (ε : ℝ) (ω : GradedForm M) :

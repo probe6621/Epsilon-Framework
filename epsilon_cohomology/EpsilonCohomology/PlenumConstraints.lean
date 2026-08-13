@@ -1,6 +1,7 @@
+import Mathlib.Analysis.NormedSpace.Basic
+import Mathlib.MeasureTheory.Integral.SetIntegral
 import EpsilonCohomology.FractalForms
-import EpsilonCohomology.HodgeGrading
-import Mathlib.Geometry.Manifold.ContMdiffMap
+import EpsilonCohomology.HodgeGrading 
 
 noncomputable section
 
@@ -32,7 +33,7 @@ def toroidalBundleMap (ω : GradedForm ToroidalCoords) (ε : ℝ) : FractalFormB
   scaling := ε,
   forms := fun δ ↦ fractalScale δ ω,
   metric_bound := by
-    obtain ⟨C, hC⟩ := fractalScale_toroidal_metric ε ω ω
+    obtain ⟨C, hC⟩ := fractalScale_preserves_coupling_uniformly ε ω ω
     refine ⟨C, fun x y ↦ ?_⟩
     simp only [toroidalMetric]
     split
