@@ -24,12 +24,25 @@ def fractalScale (ε : ℝ) (ω : GradedForm M) : GradedForm M :=
       apply ω.smooth.comp (continuous_smul_left ε).smooth,
     degree := ω.degree }
 
-/-- Fractal scaling preserves norms with plenum floor constraint -/
+/-- Fractal scaling preserves norms with explicit plenum bounds -/
 theorem fractalScale_norm_bound (ε : ℝ) (ω : GradedForm M) :
     plenum_floor M → 
     ∃ (C : ℝ) (hC : 0 < C ∧ C ≤ 1), 
     ∀ x, ‖(fractalScale ε ω).coeff x‖ ≤ C * ‖ω.coeff x‖ ∧
-    (ε ≥ 1 → ‖(fractalScale ε ω).coeff x‖ ≥ (plenum_floor M).choose * ‖ω.coeff x‖) := by
+    (ε ≥ 1 → ‖(fractalScale ε ω).coeff x‖ ≥ (plenum_floor M).choose * ‖ω.coeff x‖) ∧
+    (∀ δ > 0, ∃ ε₀ > 0, ∀ ε < ε₀, 
+      ‖(fractalScale ε ω).coeff x‖ ≤ (C + δ) * ‖ω.coeff x‖) := by
+  sorry
+
+/-- Fractal scaling preserves harmonicity with quantitative bounds -/
+theorem fractalScale_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M) 
+    (hω : isFractalHarmonic k 1 ω) :
+    plenum_floor M → 
+    ∃ (D : ℝ) (hD : D > 0), 
+    isFractalHarmonic k ε (fractalScale ε ω) ∧
+    (∀ η : GradedForm M, isFractalHarmonic k 1 η →
+      crossDensityCoupling k k (fractalScale ε ω) (fractalScale ε η) ≤
+      D * crossDensityCoupling k k ω η + (plenum_floor M).choose) := by
   sorry
 
 /-- Quantitative convergence as coupling parameters vanish -/
@@ -234,15 +247,18 @@ theorem uniform_coupling_convergence (k : ℕ) (ε : ℝ) (ω : GradedForm M) :
     δ * (1 + (plenum_floor M).choose) := by
   sorry
 
-/-- Quantitative bounds for zero-defect convergence -/
+/-- Enhanced zero-defect convergence with plenum bounds -/
 theorem zero_defect_convergence_bounds (k : ℕ) (ε δ : ℝ) (C : ℝ) (ω : GradedForm M) :
     isFractalHarmonic k ε (DegreeKForm.zeroDefect C ω) →
+    plenum_floor M → 
     ∃ (K L : ℝ) (hK : K > 0) (hL : L > 0),
     ∀ (η : GradedForm M), 
     crossDensityCoupling k k ω η ≤ K * C + L * ε ∧
     (isFractalHarmonic k ε η → 
      crossDensityCoupling k k (fractalScale δ ω) (fractalScale δ η) ≤ 
-     (K * C + L * ε) * (1 + δ^2)) := by
+     (K * C + L * ε) * (1 + δ^2) + (plenum_floor M).choose) ∧
+    (∀ γ > 0, ∃ ε₀ > 0, ∀ ε < ε₀,
+      crossDensityCoupling k k (fractalScale ε ω) (fractalScale ε η) ≤ γ) := by
   sorry
 
 /-- Enhanced zero-defect scaling with toroidal constraints -/

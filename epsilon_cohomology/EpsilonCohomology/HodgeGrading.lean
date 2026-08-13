@@ -1074,17 +1074,24 @@ theorem hodge_decomposition_isomorphism (k : ℕ) :
     {ξ : DegreeKForm (k+1) M // ∃ζ, ξ = codifferential (k+2) ζ} := by
   sorry
 
-/-- Enhanced harmonic projection with fractal scaling and stability -/
+/-- Enhanced harmonic projection with plenum constraints -/
 def harmonic_projection (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) : DegreeKForm k M :=
   let hc := Classical.choose (hodge_decomposition k ω)
   let scaled_harmonic := fractalScale ε (DegreeKForm.toGraded hc.harmonic)
   { val := fun x => 
       let C := Classical.choose (fractalScale_preserves_coupling_uniformly ε k k 
                (DegreeKForm.toGraded hc.harmonic) (DegreeKForm.toGraded hc.harmonic))
-      if C = 0 then 0 else scaled_harmonic.coeff x / C,
+      let ε_min := (plenum_floor M).choose
+      if C = 0 then 0 else scaled_harmonic.coeff x / max C ε_min,
     degree := k,
     smooth := by 
       apply scaled_harmonic.smooth.comp (continuous_smul_left ε).smooth }
+
+/-- Harmonic projection preserves plenum constraints -/
+theorem harmonic_projection_preserves_plenum (k : ℕ) (ε : ℝ) (ω : DegreeKForm k M) :
+    plenum_floor M → 
+    ∃ c > 0, ∀ p, ‖(harmonic_projection k ε ω).val p‖ ≥ c * (plenum_floor M).choose := by
+  sorry
 
 /-- Harmonic projection preserves toroidal periodicity -/
 theorem harmonic_projection_toroidal_periodic (k : ℕ) (ε : ℝ) (ω : DegreeKForm k ToroidalCoords) :
