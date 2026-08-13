@@ -49,7 +49,53 @@ def isFractalHarmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M) : Prop :=
 theorem fractal_hodge_decomposition (k : ℕ) (ε : ℝ) (ω : GradedForm M) :
     ∃ (h : GradedForm M) (e : GradedForm M) (c : GradedForm M),
       isFractalHarmonic k ε h ∧
-      ω = h + fractalD (k-1) ε e + fractalCod (k+1) ε c := by
+      ω = h + fractalD (k-1) ε e + fractalCod (k+1) ε c ∧
+      (∀ (η : GradedForm M), isFractalHarmonic k ε η → 
+        crossDensityCoupling k k h η = crossDensityCoupling k k ω η) := by
+  sorry
+
+/-- Fractal scaling preserves Hodge decomposition -/
+theorem fractalScale_preserves_decomposition (k : ℕ) (ε δ : ℝ) (ω : GradedForm M) :
+    let hc := Classical.choose (fractal_hodge_decomposition k ε ω)
+    fractalScale δ ω = 
+      { degree := ω.degree,
+        coeff := fractalScale δ hc.harmonic + 
+                 fractalScale δ (fractalD (k-1) ε hc.exact) +
+                 fractalScale δ (fractalCod (k+1) ε hc.coexact),
+        smooth := by sorry } := by
+  sorry
+
+/-- Fractal differential preserves harmonic forms -/
+theorem fractalD_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M)
+    (hω : isFractalHarmonic k ε ω) : isFractalHarmonic (k+1) ε (fractalD k ε ω) := by
+  sorry
+
+/-- Fractal codifferential preserves harmonic forms -/
+theorem fractalCod_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M)
+    (hω : isFractalHarmonic k ε ω) : isFractalHarmonic (k-1) ε (fractalCod k ε ω) := by
+  sorry
+
+/-- Fractal Laplacian preserves harmonic forms -/
+theorem fractalLaplacian_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M)
+    (hω : isFractalHarmonic k ε ω) : fractalLaplacian k ε ω = 0 := by
+  sorry
+
+/-- Fractal Hodge star preserves harmonic forms -/
+theorem fractalHodgeStar_preserves_harmonic (k : ℕ) (ε : ℝ) (ω : GradedForm M)
+    (hω : isFractalHarmonic k ε ω) : isFractalHarmonic (n - k) ε (fractalHodgeStar k ε ω) := by
+  sorry
+
+/-- Fractal harmonic forms are dense in kernel of fractal Laplacian -/
+theorem fractal_harmonic_forms_dense (k : ℕ) (ε : ℝ) :
+    closure {ω : GradedForm M | isFractalHarmonic k ε ω} = 
+    {ω : GradedForm M | fractalLaplacian k ε ω = 0} := by
+  sorry
+
+/-- Fractal Hodge decomposition is stable under small perturbations -/
+theorem fractal_decomposition_stable (k : ℕ) (ε : ℝ) (ω : GradedForm M) :
+    ∃ δ > 0, ∀ (η : GradedForm M) (hη : ∫ x, η.coeff x ^ 2 < δ),
+    let hc := Classical.choose (fractal_hodge_decomposition k ε (ω + η))
+    ∫ x, (hc.harmonic.coeff - (Classical.choose (fractal_hodge_decomposition k ε ω)).harmonic.coeff) ^ 2 < δ := by
   sorry
 
 /-- Coupling matrix satisfies symmetry -/
